@@ -18,6 +18,12 @@ services:
       - POSTGRES_USER=django
       - POSTGRES_PASSWORD=django
       - POSTGRES_DB=metr_production
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - server
 
 volumes:
   postgres_data:

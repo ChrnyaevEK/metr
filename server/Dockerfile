@@ -1,4 +1,4 @@
-# https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/#project-setup
+# https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx
 FROM python:3.9.6-alpine
 
 # create directory for the app user
