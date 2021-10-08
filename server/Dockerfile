@@ -18,7 +18,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install dependencies
-RUN apk update && apk add --no-cache libressl-dev musl-dev libffi-dev build-base postgresql-dev gcc python3-dev musl-dev
+RUN apk update && apk add --no-cache libressl-dev musl-dev libffi-dev build-base postgresql-dev gcc python3-dev musl-dev bash
 RUN pip install --upgrade pip
 COPY ./requirements.txt $APP_HOME
 RUN pip install -r $APP_HOME/requirements.txt
