@@ -21,18 +21,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 SECRET_KEY = os.environ.get("SECRET_KEY")
+HASHID_FIELD_SALT = os.environ.get("HASHID_FIELD_SALT")
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
+    'api'
 ]
 
 MIDDLEWARE = [

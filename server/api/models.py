@@ -1,3 +1,33 @@
 from django.db import models
+from hashid_field import HashidAutoField, HashidField
 
-# Create your models here.
+
+class Room(models.Model):
+    id = HashidAutoField(primary_key=True)
+    time_created = models.DateTimeField(auto_now_add=True)
+    time_updated = models.DateTimeField(auto_now=True)
+    access_token = HashidField(unique=True)  # Access token will allow to display answers
+    online_counter = models.IntegerField(default=0)
+    use_color = models.BooleanField(default=True)
+
+
+class Question(models.Model):
+    id = HashidAutoField(primary_key=True)
+    time_created = models.DateTimeField(auto_now_add=True)
+    room = models.ForeignKey(Room, models.CASCADE)
+    display_option = models.CharField(max_length=20)  # Name of widget to use when data is displayed
+
+
+class Answer(models.Model):
+    id = HashidAutoField(primary_key=True)
+    time_created = models.DateTimeField(auto_now_add=True)
+    client = HashidField()
+    question = models.ForeignKey(Question, models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class NumericAnswer(Answer):
+    type = 'numeric_answer'
+    value = models.FloatField()
