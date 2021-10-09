@@ -6,7 +6,7 @@ class Room(models.Model):
     id = HashidAutoField(primary_key=True)
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
-    access_token = HashidField(unique=True)  # Access token will allow to display answers
+    access_token = HashidField(unique=True, )  # Access token will allow to display answers
     online_counter = models.IntegerField(default=0)
     use_color = models.BooleanField(default=True)
 
