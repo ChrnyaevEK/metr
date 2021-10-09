@@ -5,6 +5,7 @@ from rest_framework import serializers
 class RoomSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     access_token = serializers.ReadOnlyField()
+    online_counter = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = models.Room
@@ -21,6 +22,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class NumericAnswerSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
+    type = serializers.ReadOnlyField(default=models.NumericAnswer.type)
 
     class Meta:
         model = models.NumericAnswer
