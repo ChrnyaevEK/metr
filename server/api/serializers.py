@@ -21,7 +21,14 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class NumericAnswerSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    client = serializers.ReadOnlyField()
+
+    class Meta:
+        model = models.NumericAnswer
+        fields = '__all__'
+
+
+class ClientSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
 
     class Meta:
         model = models.NumericAnswer

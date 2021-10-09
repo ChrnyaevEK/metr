@@ -18,10 +18,15 @@ class Question(models.Model):
     display_option = models.CharField(max_length=20)  # Name of widget to use when data is displayed
 
 
+class Client(models.Model):
+    id = HashidAutoField(primary_key=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+
 class Answer(models.Model):
     id = HashidAutoField(primary_key=True)
     time_created = models.DateTimeField(auto_now_add=True)
-    client = HashidField()
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
     question = models.ForeignKey(Question, models.CASCADE)
 
     class Meta:
