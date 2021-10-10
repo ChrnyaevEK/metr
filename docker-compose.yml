@@ -18,6 +18,12 @@ services:
       - POSTGRES_USER=$SQL_USER
       - POSTGRES_PASSWORD=$SQL_PASSWORD
       - POSTGRES_DB=$SQL_DATABASE
+  redis:
+      image: "redis:alpine"
+      expose:
+        - 6379
+      volumes:
+        - redis_data:/home/app/redis/data/
   nginx:
     build: ./nginx
     ports:
@@ -29,4 +35,5 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
   static_volume:
