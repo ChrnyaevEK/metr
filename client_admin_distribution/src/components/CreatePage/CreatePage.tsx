@@ -1,4 +1,4 @@
-import {MouseEvent, ChangeEvent, useState} from "react";
+import {MouseEvent, ChangeEvent, KeyboardEvent, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 
@@ -15,9 +15,9 @@ function Question(props: QuestionProps) {
     }
 
     return (
-        <div className="border shadow-sm p-2 font-middle d-flex justify-content-between align-items-center mb-1">
+        <div className="border p-2 font-middle d-flex justify-content-between align-items-center mb-1">
             <strong className="text-truncate">{props.value}</strong>
-            <button className="btn btn-light" onClick={handleRemoveQuestion}>
+            <button className="btn" onClick={handleRemoveQuestion}>
                 <FontAwesomeIcon icon={faTimes} className="text-danger m-1"/>
             </button>
         </div>
@@ -30,9 +30,21 @@ export function CreatePage() {
     const questionsLimit = 5  // TODO move to env file
 
 
-    const handleAddQuestion = (e: MouseEvent<HTMLButtonElement>) => {
-        setQuestions([...questions, question])
-        setQuestion('')
+    const handleAddQuestion = () => {
+        if (question.length && !questions.includes(question) && questions.length < questionsLimit) {
+            setQuestions([...questions, question])
+            setQuestion('')
+        }
+    }
+
+    const handleAddQuestionKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleAddQuestion()
+        }
+    }
+
+    const handleAddQuestionButtonPress = (e: MouseEvent<HTMLButtonElement>) => {
+        handleAddQuestion()
     }
 
     const handleSetQuestionValue = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,15 +69,18 @@ export function CreatePage() {
                 <label htmlFor="create-page-question-input" className="w-100 m-0 mr-1">
                     <input type="text" id="create-page-question-input" className="form-control"
                            value={question}
-                           onChange={(handleSetQuestionValue)}
-                           placeholder="Rychlost..."/>
+                           onChange={handleSetQuestionValue}
+                           onKeyPress={handleAddQuestionKeyPress}
+                           disabled={questions.length === questionsLimit}
+                           placeholder="Zadejte hodnotu..."/>
                 </label>
-                <button className="btn btn-success" onClick={handleAddQuestion}
-                        disabled={!question.length || questions.includes(question)}><FontAwesomeIcon icon={faPlus}/>
+                <button className="btn btn-success" onClick={handleAddQuestionButtonPress}
+                        disabled={!question.length || questions.includes(question) || questions.length === questionsLimit}>
+                    <FontAwesomeIcon icon={faPlus}/>
                 </button>
             </div>
             <button className="btn btn-success w-100"
-                    disabled={!questions.length || questions.length >= questionsLimit}>Pokračovat
+                    disabled={!questions.length || questions.length > questionsLimit}>Pokračovat
             </button>
         </div>
     );
