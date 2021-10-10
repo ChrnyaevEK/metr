@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed, NotFound
 from api import serializers
 from api import models
@@ -91,3 +93,35 @@ class NumericAnswerViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         raise MethodNotAllowed('Retrieve')
+
+
+class ClientViewSet(viewsets.ModelViewSet):
+    model = models.Client
+    serializer_class = serializers.ClientSerializer
+    permission_classes = []
+    queryset = model.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        raise MethodNotAllowed('Destroy')
+
+    def update(self, request, *args, **kwargs):
+        raise MethodNotAllowed('Update')
+
+    def retrieve(self, request, *args, **kwargs):
+        raise MethodNotAllowed('Retrieve')
+
+
+class ValidateAccessToken(APIView):
+    """ Validate access token against room hash """
+
+    authentication_classes = []
+    permission_classes = []
+
+    @staticmethod
+    def get(request, *args, **kwargs):
+        try:
+            room = get_target_room(request)
+            validate_access_token(request, room)
+        except (PermissionDenied, NotFound):
+            return Response(False)
+        return Response(True)
