@@ -27,7 +27,8 @@
     "start-public-distribution": "REACT_APP_BUILD_TARGET=public_distribution react-scripts start",
     "start-admin-distribution": "REACT_APP_BUILD_TARGET=admin_distribution react-scripts start",
     "build-public-distribution": "REACT_APP_BUILD_TARGET=public_distribution BUILD_PATH='./dist/public_distribution' react-scripts build",
-    "build-admin-distribution": "REACT_APP_BUILD_TARGET=admin_distribution BUILD_PATH='./dist/admin_distribution' react-scripts build"
+    "build-admin-distribution": "REACT_APP_BUILD_TARGET=admin_distribution BUILD_PATH='./dist/admin_distribution' react-scripts build",
+    "build": "npm run build-public-distribution && npm run build-admin-distribution"
   },
   "eslintConfig": {
     "extends": [
