@@ -1,7 +1,7 @@
 import {MouseEvent, ChangeEvent, KeyboardEvent, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
-import {displayOptions, QUESTION_LIMIT} from "../../../share";
+import {displayOptionsTitles, QUESTION_LIMIT} from "../../../share";
 
 interface QuestionType {
     value: string,
@@ -24,7 +24,7 @@ function Question(props: QuestionProps) {
             <div className="text-truncate mr-1 flex-grow-1">
                 <strong>{props.value}</strong>
             </div>
-            <strong className="text-secondary mr-1">{displayOptions[props.display_option]}</strong>
+            <strong className="text-secondary mr-1">{displayOptionsTitles[props.display_option]}</strong>
             <button className="btn" onClick={handleRemoveQuestion}>
                 <FontAwesomeIcon icon={faTimes} className="text-danger"/>
             </button>
@@ -88,7 +88,7 @@ export function CreatePage() {
                             className="form-control mr-1"
                             id="create-page-display-type-selection" disabled={questions.length === QUESTION_LIMIT}>
                         {
-                            Object.entries(displayOptions).map(([k, v], i) => <option value={k}>{v}</option>)
+                            Object.entries(displayOptionsTitles).map(([k, v], i) => <option value={k}>{v}</option>)
                         }
                     </select>
                     <button className="btn btn-success" onClick={handleAddQuestionButtonPress}

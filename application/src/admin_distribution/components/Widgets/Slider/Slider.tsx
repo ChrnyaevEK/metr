@@ -1,21 +1,12 @@
 import "./Slider.css"
 import {useEffect, useState} from "react";
+import {displayOptionValueLines, displayOptionColorShifts} from "../../../../share";
 
 interface SliderProps {
     title: string,
     value: number,
     use_color: boolean
     display_option: string,
-}
-
-const displayOptionValueLines: any = {
-    'numeric_range_maximum': ['Nizký', 'Střední', 'Optimální'],
-    'numeric_range_optimum': ['Nizký', 'Optimální', 'Vysoký'],
-}
-
-const displayOptionColorShifts: any = {
-    'numeric_range_maximum': (value: number) => 'hue-rotate(-' + value + 'deg)',
-    'numeric_range_optimum': (value: number) => 'hue-rotate(-' + 2 * value + 'deg)',
 }
 
 export function Slider(props: SliderProps) {
