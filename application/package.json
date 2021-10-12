@@ -1,5 +1,5 @@
 {
-  "name": "client_admin_distribution",
+  "name": "application",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -24,10 +24,10 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start-public-distribution": "REACT_APP_BUILD_TARGET=public_distribution react-scripts start",
+    "start-admin-distribution": "REACT_APP_BUILD_TARGET=admin_distribution react-scripts start",
+    "build-public-distribution": "REACT_APP_BUILD_TARGET=public_distribution BUILD_PATH='./dist/public_distribution' react-scripts build",
+    "build-admin-distribution": "REACT_APP_BUILD_TARGET=admin_distribution BUILD_PATH='./dist/admin_distribution' react-scripts build"
   },
   "eslintConfig": {
     "extends": [

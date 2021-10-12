@@ -1,0 +1,1 @@
+{"version":3,"sources":["public_distribution/components/App/App.tsx"],"names":["App"],"mappings":"uIAAA,6BASeA,UANf,WACI,OACI","file":"static/js/4.bdf4adb0.chunk.js","sourcesContent":["import React from 'react';\nimport 'bootstrap/dist/css/bootstrap.min.css';\n\nfunction App() {\n    return (\n        <div>Public</div>\n    );\n}\n\nexport default App;\n"],"sourceRoot":""}
