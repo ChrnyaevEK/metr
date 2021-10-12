@@ -3,18 +3,13 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {displayOptionsTitles, QUESTION_LIMIT} from "../../../share";
 
-interface QuestionType {
-    value: string,
-    display_option: string,
-}
-
-interface QuestionProps extends QuestionType {
+interface QuestionProps extends TextualQuestion {
     setQuestions: any,
 }
 
 function Question(props: QuestionProps) {
     const handleRemoveQuestion = (e: MouseEvent<HTMLButtonElement>) => {
-        props.setQuestions((questions: QuestionType[]) => {
+        props.setQuestions((questions: TextualQuestion[]) => {
             return [...questions.filter(q => q.value !== props.value)]
         })
     }
@@ -33,8 +28,8 @@ function Question(props: QuestionProps) {
 }
 
 export function CreatePage() {
-    const [questions, setQuestions]: [QuestionType[], any] = useState([])
-    const [question, setQuestion]: [QuestionType, any] = useState({display_option: 'numeric_range_optimum', value: ''})
+    const [questions, setQuestions]: [TextualQuestion[], any] = useState([])
+    const [question, setQuestion]: [TextualQuestion, any] = useState({display_option: 'numeric_range_optimum', value: ''})
 
     const handleAddQuestion = () => {
         if (question.value.length && !questions.includes(question) && questions.length < QUESTION_LIMIT) {

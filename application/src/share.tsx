@@ -1,5 +1,9 @@
 export const QUESTION_LIMIT = 5
 
+// TODO - unite option structures
+
+export const displayOptions: string[] = ['numeric_range_optimum', 'numeric_range_maximum']
+
 interface IDisplayOptionsTitles {
     [key: string]: string
 }
@@ -14,8 +18,8 @@ interface IDisplayOptionValues {
 }
 
 export const displayOptionValueLines: IDisplayOptionValues = {
-    'numeric_range_maximum': ['Nizký', 'Střední', 'Optimální'],
-    'numeric_range_optimum': ['Nizký', 'Optimální', 'Vysoký'],
+    'numeric_range_maximum': ['Nizké', 'Střední', 'Maximální'],
+    'numeric_range_optimum': ['Nizké', 'Optimální', 'Vysoké'],
 }
 type colorShifter = (value: number) => string
 
@@ -29,6 +33,7 @@ export const displayOptionColorShifts: IDisplayOptionColorShifters = {
 }
 
 export default {
+    displayOptions,
     displayOptionsTitles,
     displayOptionValueLines,
     displayOptionColorShifts,
