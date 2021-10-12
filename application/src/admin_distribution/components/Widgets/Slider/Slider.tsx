@@ -5,7 +5,7 @@ interface SliderProps {
     title: string,
     value: number,
     use_color: boolean
-    type: string,
+    display_option: string,
 }
 
 const displayOptionValueLines: any = {
@@ -19,10 +19,10 @@ const displayOptionColorShifts: any = {
 }
 
 export function Slider(props: SliderProps) {
-    const [rangeStyle, setRangeStyle] = useState(displayOptionColorShifts[props.type](props.value))
+    const [rangeStyle, setRangeStyle] = useState(displayOptionColorShifts[props.display_option](props.value))
 
     useEffect(() => {
-        setRangeStyle(displayOptionColorShifts[props.type](props.value))
+        setRangeStyle(displayOptionColorShifts[props.display_option](props.value))
     }, [props.value])
 
     return (
@@ -31,7 +31,7 @@ export function Slider(props: SliderProps) {
             <input style={{'filter': rangeStyle}} type="range" className="slider" min={0} max={100}
                    value={props.value}/>
             <div className="d-flex justify-content-between font-tiny text-secondary">
-                {displayOptionValueLines[props.type].map((vl: string) => <span>{vl}</span>)}
+                {displayOptionValueLines[props.display_option].map((vl: string) => <span>{vl}</span>)}
             </div>
         </div>
     )

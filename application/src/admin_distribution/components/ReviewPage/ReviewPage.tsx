@@ -11,12 +11,12 @@ export function ReviewPage() {
             </div>
             <div className="font-small text-success mb-3"><strong>22 online 14:20</strong></div>
 
-            <Slider title="Test" value={0} type="numeric_range_maximum" use_color={true}/>
-            <Slider title="Test" value={20} type="numeric_range_maximum" use_color={true}/>
-            <Slider title="Test" value={40} type="numeric_range_maximum" use_color={true}/>
-            <Slider title="Test" value={60} type="numeric_range_maximum" use_color={true}/>
-            <Slider title="Test" value={80} type="numeric_range_maximum" use_color={true}/>
-            <Slider title="Test" value={100} type="numeric_range_maximum" use_color={true}/>
+            <Slider title="Test" value={0} display_option="numeric_range_maximum" use_color={true}/>
+            <Slider title="Test" value={20} display_option="numeric_range_maximum" use_color={true}/>
+            <Slider title="Test" value={40} display_option="numeric_range_maximum" use_color={true}/>
+            <Slider title="Test" value={60} display_option="numeric_range_maximum" use_color={true}/>
+            <Slider title="Test" value={80} display_option="numeric_range_maximum" use_color={true}/>
+            <Slider title="Test" value={100} display_option="numeric_range_maximum" use_color={true}/>
 
             <div className="d-flex justify-content-between font-small align-items-center">
                 <a href="#">Export dat</a>
