@@ -97,6 +97,9 @@ class ClientViewSet(viewsets.ModelViewSet):
     permission_classes = []
     queryset = model.objects.all()
 
+    def list(self, request, *args, **kwargs):
+        raise MethodNotAllowed('List')
+
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed('Destroy')
 

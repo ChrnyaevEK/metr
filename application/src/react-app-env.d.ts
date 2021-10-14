@@ -27,6 +27,11 @@ interface NumericAnswer extends AnswerType {
     value: number
 }
 
+interface ClientType {
+    id?: string,
+    room: string,
+}
+
 interface IDisplayOptions {
     [key: string]: {
         title: string,
