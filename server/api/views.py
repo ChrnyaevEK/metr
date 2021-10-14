@@ -50,9 +50,7 @@ class RoomViewSet(viewsets.ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        room = self.get_object()
-        validate_access_token(request, room)
-        return super().destroy(request, *args, **kwargs)
+        raise MethodNotAllowed('Destroy')
 
     def list(self, request, *args, **kwargs):
         raise MethodNotAllowed('List')
@@ -64,9 +62,10 @@ class QuestionViewSet(viewsets.ModelViewSet):
     permission_classes = []
 
     def get_queryset(self):
-        room = get_target_room(self.request)
-        validate_access_token(self.request, room)
-        return self.model.objects.filter(room=room)
+        # room = get_target_room(self.request)
+        # validate_access_token(self.request, room)
+        # return self.model.objects.filter(room=room)
+        return self.model.objects.all()
 
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed('Destroy')
@@ -90,9 +89,6 @@ class NumericAnswerViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         raise MethodNotAllowed('Update')
-
-    def retrieve(self, request, *args, **kwargs):
-        raise MethodNotAllowed('Retrieve')
 
 
 class ClientViewSet(viewsets.ModelViewSet):
