@@ -1,4 +1,5 @@
 export const QUESTION_LIMIT = 5
+export const RECONNECT_TIMEOUT = 2000
 
 export const displayOptions: IDisplayOptions = {
     numeric_range_optimum: {
@@ -15,5 +16,6 @@ export const displayOptions: IDisplayOptions = {
 
 export default {
     displayOptions,
-    QUESTION_LIMIT
+    QUESTION_LIMIT,
+    RECONNECT_TIMEOUT
 }
