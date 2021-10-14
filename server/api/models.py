@@ -42,7 +42,7 @@ class Answer(models.Model):
 
 class NumericAnswer(Answer):
     type = 'numeric_answer'
-    value = models.FloatField()
+    value = models.FloatField(default=0)
 
 
 # Option name: valid answer type

@@ -1,0 +1,46 @@
+/** Chrome*/
+input[type=range]{
+    -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    height: 2px;
+    background: #1597ff;
+    margin: 8px 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 2px solid #a3a3a3;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: white;
+    margin-top: -10px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+/** FF*/
+input[type="range"]::-moz-range-progress {
+    background-color: #1597ff;
+}
+input[type="range"]::-moz-range-track {
+    background-color: #1597ff;
+}
+input[type=range]::-moz-range-thumb {
+    border: 2px solid #a3a3a3;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: white;
+}
+/* IE*/
+input[type="range"]::-ms-fill-lower {
+    background-color: #1597ff;
+}
+input[type="range"]::-ms-fill-upper {
+    background-color: #1597ff;
+}
