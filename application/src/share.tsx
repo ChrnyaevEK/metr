@@ -1,5 +1,6 @@
 export const QUESTION_LIMIT = 5
 export const RECONNECT_TIMEOUT = 2000
+export const BASE_HTTP_URL = 'http://localhost:8000'
 
 export const displayOptions: IDisplayOptions = {
     numeric_range_optimum: {

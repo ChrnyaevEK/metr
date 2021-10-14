@@ -1,12 +1,14 @@
 import {useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faArrowRight, faPlus, faUserFriends, faUserShield} from "@fortawesome/free-solid-svg-icons";
+import {faPlus, faUserFriends, faUserShield} from "@fortawesome/free-solid-svg-icons";
 import {
     Link,
     useHistory
 } from "react-router-dom";
+import {useDispatch} from "react-redux";
 
 export function HomePage() {
+    const dispatch = useDispatch()
     const [roomId, setRoomId]: [string, any] = useState('')
     const getAdminRoomURL = () => '/admin/' + roomId
     const getPublicRoomURL = () => '/public/' + roomId

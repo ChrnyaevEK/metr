@@ -1,10 +1,13 @@
 import $ from 'jquery'
-import AjaxSettings = JQuery.AjaxSettings;
+import {BASE_HTTP_URL} from "../share";
 
 const baseApi = {
-    ajaxJSON: async (settings: AjaxSettings) => {
+    ajaxJSON: async (settings: JQueryAjaxSettings) => {
         return $.ajax({
             ...settings,
+            crossDomain: true,
+            dataType: 'json',
+            url: BASE_HTTP_URL + settings.url,
             contentType: 'application/json',
             data: JSON.stringify(settings.data)
         });
@@ -13,32 +16,32 @@ const baseApi = {
 
 export const api = {
     ...baseApi,
-    get: async (settings: AjaxSettings) => {
-        return api.ajaxJSON({
+    get: async (settings: JQueryAjaxSettings) => {
+        return await api.ajaxJSON({
             ...settings,
             type: 'GET',
         })
     },
-    post: async (settings: AjaxSettings) => {
-        return api.ajaxJSON({
+    post: async (settings: JQueryAjaxSettings) => {
+        return await api.ajaxJSON({
             ...settings,
             type: 'POST',
         })
     },
-    put: async (settings: AjaxSettings) => {
-        return api.ajaxJSON({
+    put: async (settings: JQueryAjaxSettings) => {
+        return await api.ajaxJSON({
             ...settings,
             type: 'PUT',
         })
     },
-    patch: async (settings: AjaxSettings) => {
-        return api.ajaxJSON({
+    patch: async (settings: JQueryAjaxSettings) => {
+        return await api.ajaxJSON({
             ...settings,
             type: 'PATCH',
         })
     },
-    delete: async (settings: AjaxSettings) => {
-        return api.ajaxJSON({
+    delete: async (settings: JQueryAjaxSettings) => {
+        return await api.ajaxJSON({
             ...settings,
             type: 'DELETE',
         })

@@ -1,23 +1,23 @@
 /// <reference types="react-scripts" />
 interface RoomType {
-    id: string,
-    time_created: string,
-    time_updated: string,
+    id?: string,
+    time_created?: string,
+    time_updated?: string,
     access_token: string,
     use_color: boolean
 }
 
 interface QuestionType {
-    id: string,
-    time_created: string,
+    id?: string,
+    time_created?: string,
     room: string,
     value: string,
     display_option: string,
 }
 
 interface AnswerType {
-    id: string,
-    time_created: string,
+    id?: string,
+    time_created?: string,
     client: string,
     question: string,
     type: string,
