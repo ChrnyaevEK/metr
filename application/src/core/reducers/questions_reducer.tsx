@@ -12,14 +12,18 @@ export const questionsReducer = (state: IState = initialState, action: PayloadAc
     switch (action.type) {
         case 'questions/create':  // Replace existing object with new one
         case 'questions/retrieve':
-            state.questions = [
-                ...state.questions.filter((q) => q.id !== action.payload.id),
-                action.payload,
-            ]
-            return state
+            return {
+                ...state,
+                questions: [
+                    ...state.questions.filter((q) => q.id !== action.payload.id),
+                    action.payload,
+                ]
+            }
         case 'questions/list':
-            state.questions = action.payload
-            return state
+            return {
+                ...state,
+                questions: action.payload
+            }
         default:
             return state
     }

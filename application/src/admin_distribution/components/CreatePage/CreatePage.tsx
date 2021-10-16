@@ -29,6 +29,7 @@ function Question(props: QuestionProps) {
 }
 
 export function CreatePage() {
+    const [lock, setLock]: [boolean, any] = useState(false)
     const [questions, setQuestions]: [QuestionType[], any] = useState([])
     const [question, setQuestion]: [QuestionType, any] = useState({
         id: '',
@@ -59,8 +60,12 @@ export function CreatePage() {
         display_option: e.target.value
     })
 
-    // @ts-ignore
-    // @ts-ignore
+    const handleContinue = () => {
+        (async () => {
+
+        })()
+    }
+
     return (
         <div>
             <div className="font-big mb-3 d-flex justify-content-between">
@@ -79,25 +84,26 @@ export function CreatePage() {
                            value={question.value}
                            onChange={handleSetQuestionValue}
                            onKeyPress={handleAddQuestionKeyPress}
-                           disabled={questions.length === QUESTION_LIMIT}
+                           disabled={questions.length === QUESTION_LIMIT || lock}
                            placeholder="Zadejte hodnotu..."/>
                 </label>
                 <div className="d-flex w-50">
                     <select value={question.display_option} onChange={handleSetDisplayOption}
                             className="form-control mr-1"
-                            id="create-page-display-type-selection" disabled={questions.length === QUESTION_LIMIT}>
+                            id="create-page-display-type-selection"
+                            disabled={questions.length === QUESTION_LIMIT || lock}>
                         {
                             Object.entries(displayOptions).map(([k, v], i) => <option value={k}>{v.title}</option>)
                         }
                     </select>
                     <button className="btn btn-success" onClick={handleAddQuestionButtonPress}
-                            disabled={!question.value.length || questions.includes(question) || questions.length === QUESTION_LIMIT}>
+                            disabled={!question.value.length || questions.includes(question) || questions.length === QUESTION_LIMIT || lock}>
                         <FontAwesomeIcon icon={faPlus}/>
                     </button>
                 </div>
             </div>
             <button className="btn btn-success w-100"
-                    disabled={!questions.length || questions.length > QUESTION_LIMIT}>Pokračovat
+                    disabled={!questions.length || questions.length > QUESTION_LIMIT || lock}>Pokračovat
             </button>
         </div>
     );

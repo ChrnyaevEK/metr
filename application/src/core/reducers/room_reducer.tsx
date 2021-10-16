@@ -14,8 +14,10 @@ export const roomsReducer = (state: IState = initialState, action: PayloadAction
         case 'rooms/update':
         case 'rooms/partial_update':
         case 'rooms/retrieve':
-            state.room = action.payload
-            return state
+            return {
+                ...state,
+                room: action.payload
+            }
         default:
             return state
     }

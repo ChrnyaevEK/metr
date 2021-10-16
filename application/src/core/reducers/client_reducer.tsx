@@ -11,8 +11,10 @@ const initialState: IState = {
 export const clientsReducer = (state: IState = initialState, action: PayloadAction<any>) => {
     switch (action.type) {
         case 'clients/create':
-            state.client = action.payload
-            return state
+            return  {
+                ...state,
+                client: action.payload
+            }
         default:
             return state
     }

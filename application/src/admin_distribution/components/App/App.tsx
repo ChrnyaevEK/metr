@@ -12,6 +12,8 @@ import store from "../../../core/store"
 import ReviewPage from "../ReviewPage/ReviewPage";
 import CreatePage from "../CreatePage/CreatePage";
 import {HomePage} from "../HomePage/HomePage";
+import Logger from "../Utils/Logger/Logger";
+
 
 function App() {
     return (
@@ -20,6 +22,7 @@ function App() {
                 <div className="container h-100">
                     <div className="row d-flex justify-content-center align-items-center h-100">
                         <div className="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <Logger/>
                             <Switch>
                                 <Route path="/admin/:roomId">
                                     <ReviewPage/>

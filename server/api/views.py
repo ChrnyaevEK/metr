@@ -7,9 +7,7 @@ from api import models
 
 
 def validate_access_token(request, room):  # ...?access_token=hash...
-    permission_denied = PermissionDenied({
-        'message': 'Access token validation failed',
-    })
+    permission_denied = PermissionDenied('Access token validation failed')
     try:
         access_token = request.query_params['access_token']
     except KeyError:
@@ -21,12 +19,9 @@ def validate_access_token(request, room):  # ...?access_token=hash...
 
 def get_target_room(request):  # ...?room=hash...
     try:
-        print(request.query_params['room'])
         return models.Room.objects.get(pk=request.query_params['room'])
     except (models.Room.DoesNotExist, KeyError):
-        raise NotFound({
-            'message': 'Target room does not exist'
-        })
+        raise NotFound('Target room does not exist')
 
 
 class RoomViewSet(viewsets.ModelViewSet):
@@ -135,7 +130,6 @@ class ValidateRoomExist(APIView):
 
     @staticmethod
     def get(request, *args, **kwargs):
-        print(123)
         try:
             get_target_room(request)
         except NotFound:

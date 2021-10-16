@@ -1,16 +1,38 @@
 import $ from 'jquery'
 import {BASE_HTTP_URL} from "../share";
+import store from "./store";
 
-const baseApi = {
+export const baseApi = {
+    dispatch: (e: any) => {
+    },
     ajaxJSON: async (settings: JQueryAjaxSettings) => {
-        return $.ajax({
-            ...settings,
-            crossDomain: true,
-            dataType: 'json',
-            url: BASE_HTTP_URL + settings.url,
-            contentType: 'application/json',
-            data: JSON.stringify(settings.data)
-        });
+        let response;
+        try {
+            response = await $.ajax({
+                ...settings,
+                crossDomain: true,
+                dataType: 'json',
+                url: BASE_HTTP_URL + settings.url,
+                contentType: 'application/json',
+                data: JSON.stringify(settings.data)
+            });
+        } catch (e: any) {
+            store.dispatch({
+                type: 'logger/set/error',
+                payload: {
+                    detail: e.responseJSON ? e.responseJSON['detail'] : 'Server error',
+                    status: e.status || 500,
+                    protocol: 'http',
+                    timestamp: Date.now()
+                },
+            })
+            throw e
+        }
+        store.dispatch({
+            type: 'logger/unset/error',
+            payload: null,
+        })
+        return response
     }
 }
 

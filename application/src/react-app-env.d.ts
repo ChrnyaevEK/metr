@@ -32,6 +32,13 @@ interface ClientType {
     room: string,
 }
 
+interface ErrorType {
+    detail: string,
+    status: number,
+    protocol: string['http' | 'ws'],
+    timestamp: Date
+}
+
 interface IDisplayOptions {
     [key: string]: {
         title: string,

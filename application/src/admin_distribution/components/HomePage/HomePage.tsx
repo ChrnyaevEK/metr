@@ -6,6 +6,7 @@ import {
     useHistory
 } from "react-router-dom";
 import {validateRoomExist} from "../../../core/actions/room_actions";
+import {exec} from "child_process";
 
 export function HomePage() {
     const [roomId, setRoomId]: [string, any] = useState('')
@@ -17,7 +18,11 @@ export function HomePage() {
 
     useEffect(() => {
         (async () => {
-            setIsValid(await validateRoomExist(roomId))
+            try {
+                setIsValid(await validateRoomExist(roomId))
+            } catch (e) {
+                setIsValid(false)
+            }
         })()
     }, [roomId])
 
