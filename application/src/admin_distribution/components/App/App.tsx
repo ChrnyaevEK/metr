@@ -4,7 +4,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link, Redirect
 } from "react-router-dom";
 import {Provider} from "react-redux";
 import store from "../../../core/store"
@@ -27,8 +27,11 @@ function App() {
                                 <Route path="/admin">
                                     <CreatePage/>
                                 </Route>
-                                <Route path="*">
+                                <Route path="/home">
                                     <HomePage/>
+                                </Route>
+                                <Route path="*">
+                                    <Redirect to="/home"/>
                                 </Route>
                             </Switch>
                             <div className="font-small fixed-bottom d-flex justify-content-center px-3 py-1">

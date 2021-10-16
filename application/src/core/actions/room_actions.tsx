@@ -1,6 +1,7 @@
 import {ThunkDispatch} from "redux-thunk";
 import {AnyAction} from "@reduxjs/toolkit";
 import {viewSet} from "../viewSet";
+import {api} from '../api'
 
 export const retrieveRoom = (id: string) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
     dispatch({
@@ -28,4 +29,8 @@ export const createRoom = (id: string, data: RoomType) => async (dispatch: Thunk
         type: 'rooms/create',
         payload: await viewSet.create('rooms', data),
     })
+}
+
+export const validateRoomExist = async (id: string) => {
+    return await api.get({url: `/validate_room_exist?room=${id}`})
 }

@@ -7,10 +7,10 @@ def display_option_validator(item):
 
 
 class Room(models.Model):
-    id = HashidAutoField(primary_key=True)
+    id = HashidAutoField(primary_key=True, salt='room.id')
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
-    access_token = HashidField(unique=True, )  # Access token will allow to display answers
+    access_token = HashidField(unique=True, salt='room.access_token')  # Access token will allow to display answers
     use_color = models.BooleanField(default=True)
 
     def online_counter(self):
@@ -18,7 +18,7 @@ class Room(models.Model):
 
 
 class Question(models.Model):
-    id = HashidAutoField(primary_key=True)
+    id = HashidAutoField(primary_key=True, salt='question.id')
     time_created = models.DateTimeField(auto_now_add=True)
     room = models.ForeignKey(Room, models.CASCADE)
     # Name of widget to use when data is displayed
@@ -26,12 +26,12 @@ class Question(models.Model):
 
 
 class Client(models.Model):
-    id = HashidAutoField(primary_key=True)
+    id = HashidAutoField(primary_key=True, salt='client.id')
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
 
 class Answer(models.Model):
-    id = HashidAutoField(primary_key=True)
+    id = HashidAutoField(primary_key=True, salt='answer.id')
     time_created = models.DateTimeField(auto_now_add=True)
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
     question = models.ForeignKey(Question, models.CASCADE)

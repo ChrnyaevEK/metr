@@ -1,22 +1,29 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faUserFriends, faUserShield} from "@fortawesome/free-solid-svg-icons";
 import {
     Link,
     useHistory
 } from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {validateRoomExist} from "../../../core/actions/room_actions";
 
 export function HomePage() {
-    const dispatch = useDispatch()
     const [roomId, setRoomId]: [string, any] = useState('')
+    const [isValid, setIsValid]: [boolean, any] = useState(false)
+
     const getAdminRoomURL = () => '/admin/' + roomId
     const getPublicRoomURL = () => '/public/' + roomId
     let history = useHistory();
 
+    useEffect(() => {
+        (async () => {
+            setIsValid(await validateRoomExist(roomId))
+        })()
+    }, [roomId])
+
     return (
         <div>
-            <div className="font-big"><strong>Vítejte v aplikaci Metr!</strong></div>
+            <div className="font-big">Vítejte v aplikaci <strong className="text-secondary">METR</strong></div>
             <div className="font-middle text-secondary mb-5">Pro pokračování zadejte ID dotazníku</div>
             <div className="font-middle d-flex form-group">
                 <input type="text" className="form-control mr-1" placeholder="Zadejte ID dotazníku" onChange={(e) => {
@@ -33,7 +40,7 @@ export function HomePage() {
                         }}>
                     <FontAwesomeIcon icon={faUserFriends}/>
                 </button>
-                <button className="btn btn-success" title="Vutvořit nový dotazník" onClick={() => {
+                <button className="btn btn-success" title="Vytvořit nový dotazník" onClick={() => {
                     history.push('/admin/')
                 }}>
                     <FontAwesomeIcon icon={faPlus}/>
@@ -41,12 +48,13 @@ export function HomePage() {
             </div>
             <div className="d-flex flex-column font-small text-secondary">
                 {
-                    roomId.length ?
+                    (roomId.length && isValid) ?
                         <div>
                             <span className="mr-2"><Link to={getAdminRoomURL()}>Admin</Link></span>
-                            <a href={getPublicRoomURL()}>Public</a>
+                            <a className="mr-2" href={getPublicRoomURL()}>Public</a>
+                            <Link to='/admin/'>Vytvořit nový dotazník</Link>
                         </div> :
-                        <i>The best is yet to come...</i>
+                        <span>Dotazník neexistuje... <Link to='/admin/'>Vytvořit nový dotazník</Link></span>
                 }
             </div>
         </div>

@@ -21,6 +21,7 @@ def validate_access_token(request, room):  # ...?access_token=hash...
 
 def get_target_room(request):  # ...?room=hash...
     try:
+        print(request.query_params['room'])
         return models.Room.objects.get(pk=request.query_params['room'])
     except (models.Room.DoesNotExist, KeyError):
         raise NotFound({
@@ -122,5 +123,21 @@ class ValidateAccessToken(APIView):
             room = get_target_room(request)
             validate_access_token(request, room)
         except (PermissionDenied, NotFound):
+            return Response(False)
+        return Response(True)
+
+
+class ValidateRoomExist(APIView):
+    """ Validate room exists """
+
+    authentication_classes = []
+    permission_classes = []
+
+    @staticmethod
+    def get(request, *args, **kwargs):
+        print(123)
+        try:
+            get_target_room(request)
+        except NotFound:
             return Response(False)
         return Response(True)
