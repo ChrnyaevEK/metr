@@ -1,9 +1,10 @@
 from api import models
 from rest_framework import serializers
+from hashid_field.rest import HashidSerializerCharField
 
 
 class RoomSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
+    id = HashidSerializerCharField(read_only=True, source_field='api.Room.id')
     access_token = serializers.ReadOnlyField()
     online_counter = serializers.IntegerField(read_only=True)
 
@@ -13,7 +14,11 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
+    id = HashidSerializerCharField(read_only=True, source_field='api.Question.id')
+    room = serializers.PrimaryKeyRelatedField(
+        pk_field=HashidSerializerCharField(source_field='api.Room.id'),
+        queryset=models.Room.objects.all()
+    )
 
     class Meta:
         model = models.Question
@@ -21,7 +26,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class NumericAnswerSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
+    id = HashidSerializerCharField(read_only=True, source_field='api.NumericAnswer.id')
+    question = serializers.PrimaryKeyRelatedField(
+        pk_field=HashidSerializerCharField(source_field='api.Question.id'),
+        queryset=models.Question.objects.all()
+    )
     type = serializers.ReadOnlyField(default=models.NumericAnswer.type)
 
     class Meta:
@@ -30,8 +39,8 @@ class NumericAnswerSerializer(serializers.ModelSerializer):
 
 
 class ClientSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
+    id = HashidSerializerCharField(read_only=True, source_field='api.Client.id')
 
     class Meta:
-        model = models.NumericAnswer
+        model = models.Client
         fields = '__all__'

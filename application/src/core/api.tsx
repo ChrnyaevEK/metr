@@ -3,8 +3,6 @@ import {BASE_HTTP_URL} from "../share";
 import store from "./store";
 
 export const baseApi = {
-    dispatch: (e: any) => {
-    },
     ajaxJSON: async (settings: JQueryAjaxSettings) => {
         let response;
         try {
@@ -17,10 +15,11 @@ export const baseApi = {
                 data: JSON.stringify(settings.data)
             });
         } catch (e: any) {
+            console.error(e)
             store.dispatch({
                 type: 'logger/set/error',
                 payload: {
-                    detail: e.responseJSON ? e.responseJSON['detail'] : 'Server error',
+                    detail: e.responseJSON?.detail || 'Server error occurred...',
                     status: e.status || 500,
                     protocol: 'http',
                     timestamp: Date.now()

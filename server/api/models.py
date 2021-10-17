@@ -1,5 +1,5 @@
 from django.db import models
-from hashid_field import HashidAutoField, HashidField
+from hashid_field import HashidAutoField
 
 
 def display_option_validator(item):
@@ -10,7 +10,7 @@ class Room(models.Model):
     id = HashidAutoField(primary_key=True, salt='room.id')
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
-    access_token = HashidField(unique=True, salt='room.access_token')  # Access token will allow to display answers
+    access_token = models.CharField(max_length=36)  # Access token will allow to display answers
     use_color = models.BooleanField(default=True)
 
     def online_counter(self):
@@ -22,7 +22,7 @@ class Question(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     room = models.ForeignKey(Room, models.CASCADE)
     # Name of widget to use when data is displayed
-    display_option = models.CharField(max_length=20, validators=[display_option_validator])
+    display_option = models.CharField(max_length=100, validators=[display_option_validator])
 
 
 class Client(models.Model):

@@ -11,6 +11,10 @@ const initialState: IState = {
 export const roomsReducer = (state: IState = initialState, action: PayloadAction<any>) => {
     switch (action.type) {
         case 'rooms/create':
+            return {
+                ...state,
+                room: action.payload
+            }
         case 'rooms/update':
         case 'rooms/partial_update':
         case 'rooms/retrieve':

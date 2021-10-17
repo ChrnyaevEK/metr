@@ -1,13 +1,14 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import PermissionDenied, MethodNotAllowed, NotFound
+from rest_framework.exceptions import PermissionDenied, MethodNotAllowed, NotFound, ValidationError
 from api import serializers
 from api import models
+from uuid import uuid3, NAMESPACE_DNS
 
 
 def validate_access_token(request, room):  # ...?access_token=hash...
-    permission_denied = PermissionDenied('Access token validation failed')
+    permission_denied = PermissionDenied('Access access_token validation failed')
     try:
         access_token = request.query_params['access_token']
     except KeyError:
@@ -36,9 +37,12 @@ class RoomViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        room = self.get_object()
-        validate_access_token(request, room)
-        return super().create(request, *args, **kwargs)
+        room = self.model(**{
+            **request.data,
+            'access_token': str(uuid3(NAMESPACE_DNS, 'room.access_token'))
+        })
+        room.save()
+        return Response(self.serializer_class(room).data)
 
     def retrieve(self, request, *args, **kwargs):
         room = self.get_object()
@@ -107,7 +111,7 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 
 class ValidateAccessToken(APIView):
-    """ Validate access token against room hash """
+    """ Validate access access_token against room hash """
 
     authentication_classes = []
     permission_classes = []

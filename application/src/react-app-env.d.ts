@@ -3,8 +3,8 @@ interface RoomType {
     id?: string,
     time_created?: string,
     time_updated?: string,
-    access_token: string,
-    use_color: boolean
+    access_token?: string,
+    use_color?: boolean
 }
 
 interface QuestionType {
