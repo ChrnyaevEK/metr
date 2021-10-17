@@ -2,24 +2,40 @@ import {MouseEvent, ChangeEvent, KeyboardEvent, useState, useEffect, useRef, use
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {displayOptions, QUESTION_LIMIT} from "../../../share";
-import {createRoom} from "../../../core/actions/room_actions";
-import {createQuestion} from "../../../core/actions/questions_actions";
-import {viewSet} from "../../../core/viewSet";
-import {useDispatch, useSelector} from "react-redux";
-import store, {RootState} from "../../../core/store";
+import {createRoomNoStore} from "../../../core/actions/room_actions";
+import {createQuestionNoStore} from "../../../core/actions/questions_actions";
+import {useHistory} from "react-router-dom";
 
+interface IQuestionProps {
+    question: QuestionType,
+    setQuestions: any,
+    lock: boolean,
+}
+
+function Question(props: IQuestionProps) {
+    const handleRemoveQuestion = (e: MouseEvent<HTMLButtonElement>) => {
+        props.setQuestions((questions: QuestionType[]) => {
+            return [...questions.filter(q => q.value !== props.question.value)]
+        })
+    }
+
+    return (
+        <div className="border px-2 py-0 font-middle d-flex align-items-center mb-1">
+            <div className="text-truncate mr-1 flex-grow-1">
+                <strong>{props.question.value}</strong>
+            </div>
+            <strong className="text-secondary mr-1">{displayOptions[props.question.display_option].title}</strong>
+            <button className="btn" onClick={handleRemoveQuestion} disabled={props.lock}>
+                <FontAwesomeIcon icon={faTimes} className="text-danger"/>
+            </button>
+        </div>
+    )
+}
 
 export function CreatePage() {
-    const dispatch = useDispatch()
-    const [lock, setLock]: [boolean, any] = useState(false)
+    const history = useHistory()
 
-    // For this hell say thanks to React ..
-    // https://stackoverflow.com/questions/61515547/redux-useselector-not-updated-need-to-be-refresh
-    const room = useSelector((state: RootState) => state.roomManager.room)
-    const roomRef = useRef(room);
-    useLayoutEffect(() => {
-        roomRef.current = room;
-    }, [room]);
+    const [lock, setLock]: [boolean, any] = useState(false)
 
     const [questions, setQuestions]: [QuestionType[], any] = useState([])
     const [question, setQuestion]: [QuestionType, any] = useState({
@@ -29,29 +45,6 @@ export function CreatePage() {
         display_option: 'numeric_range_optimum',
         value: ''
     })
-
-    function Question(props: {
-        question: QuestionType,
-        setQuestions: any,
-    }) {
-        const handleRemoveQuestion = (e: MouseEvent<HTMLButtonElement>) => {
-            props.setQuestions((questions: QuestionType[]) => {
-                return [...questions.filter(q => q.value !== props.question.value)]
-            })
-        }
-
-        return (
-            <div className="border px-2 py-0 font-middle d-flex align-items-center mb-1">
-                <div className="text-truncate mr-1 flex-grow-1">
-                    <strong>{props.question.value}</strong>
-                </div>
-                <strong className="text-secondary mr-1">{displayOptions[props.question.display_option].title}</strong>
-                <button className="btn" onClick={handleRemoveQuestion} disabled={lock}>
-                    <FontAwesomeIcon icon={faTimes} className="text-danger"/>
-                </button>
-            </div>
-        )
-    }
 
     const handleAddQuestion = () => {
         if (question.value.length && !questions.includes(question) && questions.length < QUESTION_LIMIT) {
@@ -76,15 +69,14 @@ export function CreatePage() {
 
     const handleContinue = async () => {
         setLock(true)  // Lock buttons
-        await dispatch(createRoom({}))  // Create room
-        console.log(questions)
+        let room = await createRoomNoStore({})  // Create room
         for (let questionTmp of questions) {  // Create all questions
-            await dispatch(createQuestion({
+            await createQuestionNoStore({
                 ...questionTmp,
-                room: roomRef.current.id
-            }))
+                room: room.id
+            })
         }
-        setLock(false)
+        history.push(`/admin/${room.id}/`)
     }
 
     return (
@@ -97,7 +89,7 @@ export function CreatePage() {
                 Přepravte si hodnoty pro sledování a zvolte jejich skupinu
             </div>
             {questions.map(
-                (q, i) => <Question setQuestions={setQuestions} question={q} key={q.value}/>
+                (q, i) => <Question setQuestions={setQuestions} question={q} lock={lock} key={q.value}/>
             )}
             <div className="form-group d-flex mb-3">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
@@ -114,8 +106,8 @@ export function CreatePage() {
                             id="create-page-display-type-selection"
                             disabled={questions.length === QUESTION_LIMIT || lock}>
                         {
-                            Object.entries(displayOptions).map(([k, v], i) => <option key={k}
-                                                                                      value={k}>{v.title}</option>)
+                            Object.entries(displayOptions)
+                                .map(([k, v], i) => <option key={k} value={k}>{v.title}</option>)
                         }
                     </select>
                     <button className="btn btn-success" onClick={handleAddQuestionButtonPress}

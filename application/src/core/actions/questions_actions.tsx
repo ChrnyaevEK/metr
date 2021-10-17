@@ -22,3 +22,8 @@ export const createQuestion = (data: QuestionType) => async (dispatch: ThunkDisp
         payload: await viewSet.create('questions', data),
     })
 }
+
+export const createQuestionNoStore = async (data: QuestionType) => {
+    // Create action should not change store state - store represent URL location and should be fetched on page loadedc
+    return await viewSet.create('questions', data)
+}

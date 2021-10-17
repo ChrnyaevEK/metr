@@ -30,6 +30,10 @@ export const createRoom = (data: RoomType) => async (dispatch: ThunkDispatch<{},
     })
 }
 
+export const createRoomNoStore = async (data: RoomType) => {
+    return await viewSet.create('rooms', data)
+}
+
 export const validateRoomExist = async (id: string) => {
     return await api.get({url: `/validate_room_exist?room=${id}`})
 }

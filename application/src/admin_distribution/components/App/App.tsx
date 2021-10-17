@@ -39,7 +39,8 @@ function App() {
                                     </Route>
                                 </Switch>
                                 <div className="font-small fixed-bottom d-flex justify-content-center px-3 py-1">
-                                    <Link to="/">Home</Link>
+                                    <Link to="/" className="mr-5">Domů</Link>
+                                    <Link to="/admin/">Nový dotazník</Link>
                                 </div>
                             </div>
                         </div>
