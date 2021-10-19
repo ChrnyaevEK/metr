@@ -11,6 +11,7 @@ constantly==15.1.0
 cryptography==35.0.0
 daphne==3.0.2
 Django==3.2.8
+django-cors-headers==3.10.0
 django-filter==21.1
 django-hashid-field==3.3.2
 djangorestframework==3.12.4

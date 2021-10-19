@@ -1,7 +1,23 @@
 # Metr
-Metr je aplikace, která dokáže zprostředkovat rychlou zpětnou vazbu mezi přednášejícím a studentem během přednášky!
-Jde o nápad live sledování “stavu přednášky”. Student bude mít možnost anonymně hodnotit rychlost výkladu, pochopitelnost látky a jiné podobné parametry v libovolný okamžik výkladu. Současně přednášející bude vidět průměr těch hodnot a bude moct na to reagovat (třeba zpomalí nebo předělá příliš komplikovaný materiál).
-Aplikace nevyžaduje přihlášení (up and go), stačí vytvořit dotazn9k a můžete sdílet odkazy pro studenty, třeba pomocí QR kódu. Dále bude nějaké výchozí nastavení zobrazení výsledků, které se dá upravit podle potřeb (třeba přidat graf časového vývoje hodnoty, nebo barevné zobrazení apod...). Na straně studenta je to jen sada otázek a slidery pro odpověď. Odesílá se to automaticky, kvůli rychlosti a jednoduchosti práce. Anonymita je důležitou součástí aplikace.
 
-# Jaké problémy řeší aplikace?
-Primárně jednoduchost, rychlost a jakou si “bezpečnost” odezvy, pak přehlednost a úplnost informací o stavu přednášky. Předpokládám, že to je výhodnější pro větší přednáškové skupiny, kde je ta možnost komunikaci omezena.
+Welcome to the **metr** application! This app allow students to rate lectures online and teachers to react to those rates to reach the best lecture quality ever!
+
+
+## Development 
+
+### Install
+
+Project is compilable with `python 3`.
+
+Run `pip install -r requirements.txt` to install required dependencies.
+
+Install `redis` database. Make sure it runs on `localhost:6379`. Redis is used with `django channels`.
+
+### Development workflow
+
+To run **development server** use standard django command
+`python manage.py runserver`, which will create development database locally with default settings.
+
+Apply all migrations with `python manage.py migrate`. 
+
+Create super user with `python manage.py createsuperuser` using any username and password.
