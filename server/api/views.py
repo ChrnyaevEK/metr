@@ -62,10 +62,9 @@ class QuestionViewSet(viewsets.ModelViewSet):
     permission_classes = []
 
     def get_queryset(self):
-        # room = get_target_room(self.request)
-        # validate_access_token(self.request, room)
-        # return self.model.objects.filter(room=room)
-        return self.model.objects.all()
+        room = get_target_room(self.request)
+        validate_access_token(self.request, room)
+        return self.model.objects.filter(room=room)
 
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed('Destroy')

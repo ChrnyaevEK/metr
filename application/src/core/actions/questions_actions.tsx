@@ -2,14 +2,14 @@ import {ThunkDispatch} from "redux-thunk";
 import {AnyAction} from "@reduxjs/toolkit";
 import {viewSet} from "../viewSet";
 
-export const listQuestions = () => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
+export const listQuestions = (roomId: string) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
     dispatch({
         type: 'questions/list',
         payload: await viewSet.list('questions'),
     })
 }
 
-export const retrieveQuestion = (id: string) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
+export const retrieveQuestion = (roomId: string, id: string) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
     dispatch({
         type: 'questions/retrieve',
         payload: await viewSet.retrieve(id, 'questions'),

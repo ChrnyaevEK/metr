@@ -1,8 +1,12 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
 import Slider from "../Widgets/Slider/Slider";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {displayOptions} from "../../../share";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../core/store";
+import {retrieveRoom} from "../../../core/actions/room_actions";
+import {listQuestions} from "../../../core/actions/questions_actions";
 
 interface IQuestionGroup {
     questions: JSX.Element[]
@@ -19,24 +23,19 @@ function QuestionGroup(props: IQuestionGroup) {
 }
 
 export function ReviewPage() {
-    const questions: QuestionType[] = [
-        {
-            id: '1',
-            time_created: '',
-            room: '',
-            value: 'Test question',
-            display_option: 'numeric_range_optimum',
-        },
-    ]
+    const dispatch = useDispatch()
 
-    const answers: NumericAnswer[] = []
-    const room: RoomType = {
-        id: '',
-        time_created: '',
-        time_updated: '',
-        access_token: '',
-        use_color: true
-    }
+    const room = useSelector((state: RootState) => state.roomManager.room)
+    const questions = useSelector((state: RootState) => state.questionManager.questions)
+    const answers = useSelector((state: RootState) => state.answerManager.answers)
+
+    useEffect(() => {
+        (async () => {
+            await dispatch(retrieveRoom())
+            await dispatch(listQuestions())
+
+        })()
+    }, [])
 
     const [presentation, setPresentation]: [boolean, any] = useState(false)
 
