@@ -20,4 +20,7 @@ To run **development server** use standard django command
 
 Apply all migrations with `python manage.py migrate`. 
 
+Collect static files with `python manage.py collectstatic`.
+
+
 Create super user with `python manage.py createsuperuser` using any username and password.
