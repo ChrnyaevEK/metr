@@ -5,13 +5,15 @@ interface IState {
 }
 
 const initialState: IState = {
-    client: null,
+    client: null
 }
 
 export const clientsReducer = (state: IState = initialState, action: PayloadAction<any>) => {
     switch (action.type) {
-        case 'clients/create':
-            return  {
+        case 'client/retrieve':
+        case 'client/update':
+        case 'client/create':
+            return {
                 ...state,
                 client: action.payload
             }

@@ -47,7 +47,6 @@ export function AnswerPage() {
         id: 'xxyyzz',
         time_created: '',
         time_updated: '',
-        access_token: '',
         use_color: true
     }
 

@@ -25,15 +25,9 @@ function App() {
                             <div className="col-12 col-sm-10 col-md-8 col-lg-6">
                                 <Logger/>
                                 <Switch>
-                                    <Route path="/admin/:roomId">
-                                        <ReviewPage/>
-                                    </Route>
-                                    <Route path="/admin">
-                                        <CreatePage/>
-                                    </Route>
-                                    <Route path="/home">
-                                        <HomePage/>
-                                    </Route>
+                                    <Route path="/admin/:roomId" component={ReviewPage}/>
+                                    <Route path="/admin/" component={CreatePage}/>
+                                    <Route path="/home" component={HomePage}/>
                                     <Route path="*">
                                         <Redirect to="/home"/>
                                     </Route>

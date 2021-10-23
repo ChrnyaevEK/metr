@@ -19,13 +19,12 @@ export function Slider(props: SliderProps) {
         setValue(total)
         setRangeStyle(displayOptions[props.question.display_option].color_shifter(value))
     }, [props.answers])  // TODO check
-
     return (
         <div className="d-flex flex-column mb-2">
             <div className="font-middle text-truncate"><strong>{props.question.value}</strong></div>
-            <input style={{'filter': rangeStyle}} type="range" className="slider" min={0} max={100} value={value}/>
+            <input style={{'filter': rangeStyle}} type="range" className="slider" min={0} max={100} value={value} readOnly={true}/>
             <div className="d-flex justify-content-between font-tiny text-secondary">
-                {displayOptions[props.question.display_option].text_equivalents.map((vl: string) => <span>{vl}</span>)}
+                {displayOptions[props.question.display_option].text_equivalents.map((vl: string) => <span key={vl}>{vl}</span>)}
             </div>
         </div>
     )

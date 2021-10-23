@@ -8,7 +8,7 @@ import loggerReducer from "./reducers/logger_reducer";
 import clientsReducer from "./reducers/client_reducer";
 
 const rootReducer = combineReducers({
-    clientManager: clientsReducer,
+    clientsManager: clientsReducer,
     questionManager: questionsReducer,
     answerManager: answersReducer,
     roomManager: roomsReducer,

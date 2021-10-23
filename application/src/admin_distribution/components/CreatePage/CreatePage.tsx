@@ -2,9 +2,11 @@ import {MouseEvent, ChangeEvent, KeyboardEvent, useState, useEffect, useRef, use
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {displayOptions, QUESTION_LIMIT} from "../../../share";
-import {createRoomNoStore} from "../../../core/actions/room_actions";
-import {createQuestionNoStore} from "../../../core/actions/questions_actions";
+import {createRoom} from "../../../core/actions/room_actions";
+import {createQuestion} from "../../../core/actions/questions_actions";
 import {useHistory} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../core/store";
 
 interface IQuestionProps {
     question: QuestionType,
@@ -34,6 +36,14 @@ function Question(props: IQuestionProps) {
 
 export function CreatePage() {
     const history = useHistory()
+    const dispatch = useDispatch()
+
+    const room = useSelector((state: RootState) => state.roomManager.room)
+    const roomRef = useRef(room)
+    useLayoutEffect(() => {
+        roomRef.current = room;
+    }, [room]);
+
 
     const [lock, setLock]: [boolean, any] = useState(false)
 
@@ -69,14 +79,14 @@ export function CreatePage() {
 
     const handleContinue = async () => {
         setLock(true)  // Lock buttons
-        let room = await createRoomNoStore({})  // Create room
+        await dispatch(createRoom({}))  // Create room
         for (let questionTmp of questions) {  // Create all questions
-            await createQuestionNoStore({
+            await dispatch(createQuestion({
                 ...questionTmp,
-                room: room.id
-            })
+                room: roomRef.current.id
+            }))
         }
-        history.push(`/admin/${room.id}/`)
+        history.push(`/admin/${roomRef.current.id}/`)
     }
 
     return (
