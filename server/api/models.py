@@ -27,6 +27,7 @@ class Question(models.Model):
 
 class Client(models.Model):
     id = HashidAutoField(primary_key=True, salt='client.id')
+    time_created = models.DateTimeField(auto_now_add=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
 
