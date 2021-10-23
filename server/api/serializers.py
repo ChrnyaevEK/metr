@@ -5,7 +5,6 @@ from hashid_field.rest import HashidSerializerCharField
 
 class RoomSerializer(serializers.ModelSerializer):
     id = HashidSerializerCharField(read_only=True, source_field='api.Room.id')
-    access_token = serializers.ReadOnlyField()
     online_counter = serializers.IntegerField(read_only=True)
 
     class Meta:

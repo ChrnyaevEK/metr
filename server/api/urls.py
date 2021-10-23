@@ -10,6 +10,5 @@ router.register(r'clients', views.ClientViewSet, 'client')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('validate_access_token', views.ValidateAccessToken.as_view()),
     path('validate_room_exist', views.ValidateRoomExist.as_view())
 ]

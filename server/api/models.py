@@ -10,7 +10,6 @@ class Room(models.Model):
     id = HashidAutoField(primary_key=True, salt='room.id')
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
-    access_token = models.CharField(max_length=36)  # Access token will allow to display answers
     use_color = models.BooleanField(default=True)
 
     def online_counter(self):
@@ -23,6 +22,7 @@ class Question(models.Model):
     room = models.ForeignKey(Room, models.CASCADE)
     # Name of widget to use when data is displayed
     display_option = models.CharField(max_length=100, validators=[display_option_validator])
+    value = models.CharField(max_length=1000)
 
 
 class Client(models.Model):
