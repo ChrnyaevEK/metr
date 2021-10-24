@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, KeyboardEvent} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import {
@@ -31,8 +31,14 @@ export function HomePage() {
                 <input type="text" className="form-control mr-1" placeholder="Zadejte ID přednášky..."
                        onChange={(e) => {
                            setRoomId(e.target.value)
-                       }}/>
-                <button className="btn btn-success" disabled={!roomId.length} onClick={() => {
+                       }}
+                       onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
+                           if (e.key === 'Enter' && isValid) {
+                               history.push(getRoomURL())
+                           }
+                       }}
+                />
+                <button className="btn btn-success" disabled={!isValid} onClick={() => {
                     history.push(getRoomURL())
                 }}>
                     <FontAwesomeIcon icon={faArrowRight}/>
@@ -43,7 +49,7 @@ export function HomePage() {
                     <div className="font-small text-secondary position-absolute">
                         {
                             isValid ?
-                                <Link to={getRoomURL()}>Hlasování</Link> :
+                                <Link to={getRoomURL()}>Otevřit hlasování</Link> :
                                 <span>Přednáška neexistuje...</span>
                         }
                     </div> : null
