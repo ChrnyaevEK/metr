@@ -24,6 +24,11 @@ class Question(models.Model):
     display_option = models.CharField(max_length=100, validators=[display_option_validator])
     value = models.CharField(max_length=1000)
 
+    @property
+    def rate(self):
+        # TODO Implement
+        return 10
+
 
 class Client(models.Model):
     id = HashidAutoField(primary_key=True, salt='client.id')
