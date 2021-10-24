@@ -16,7 +16,7 @@ export const retrieveQuestion = (roomId: string, id: string) => async (dispatch:
     })
 }
 
-export const createQuestion = (data: QuestionType) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
+export const createQuestion = (data: QuestionPrototype) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
     dispatch({
         type: 'questions/create',
         payload: await viewSet.create('questions', data),

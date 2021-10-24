@@ -9,15 +9,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
 import {Button} from "react-bootstrap";
 
-interface IQuestionProps {
-    question: QuestionType,
+interface QuestionComponentProps {
+    question: QuestionPrototype,
     setQuestions: any,
     lock: boolean,
 }
 
-function Question(props: IQuestionProps) {
+function Question(props: QuestionComponentProps) {
     const handleRemoveQuestion = (e: MouseEvent<HTMLButtonElement>) => {
-        props.setQuestions((questions: QuestionType[]) => {
+        props.setQuestions((questions: QuestionPrototype[]) => {
             return [...questions.filter(q => q.value !== props.question.value)]
         })
     }
@@ -38,25 +38,15 @@ function Question(props: IQuestionProps) {
 export function CreatePage() {
     const history = useHistory()
     const dispatch = useDispatch()
-
     const room = useSelector((state: RootState) => state.roomManager.room)
     const roomRef = useRef(room)
-    useLayoutEffect(() => {
-        roomRef.current = room;
-    }, [room]);
-
-
     const [lock, setLock]: [boolean, any] = useState(false)
-
-    const [questions, setQuestions]: [QuestionType[], any] = useState([])
-    const [question, setQuestion]: [QuestionType, any] = useState({
-        room: '',
-        time_created: '',
+    const [questions, setQuestions]: [QuestionPrototype[], any] = useState([])
+    const [question, setQuestion]: [QuestionPrototype, any] = useState({
         display_option: 'numeric_range_optimum',
+        room: '',
         value: '',
-        rate: 0
     })
-
     const handleAddQuestion = () => {
         if (question.value.length && !questions.includes(question) && questions.length < QUESTION_LIMIT) {
             setQuestions([...questions, question])
@@ -81,14 +71,16 @@ export function CreatePage() {
     const handleContinue = async () => {
         setLock(true)  // Lock buttons
         await dispatch(createRoom({}))  // Create room
-        for (let questionTmp of questions) {  // Create all questions
-            await dispatch(createQuestion({
-                ...questionTmp,
-                room: roomRef.current.id
-            }))
+        for (let q of questions) {  // Create all questions
+            q.room = roomRef.current.id
+            await dispatch(createQuestion(q))
         }
         history.push(`/admin/${roomRef.current.id}/`)
     }
+
+    useLayoutEffect(() => {
+        roomRef.current = room;
+    }, [room]);
 
     return (
         <div>

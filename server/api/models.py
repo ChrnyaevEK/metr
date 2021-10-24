@@ -46,7 +46,7 @@ class Answer(models.Model):
 
 
 class NumericAnswer(Answer):
-    type = 'numeric_answer'
+    type = 'numeric_answers'
     value = models.FloatField(default=0)
 
 

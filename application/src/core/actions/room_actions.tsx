@@ -9,21 +9,21 @@ export const retrieveRoom = (id: string) => async (dispatch: ThunkDispatch<{}, {
         payload: await viewSet.retrieve(id, 'rooms'),
     })
 }
-export const updateRoom = (id: string, data: RoomType) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
+export const updateRoom = (id: string, data: RoomPrototype) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
     dispatch({
         type: 'rooms/update',
         payload: await viewSet.update(id, 'rooms', data),
     })
 }
 
-export const partialUpdateRoom = (id: string, data: RoomType) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
+export const partialUpdateRoom = (id: string, data: RoomPrototype) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
     dispatch({
         type: 'rooms/partial_update',
         payload: await viewSet.partial_update(id, 'rooms', data),
     })
 }
 
-export const createRoom = (data: RoomType) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
+export const createRoom = (data: RoomPrototype) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
     dispatch({
         type: 'rooms/create',
         payload: await viewSet.create('rooms', data),

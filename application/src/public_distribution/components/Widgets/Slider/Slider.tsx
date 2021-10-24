@@ -17,7 +17,7 @@ export function Slider(props: ISlider) {
             <div className="d-flex justify-content-between">
                 {
                     displayOptions[props.question.display_option].text_equivalents.map((v) => {
-                        return <span className="font-small text-secondary">{v}</span>
+                        return <span key={v} className="font-small text-secondary">{v}</span>
                     })
                 }
             </div>

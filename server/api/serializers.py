@@ -31,6 +31,10 @@ class NumericAnswerSerializer(serializers.ModelSerializer):
         pk_field=HashidSerializerCharField(source_field='api.Question.id'),
         queryset=models.Question.objects.all()
     )
+    client = serializers.PrimaryKeyRelatedField(
+        pk_field=HashidSerializerCharField(source_field='api.Client.id'),
+        queryset=models.Client.objects.all()
+    )
     type = serializers.ReadOnlyField(default=models.NumericAnswer.type)
 
     class Meta:
@@ -40,6 +44,10 @@ class NumericAnswerSerializer(serializers.ModelSerializer):
 
 class ClientSerializer(serializers.ModelSerializer):
     id = HashidSerializerCharField(read_only=True, source_field='api.Client.id')
+    room = serializers.PrimaryKeyRelatedField(
+        pk_field=HashidSerializerCharField(source_field='api.Room.id'),
+        queryset=models.Room.objects.all()
+    )
 
     class Meta:
         model = models.Client
