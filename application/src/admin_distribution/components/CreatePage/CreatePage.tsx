@@ -7,6 +7,7 @@ import {createQuestion} from "../../../core/actions/questions_actions";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
+import {Button} from "react-bootstrap";
 
 interface IQuestionProps {
     question: QuestionType,
@@ -22,14 +23,14 @@ function Question(props: IQuestionProps) {
     }
 
     return (
-        <div className="border px-2 py-0 font-middle d-flex align-items-center mb-1">
+        <div className="border px-2 py-1 font-middle d-flex align-items-center mb-1">
             <div className="text-truncate mr-1 flex-grow-1">
                 <strong>{props.question.value}</strong>
             </div>
-            <strong className="text-secondary mr-1">{displayOptions[props.question.display_option].title}</strong>
-            <button className="btn" onClick={handleRemoveQuestion} disabled={props.lock}>
+            <span className="text-secondary mr-1">{displayOptions[props.question.display_option].title}</span>
+            <Button variant="light" onClick={handleRemoveQuestion} disabled={props.lock}>
                 <FontAwesomeIcon icon={faTimes} className="text-danger"/>
-            </button>
+            </Button>
         </div>
     )
 }
@@ -92,7 +93,7 @@ export function CreatePage() {
     return (
         <div>
             <div className="font-big mb-3 d-flex justify-content-between">
-                <strong>Nová přednášku</strong><strong
+                <strong>Nová přednáška</strong><strong
                 className="text-secondary">{questions.length}/{QUESTION_LIMIT}</strong>
             </div>
             <div className="font-middle text-secondary mb-3">
@@ -101,7 +102,7 @@ export function CreatePage() {
             {questions.map(
                 (q, i) => <Question setQuestions={setQuestions} question={q} lock={lock} key={q.value}/>
             )}
-            <div className="form-group d-flex mb-3">
+            <div className="form-group d-flex mb-1">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
                     <input type="text" id="create-page-question-input" className="form-control"
                            value={question.value}
@@ -120,16 +121,16 @@ export function CreatePage() {
                                 .map(([k, v], i) => <option key={k} value={k}>{v.title}</option>)
                         }
                     </select>
-                    <button className="btn btn-success" onClick={handleAddQuestionButtonPress}
+                    <Button variant="success" onClick={handleAddQuestionButtonPress}
                             disabled={!question.value.length || questions.includes(question) || questions.length === QUESTION_LIMIT || lock}>
                         <FontAwesomeIcon icon={faPlus}/>
-                    </button>
+                    </Button>
                 </div>
             </div>
-            <button className="btn btn-success w-100"
+            <Button variant="success" className="w-100"
                     onClick={handleContinue}
                     disabled={!questions.length || questions.length > QUESTION_LIMIT || lock}>Pokračovat
-            </button>
+            </Button>
         </div>
     );
 }

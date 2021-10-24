@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import {validateRoomExist} from "../../../core/actions/room_actions";
 import {exec} from "child_process";
+import {Button} from "react-bootstrap";
 
 export function HomePage() {
     const [roomId, setRoomId]: [string, any] = useState('')
@@ -35,27 +36,28 @@ export function HomePage() {
                        }}/>
                 {
                     isValid ?
-                        <button className="btn btn-success mr-1" title="Administrace" disabled={!roomId.length}
+                        <Button className="mr-1" variant="success" title="Administrace" disabled={!roomId.length}
                                 onClick={() => {
                                     history.push(getAdminRoomURL())
                                 }}>
                             <FontAwesomeIcon icon={faUserShield}/>
-                        </button> : null
+                        </Button> : null
                 }
                 {
                     isValid ?
-                        <button className="btn btn-success mr-1" title="Stránka pro veřejnost" disabled={!roomId.length}
+                        <Button variant="success" className="mr-1" title="Stránka pro veřejnost"
+                                disabled={!roomId.length}
                                 onClick={() => {
                                     window.location.href = getPublicRoomURL()
                                 }}>
                             <FontAwesomeIcon icon={faUserFriends}/>
-                        </button> : null
+                        </Button> : null
                 }
-                <button className="btn btn-success" title="Vytvořit novou přednášku" onClick={() => {
+                <Button variant="success" title="Vytvořit novou přednášku" onClick={() => {
                     history.push('/admin/')
                 }}>
                     <FontAwesomeIcon icon={faPlus}/>
-                </button>
+                </Button>
             </div>
             {
                 roomId.length ?
