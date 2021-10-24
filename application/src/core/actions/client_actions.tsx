@@ -3,8 +3,8 @@ import {AnyAction} from "@reduxjs/toolkit";
 import {viewSet} from "../viewSet";
 
 export const createClient = (data: ClientPrototype) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
-    dispatch({
+    return dispatch({
         type: 'client/create',
         payload: await viewSet.create('clients', data),
-    })
+    }).payload
 }

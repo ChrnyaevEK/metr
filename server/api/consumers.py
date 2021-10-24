@@ -3,7 +3,6 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from api import models
 import json
-from collections import defaultdict
 
 
 class Counter:
@@ -34,9 +33,13 @@ class PublicPoll(WebsocketConsumer):
                 }
             )
 
+    def receive(self, text_data=None, bytes_data=None):
+        event = json.loads(text_data)
+        if event['type'] == 'bind_client':
+            self.bind_client(event['message']['id'])
+
     # Match WS with client
-    def bind_client(self, event):
-        client_id = event['message']
+    def bind_client(self, client_id):
         if models.Client.objects.filter(pk=client_id).exists():
             self.client_id = client_id
 
@@ -50,7 +53,6 @@ class PublicPoll(WebsocketConsumer):
 
     def disconnect(self, code):
         async_to_sync(self.channel_layer.group_discard)(self.public_group_name, self.channel_name)
-
         try:
             models.Client.objects.get(pk=self.client_id).delete()
         except models.Client.DoesNotExist:

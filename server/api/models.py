@@ -1,5 +1,6 @@
 from django.db import models
 from hashid_field import HashidAutoField
+from api.consumers import Counter
 
 
 def display_option_validator(item):
@@ -14,6 +15,9 @@ class Room(models.Model):
 
     def online_counter(self):
         return Client.objects.filter(room=self).count()
+
+    def is_online(self):
+        return self.id in Counter.admin_counter
 
 
 class Question(models.Model):

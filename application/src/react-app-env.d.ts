@@ -5,6 +5,7 @@ interface RoomType {
     time_updated: string,
     use_color: boolean
     online_counter: number,
+    is_online: boolean,
 }
 
 interface RoomPrototype {
@@ -72,5 +73,6 @@ interface IDisplayOptions {
 }
 
 interface WSEvent {
-    type: string
+    type: string,
+    message?: any
 }

@@ -5,6 +5,10 @@ class WS {
     connection: WebSocket | undefined
     onmessage: any
 
+    send = (event: WSEvent) => {
+        this.connection?.send(JSON.stringify(event))
+    }
+
     open = (group: string, room: string, onMessage: (e: WSEvent) => void) => {
         this.onmessage = onMessage
         this.url = `${BASE_WS_URL}/ws/${group}/${room}/`

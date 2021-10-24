@@ -12,6 +12,7 @@ import {listQuestions} from "../../../core/actions/questions_actions";
 import {useEffect, useRef, useState} from "react";
 import {createClient} from "../../../core/actions/client_actions";
 import QRCode from "react-qr-code";
+import WS from "../../../core/ws";
 
 interface IQuestionGroup {
     questions: JSX.Element[]
@@ -31,19 +32,27 @@ function QuestionGroup(props: IQuestionGroup) {
     )
 }
 
+const ws = new WS()
+
 export function AnswerPage({match}: RouteComponentProps<TParams>) {
     const timeout = 2000 // Save timeout [s]
+
     const dispatch = useDispatch()
+
     const [showShare, setShowShare] = useState(false);
     const handleClose = () => setShowShare(false);
     const handleShow = () => setShowShare(true);
+
     const room: RoomType = useSelector((state: RootState) => state.roomManager.room)
     const questions: QuestionType[] = useSelector((state: RootState) => state.questionManager.questions)
     const client: ClientType = useSelector((state: RootState) => state.clientsManager.client)
+
     const [saveTimeoutId, setSaveTimeoutId]: [number | null, any] = useState(null)
+    const [saved, setSaved] = useState(false)
+
     const [tempAnswers, setTempAnswers]: [NumericAnswerPrototype[], any] = useState([])
     const tempAnswersRef = useRef(tempAnswers)
-    const [saved, setSaved] = useState(false)
+
     const handleAddAnswer = (question: QuestionType, value: number) => {
         setSaved(false)
         let ans = tempAnswers.filter((a) => a.question !== question.id)
@@ -52,6 +61,17 @@ export function AnswerPage({match}: RouteComponentProps<TParams>) {
             client: client.id,
             question: question.id,
         }])
+    }
+
+    const handleMessage = (e: WSEvent) => {
+        switch (e.type) {
+            case 'admin_connect':
+            case 'admin_disconnect':
+                triggerUpdate()
+                break
+            default:
+                throw `Unknown WS event ${e.type}`
+        }
     }
 
     useEffect(() => {
@@ -69,19 +89,30 @@ export function AnswerPage({match}: RouteComponentProps<TParams>) {
         }
     }, [tempAnswers])
 
+    const triggerUpdate = async () => {
+        ws.send({
+            type: 'bind_client',
+            message: await dispatch(createClient({room: match.params.roomId}))
+        })
+        await dispatch(retrieveRoom(match.params.roomId))
+        await dispatch(listQuestions(match.params.roomId))
+    }
+
     // Retrieve data for the first time, on error - display error
     useEffect(() => {
         (async () => {
-            await dispatch(createClient({room: match.params.roomId}))
-            await dispatch(retrieveRoom(match.params.roomId))
-            await dispatch(listQuestions(match.params.roomId))
+            ws.open('public_poll', match.params.roomId, handleMessage)
+            triggerUpdate()
         })()
     }, [])
 
     return (
         <div>
             <div className="font-big d-flex justify-content-between mb-2">
-                <strong>Hlasování @ {room?.id}</strong>
+                <div>
+                    <strong className="mr-2">Přednáška @ {room?.id}</strong>
+                    <strong className="font-small mb-3 text-info"> {room?.is_online ? 'online' : 'offline'}</strong>
+                </div>
                 <Button variant="light" onClick={handleShow}><FontAwesomeIcon icon={faShareAlt}/></Button>
                 <Modal show={showShare} onHide={handleClose} centered className="d-flex">
                     <Modal.Body>
