@@ -2,6 +2,7 @@ from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from api import models
+import json
 
 
 class PublicPoll(WebsocketConsumer):
@@ -58,6 +59,12 @@ class PublicPoll(WebsocketConsumer):
             }
         )
 
+    def admin_connect(self, event):
+        self.send(json.dumps(event))
+
+    def admin_disconnect(self, event):
+        self.send(json.dumps(event))
+
 
 class AdminPoll(WebsocketConsumer):
     room = None
@@ -93,3 +100,12 @@ class AdminPoll(WebsocketConsumer):
                     'type': 'admin_disconnect',
                 }
             )
+
+    def public_connect(self, event):
+        self.send(json.dumps(event))
+
+    def state_change(self, event):
+        self.send(json.dumps(event))
+
+    def public_disconnect(self, event):
+        self.send(json.dumps(event))
