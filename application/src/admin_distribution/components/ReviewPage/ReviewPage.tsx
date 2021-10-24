@@ -1,14 +1,15 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
 import Slider from "../Widgets/Slider/Slider";
-import {KeyboardEvent, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {displayOptions} from "../../../share";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
 import {retrieveRoom} from "../../../core/actions/room_actions";
 import {listQuestions} from "../../../core/actions/questions_actions";
 import {RouteComponentProps} from "react-router";
-import {useHistory} from "react-router-dom";
+import {Modal, Button} from "react-bootstrap";
+import QRCode from "react-qr-code";
 
 interface IQuestionGroup {
     questions: JSX.Element[]
@@ -16,7 +17,7 @@ interface IQuestionGroup {
 
 function QuestionGroup(props: IQuestionGroup) {
     return (
-        <div className="card shadow mb-2">
+        <div className="card mb-2">
             <div className="card-body">
                 {props.questions}
             </div>
@@ -29,71 +30,66 @@ type TParams = {
 }
 
 export function ReviewPage({match}: RouteComponentProps<TParams>) {
+    const [showShare, setShowShare] = useState(false);
+    const handleClose = () => setShowShare(false);
+    const handleShow = () => setShowShare(true);
+
+    const [shareAdmin, setShareAdmin] = useState(false)
+
     const dispatch = useDispatch()
-    const history = useHistory()
 
     const room = useSelector((state: RootState) => state.roomManager.room)
     const questions = useSelector((state: RootState) => state.questionManager.questions)
-    const answers = useSelector((state: RootState) => state.answerManager.answers)
 
     const triggerUpdate = async () => {
         await dispatch(retrieveRoom(match.params.roomId))
         await dispatch(listQuestions(match.params.roomId))
     }
 
-    const handleEsc = (e: any) => {
-        if (e.key === 'Escape') {
-            setPresentation(false)
-        }
-    }
-
-    // Retrieve data for the first time, go home on error.
+    // Retrieve data for the first time, on error - display error
     useEffect(() => {
         (async () => {
-            try {
-                await triggerUpdate()
-            } catch (e) {
-                history.push('/home')
-            }
+            await triggerUpdate()
         })()
-        window.addEventListener('keydown', handleEsc);
-        return () => {
-            window.removeEventListener('keydown', handleEsc);
-        };
     }, [])
-
-    const [presentation, setPresentation]: [boolean, any] = useState(false)
 
     return (
         <div>
-            {!presentation ? <div className="font-big d-flex justify-content-between">
-                <strong>Přednáška @ {room ? room.id : '?'}</strong>
-                <button className="btn"><FontAwesomeIcon icon={faShareAlt}/></button>
-            </div> : null}
-            {!presentation ?
-                <div className="font-small text-success mb-3"><strong>22 online 14:20</strong></div> : null}
+            <div className="font-big d-flex justify-content-between mb-2">
+                <div>
+                    <strong className="mr-2">Přednáška @ {room?.id}</strong>
+                    <strong className="font-small text-info mb-3"> {room?.online_counter} online</strong>
+                </div>
+                <Button onClick={handleShow} variant="light">
+                    <FontAwesomeIcon icon={faShareAlt}/>
+                </Button>
+                <Modal show={showShare} onHide={handleClose} centered className="d-flex">
+                    <Modal.Body>
+                        <strong className="text-info">{shareAdmin ? "Náhled" : "Hlasování"}</strong>
+                        <div className="d-flex justify-content-center m-2">
+                            <QRCode
+                                value={`${window.location.origin}${shareAdmin ? '/admin/' : '/public/'}${room.id}/`}/>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer className="d-flex justify-content-between">
+                        <div>
+                            <Button variant="light" onClick={() => setShareAdmin(false)}
+                                    className="mr-2">Hlasování</Button>
+                            <Button variant="light" onClick={() => setShareAdmin(true)}>Náhled</Button>
+                        </div>
+                        <Button variant="primary" onClick={handleClose}>Close</Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
             {
                 Object.keys(displayOptions).map((op: string) => {
                     let qs = []
                     for (let q of questions.filter((q: QuestionType) => q.display_option === op)) {
-                        qs.push(<Slider question={q}
-                                        key={q.id}
-                                        answers={answers.filter((a: AnswerType) => a.question === q.id)}
-                                        room={room}/>
-                        )
+                        qs.push(<Slider question={q} key={q.id}/>)
                     }
                     return qs.length ? <QuestionGroup key={op} questions={qs}/> : null
                 })
             }
-            <div className="d-flex justify-content-end font-small align-items-center">
-                {
-                    presentation ?
-                        <span className="text-secondary">Zmáčknutím <strong>ESC</strong> prezentaci ukončíte</span> :
-                        <button className="btn btn-sm border text-secondary" onClick={(e) => setPresentation(true)}>
-                            Prezentace
-                        </button>
-                }
-            </div>
         </div>
     )
 }

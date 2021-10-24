@@ -1,4 +1,3 @@
-import {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
 import {displayOptions} from "../../../share";
@@ -19,29 +18,7 @@ function QuestionGroup(props: IQuestionGroup) {
 }
 
 export function AnswerPage() {
-    const questions: QuestionType[] = [
-        {
-            id: '1',
-            time_created: '',
-            room: '',
-            value: 'Test question',
-            display_option: 'numeric_range_optimum',
-        },
-        {
-            id: '2',
-            time_created: '',
-            room: '',
-            value: 'Test question 2',
-            display_option: 'numeric_range_optimum',
-        },
-        {
-            id: '3',
-            time_created: '',
-            room: '',
-            value: 'Test question 2',
-            display_option: 'numeric_range_maximum',
-        },
-    ]
+    const questions: QuestionType[] = []
 
     const room: RoomType = {
         id: 'xxyyzz',

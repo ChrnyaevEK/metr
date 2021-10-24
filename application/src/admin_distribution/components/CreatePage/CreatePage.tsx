@@ -49,11 +49,11 @@ export function CreatePage() {
 
     const [questions, setQuestions]: [QuestionType[], any] = useState([])
     const [question, setQuestion]: [QuestionType, any] = useState({
-        id: '',
         room: '',
         time_created: '',
         display_option: 'numeric_range_optimum',
-        value: ''
+        value: '',
+        rate: 0
     })
 
     const handleAddQuestion = () => {

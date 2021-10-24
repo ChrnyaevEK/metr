@@ -18,7 +18,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         pk_field=HashidSerializerCharField(source_field='api.Room.id'),
         queryset=models.Room.objects.all()
     )
-    rate = serializers.ReadOnlyField()
+    rate = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = models.Question

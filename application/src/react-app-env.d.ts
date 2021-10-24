@@ -4,6 +4,7 @@ interface RoomType {
     time_created?: string,
     time_updated?: string,
     use_color?: boolean
+    online_counter?: number,
 }
 
 interface QuestionType {
@@ -12,6 +13,7 @@ interface QuestionType {
     room: string,
     value: string,
     display_option: string,
+    rate: number,
 }
 
 interface AnswerType {
