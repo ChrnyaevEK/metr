@@ -2,6 +2,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
 import {displayOptions} from "../../../share";
 import {Slider} from "../Widgets/Slider/Slider";
+import {Button} from "react-bootstrap";
 
 interface IQuestionGroup {
     questions: JSX.Element[]
@@ -31,7 +32,7 @@ export function AnswerPage() {
         <div>
             <div className="font-big d-flex justify-content-between">
                 <strong>Student @ {room.id}</strong>
-                <button className="btn"><FontAwesomeIcon icon={faShareAlt}/></button>
+                <Button variant="light"><FontAwesomeIcon icon={faShareAlt}/></Button>
             </div>
             <div className="font-small text-success mb-3 d-flex justify-content-between">
                 <strong>Uloženo!</strong>
