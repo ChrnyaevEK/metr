@@ -92,7 +92,7 @@ export function CreatePage() {
     return (
         <div>
             <div className="font-big mb-3 d-flex justify-content-between">
-                <strong>Nový dotazník</strong><strong
+                <strong>Nová přednášku</strong><strong
                 className="text-secondary">{questions.length}/{QUESTION_LIMIT}</strong>
             </div>
             <div className="font-middle text-secondary mb-3">

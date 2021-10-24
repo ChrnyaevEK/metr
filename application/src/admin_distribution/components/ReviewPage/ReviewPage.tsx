@@ -67,7 +67,7 @@ export function ReviewPage({match}: RouteComponentProps<TParams>) {
     return (
         <div>
             {!presentation ? <div className="font-big d-flex justify-content-between">
-                <strong>Lektor @ {room ? room.id : '?'}</strong>
+                <strong>Přednáška @ {room ? room.id : '?'}</strong>
                 <button className="btn"><FontAwesomeIcon icon={faShareAlt}/></button>
             </div> : null}
             {!presentation ?
