@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import MethodNotAllowed, NotFound
 from api import serializers
 from api import models
+from api.consumers import PublicPoll
 
 
 def get_target_room(request):  # ...?room=hash...
@@ -46,6 +47,12 @@ class NumericAnswerViewSet(viewsets.ModelViewSet):
     model = models.NumericAnswer
     serializer_class = serializers.NumericAnswerSerializer
     permission_classes = []
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        question = models.Question.objects.get(pk=response.data['question'])
+        PublicPoll.trigger_admin_update(question.room.id)
+        return response
 
     def get_queryset(self):
         room = get_target_room(self.request)
