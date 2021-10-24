@@ -70,3 +70,7 @@ interface IDisplayOptions {
         color_shifter: (value: number) => string,
     }
 }
+
+interface WSEvent {
+    type: string
+}

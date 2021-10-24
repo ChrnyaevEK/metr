@@ -10,6 +10,7 @@ import {listQuestions} from "../../../core/actions/questions_actions";
 import {RouteComponentProps} from "react-router";
 import {Modal, Button} from "react-bootstrap";
 import QRCode from "react-qr-code";
+import WS from "../../../core/ws";
 
 interface IQuestionGroup {
     questions: JSX.Element[]
@@ -29,6 +30,8 @@ type TParams = {
     roomId: string
 }
 
+const ws = new WS()
+
 export function ReviewPage({match}: RouteComponentProps<TParams>) {
     const [showShare, setShowShare] = useState(false);
     const handleClose = () => setShowShare(false);
@@ -46,10 +49,23 @@ export function ReviewPage({match}: RouteComponentProps<TParams>) {
         await dispatch(listQuestions(match.params.roomId))
     }
 
+    const handleMessage = (e: WSEvent) => {
+        switch (e.type) {
+            case 'public_connect':
+            case 'state_change':
+            case 'public_disconnect':
+                triggerUpdate()
+                break
+            default:
+                throw `Unknown WS event ${e.type}`
+        }
+    }
+
     // Retrieve data for the first time, on error - display error
     useEffect(() => {
         (async () => {
             await triggerUpdate()
+            ws.open('admin_poll', match.params.roomId, handleMessage)
         })()
     }, [])
 
@@ -68,7 +84,7 @@ export function ReviewPage({match}: RouteComponentProps<TParams>) {
                         <strong className="text-info">{shareAdmin ? "Náhled" : "Hlasování"}</strong>
                         <div className="d-flex justify-content-center m-2">
                             <QRCode
-                                value={`${window.location.origin}${shareAdmin ? '/admin/' : '/public/'}${room.id}/`}/>
+                                value={`${window.location.origin}${shareAdmin ? '/admin/' : '/public/'}${room?.id}/`}/>
                         </div>
                     </Modal.Body>
                     <Modal.Footer className="d-flex justify-content-between">

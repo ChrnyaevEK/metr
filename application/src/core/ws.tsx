@@ -1,42 +1,33 @@
-import share from "../share";
+import {BASE_WS_URL, RECONNECT_TIMEOUT} from "../share";
 
 class WS {
-    url: string
-    connection: WebSocket
+    url: string | undefined
+    connection: WebSocket | undefined
+    onmessage: any
 
-    constructor(group: string) {
-        this.url = `ws://${window.location.host}/ws/${group}/`
-        this.connection = new WebSocket(this.url)
-        this.connection.onerror = this.onerror
+    open = (group: string, room: string, onMessage: (e: WSEvent) => void) => {
+        this.onmessage = onMessage
+        this.url = `${BASE_WS_URL}/ws/${group}/${room}/`
+        this.reopen()
     }
 
-    reopen() {
+    reopen = () => {
+        if (!this.url) throw 'No URL specified'
         this.connection = new WebSocket(this.url)
         this.connection.onerror = this.onerror
+        this.connection.onclose = this.onerror
+        this.connection.onmessage = (msg) => {
+            this.onmessage(JSON.parse(msg.data))
+        }
     }
 
-    close() {
+    close = () => {
+        if (!this.connection) throw 'Not connected'
         this.connection.close()
     }
 
-    isConnecting() {
-        return this.connection.CONNECTING === this.connection.readyState
-    }
-
-    isOpen() {
-        return this.connection.OPEN === this.connection.readyState
-    }
-
-    isClosing() {
-        return this.connection.CLOSING === this.connection.readyState
-    }
-
-    isClosed() {
-        return this.connection.CLOSED === this.connection.readyState
-    }
-
-    onerror() {
-        setTimeout(this.reopen, share.RECONNECT_TIMEOUT)
+    onerror = () => {
+        setTimeout(this.reopen, RECONNECT_TIMEOUT)
     }
 }
 
