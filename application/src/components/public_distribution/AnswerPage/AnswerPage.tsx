@@ -107,7 +107,7 @@ export function AnswerPage({match}: RouteComponentProps<TParams>) {
                     return qs.length ? <QuestionGroup key={op} questions={qs}/> : null
                 })
             }
-            <div className="font-small text-info position-absolute">
+            <div className="font-small text-success position-absolute">
                 {saved ? <strong>Uloženo!</strong> : null}
             </div>
         </div>

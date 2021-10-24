@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlus, faUserFriends, faUserShield} from "@fortawesome/free-solid-svg-icons";
+import {faComments, faPlus, faPoll, faUserFriends, faUserShield} from "@fortawesome/free-solid-svg-icons";
 import {
     Link,
     useHistory
 } from "react-router-dom";
-import {validateRoomExist} from "../../../core/actions/room_actions";
+import {validateRoomExist} from "../../core/actions/room_actions";
 import {exec} from "child_process";
 import {Button} from "react-bootstrap";
 
@@ -34,26 +34,19 @@ export function HomePage() {
                        onChange={(e) => {
                            setRoomId(e.target.value)
                        }}/>
-                {
-                    isValid ?
-                        <Button className="mr-1" variant="success" title="Administrace" disabled={!roomId.length}
-                                onClick={() => {
-                                    history.push(getAdminRoomURL())
-                                }}>
-                            <FontAwesomeIcon icon={faUserShield}/>
-                        </Button> : null
-                }
-                {
-                    isValid ?
-                        <Button variant="success" className="mr-1" title="Stránka pro veřejnost"
-                                disabled={!roomId.length}
-                                onClick={() => {
-                                    window.location.href = getPublicRoomURL()
-                                }}>
-                            <FontAwesomeIcon icon={faUserFriends}/>
-                        </Button> : null
-                }
-                <Button variant="success" title="Vytvořit novou přednášku" onClick={() => {
+                <Button disabled={!isValid} variant="success" className="mr-1" title="Otevřit hlasování"
+                        onClick={() => {
+                            history.push(getPublicRoomURL())
+                        }}>
+                    <FontAwesomeIcon icon={faComments}/>
+                </Button>
+                <Button disabled={!isValid} className="mr-1" variant="success" title="Otevřit výsledky"
+                        onClick={() => {
+                            history.push(getAdminRoomURL())
+                        }}>
+                    <FontAwesomeIcon icon={faPoll}/>
+                </Button>
+                <Button disabled={isValid} variant="success" title="Vytvořit novou přednášku" onClick={() => {
                     history.push('/admin/')
                 }}>
                     <FontAwesomeIcon icon={faPlus}/>
@@ -65,11 +58,11 @@ export function HomePage() {
                         {
                             (isValid) ?
                                 <div>
-                                    <span className="mr-2"><Link to={getAdminRoomURL()}>Admin</Link></span>
-                                    <a className="mr-2" href={getPublicRoomURL()}>Public</a>
-                                    <Link to='/admin/'>Vytvořit novou přednášku</Link>
+                                    <span className="mr-3">Něco se našlo...</span>
+                                    <Link className="mr-3" to={getPublicRoomURL()}>Hlasování</Link>
+                                    <Link to={getAdminRoomURL()}>Výsledky</Link>
                                 </div> :
-                                <span>Přednáška neexistuje... <Link to='/admin/'>Vytvořit novou přenášku</Link></span>
+                                <span>Přednáška neexistuje... <Link to='/admin'>Vytvořit novou přenášku</Link></span>
                         }
                     </div> : null
             }

@@ -3,6 +3,11 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from api import models
 import json
+from collections import defaultdict
+
+
+class Counter:
+    admin_counter = {}
 
 
 class PublicPoll(WebsocketConsumer):
@@ -80,6 +85,10 @@ class AdminPoll(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_add)(self.admin_group_name, self.channel_name)
 
             self.accept()
+            try:
+                Counter.admin_counter[self.room] += 1
+            except KeyError:
+                Counter.admin_counter[self.room] = 1
 
             # Trigger all public channels - admin connected
             async_to_sync(self.channel_layer.group_send)(
@@ -92,8 +101,9 @@ class AdminPoll(WebsocketConsumer):
     def disconnect(self, code):
         async_to_sync(self.channel_layer.group_discard)(self.admin_group_name, self.channel_name)
 
-        # Check if any admin is online
-        if not len(self.channel_layer.group_channels(self.admin_group_name)):
+        Counter.admin_counter[self.room] -= 1
+        if Counter.admin_counter[self.room] <= 0:
+            del Counter.admin_counter[self.room]
             async_to_sync(self.channel_layer.group_send)(
                 self.public_group_name,
                 {

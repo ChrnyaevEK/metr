@@ -81,7 +81,7 @@ export function ReviewPage({match}: RouteComponentProps<TParams>) {
                 </Button>
                 <Modal show={showShare} onHide={handleClose} centered className="d-flex">
                     <Modal.Body>
-                        <strong className="text-info">{shareAdmin ? "Náhled" : "Hlasování"}</strong>
+                        <strong className="text-info">{shareAdmin ? "Výsledky" : "Hlasování"}</strong>
                         <div className="d-flex justify-content-center m-2">
                             <QRCode
                                 value={`${window.location.origin}${shareAdmin ? '/admin/' : '/public/'}${room?.id}/`}/>
@@ -91,7 +91,7 @@ export function ReviewPage({match}: RouteComponentProps<TParams>) {
                         <div>
                             <Button variant="light" onClick={() => setShareAdmin(false)}
                                     className="mr-2">Hlasování</Button>
-                            <Button variant="light" onClick={() => setShareAdmin(true)}>Náhled</Button>
+                            <Button variant="light" onClick={() => setShareAdmin(true)}>Výsledky</Button>
                         </div>
                         <Button variant="primary" onClick={handleClose}>Close</Button>
                     </Modal.Footer>
