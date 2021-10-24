@@ -1,33 +1,43 @@
 import share from "../share";
 
-let connection: WebSocket = new WebSocket('')
+class WS {
+    url: string
+    connection: WebSocket
 
-const wsEventHandler = {
-    onerror: () => {
-        setTimeout(ws.reopen, share.RECONNECT_TIMEOUT)
+    constructor(group: string) {
+        this.url = `ws://${window.location.host}/ws/${group}/`
+        this.connection = new WebSocket(this.url)
+        this.connection.onerror = this.onerror
+    }
+
+    reopen() {
+        this.connection = new WebSocket(this.url)
+        this.connection.onerror = this.onerror
+    }
+
+    close() {
+        this.connection.close()
+    }
+
+    isConnecting() {
+        return this.connection.CONNECTING === this.connection.readyState
+    }
+
+    isOpen() {
+        return this.connection.OPEN === this.connection.readyState
+    }
+
+    isClosing() {
+        return this.connection.CLOSING === this.connection.readyState
+    }
+
+    isClosed() {
+        return this.connection.CLOSED === this.connection.readyState
+    }
+
+    onerror() {
+        setTimeout(this.reopen, share.RECONNECT_TIMEOUT)
     }
 }
 
-export const ws = {
-    reopen: () => {
-        connection = new WebSocket('')
-        connection.onerror = wsEventHandler.onerror
-    },
-    close: () => {
-        connection.close()
-    },
-    isConnecting: () => {
-        return connection.CONNECTING === connection.readyState
-    },
-    isOpen: () => {
-        return connection.OPEN === connection.readyState
-    },
-    isClosing: () => {
-        return connection.CLOSING === connection.readyState
-    },
-    isClosed: () => {
-        return connection.CLOSED === connection.readyState
-    },
-}
-
-export default ws
+export default WS
