@@ -12,13 +12,14 @@ export function HomePage() {
 
     const [targetRoomId, setTargetRoomId]: [string | null, any] = useState(null)
     const [validationTimeoutId, setValidationTimeoutId]: [number | null, any] = useState(null)
-    const [isTargetRoomValid, setIsTargetRoomValid]: [boolean, any] = useState(false)
+    const [isTargetRoomValid, setIsTargetRoomValid]: [boolean | null, any] = useState(null)
 
     const getAdminRoomURL = () => '/admin/' + targetRoomId
     const getPublicRoomURL = () => '/public/' + targetRoomId
 
     // Validate target room ID on user input
     useEffect(() => {
+        setIsTargetRoomValid(null)
         if (validationTimeoutId === null) {
             setValidationTimeoutId(setTimeout(async () => {
                 if (targetRoomId) {
@@ -47,21 +48,23 @@ export function HomePage() {
             <div className="font-middle d-flex form-group">
                 <input className="form-control mr-1" placeholder="Zadejte ID přednášky..."
                        onChange={handleSearchInput}/>
-                <Button disabled={!isTargetRoomValid} variant="success" className="mr-1" title="Otevřit hlasování"
+                <Button disabled={!Boolean(isTargetRoomValid)} variant="success" className="mr-1"
+                        title="Otevřit hlasování"
                         onClick={handleOpenPublicPage}>
                     <FontAwesomeIcon icon={faComments}/>
                 </Button>
-                <Button disabled={!isTargetRoomValid} className="mr-1" variant="success" title="Otevřit výsledky"
+                <Button disabled={!Boolean(isTargetRoomValid)} className="mr-1" variant="success"
+                        title="Otevřit výsledky"
                         onClick={handleOpenAdminPage}>
                     <FontAwesomeIcon icon={faPoll}/>
                 </Button>
-                <Button disabled={isTargetRoomValid} variant="success" title="Vytvořit novou přednášku"
+                <Button disabled={Boolean(isTargetRoomValid)} variant="success" title="Vytvořit novou přednášku"
                         onClick={handleOpenCreatePollPage}>
                     <FontAwesomeIcon icon={faPlus}/>
                 </Button>
             </div>
             {
-                targetRoomId ?
+                targetRoomId && isTargetRoomValid !== null ?
                     <div className="d-flex flex-column font-small text-secondary position-absolute">
                         {
                             isTargetRoomValid ?
