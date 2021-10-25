@@ -1,7 +1,7 @@
-import {MouseEvent, ChangeEvent, KeyboardEvent, useState, useEffect, useRef, useLayoutEffect} from "react";
+import {MouseEvent, ChangeEvent, KeyboardEvent, useState, useRef, useLayoutEffect, useEffect} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
-import {displayOptions, QUESTION_LIMIT} from "../../../share";
+import {DEFAULT_DISPLAY_OPTION, displayOptions, QUESTION_LIMIT} from "../../../share";
 import {createRoom} from "../../../core/actions/room_actions";
 import {createQuestion} from "../../../core/actions/questions_actions";
 import {useHistory} from "react-router-dom";
@@ -9,26 +9,22 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
 import {Button} from "react-bootstrap";
 
-interface QuestionComponentProps {
+function Question(props: {
     question: QuestionPrototype,
     setQuestions: any,
     lock: boolean,
-}
-
-function Question(props: QuestionComponentProps) {
+}) {
     const handleRemoveQuestion = (e: MouseEvent<HTMLButtonElement>) => {
         props.setQuestions((questions: QuestionPrototype[]) => {
-            return [...questions.filter(q => q.value !== props.question.value)]
+            return [...questions.filter(question => question.value !== props.question.value)]
         })
     }
 
     return (
-        <div className="border px-2 py-1 font-middle d-flex align-items-center mb-1">
-            <div className="text-truncate mr-1 flex-grow-1">
-                <strong>{props.question.value}</strong>
-            </div>
-            <span className="text-secondary mr-1">{displayOptions[props.question.display_option].title}</span>
-            <Button variant="light" onClick={handleRemoveQuestion} disabled={props.lock}>
+        <div className="border rounded px-2 py-1 font-middle d-flex align-items-center mb-1">
+            <div className="flex-grow-1 text-truncate mr-2 font-weight-bold">{props.question.value}</div>
+            <div className="text-secondary mr-2">{displayOptions[props.question.display_option].title}</div>
+            <Button variant="outline-light" onClick={handleRemoveQuestion} disabled={props.lock}>
                 <FontAwesomeIcon icon={faTimes} className="text-danger"/>
             </Button>
         </div>
@@ -38,17 +34,22 @@ function Question(props: QuestionComponentProps) {
 export function CreatePage() {
     const history = useHistory()
     const dispatch = useDispatch()
+
     const room = useSelector((state: RootState) => state.roomManager.room)
+
     const roomRef = useRef(room)
+
     const [lock, setLock]: [boolean, any] = useState(false)
     const [questions, setQuestions]: [QuestionPrototype[], any] = useState([])
     const [question, setQuestion]: [QuestionPrototype, any] = useState({
-        display_option: 'numeric_range_optimum',
+        display_option: DEFAULT_DISPLAY_OPTION,
         room: '',
         value: '',
     })
+    const [isQuestionAccepted, setIsQuestionAccepted]: [boolean, any] = useState(false)
+
     const handleAddQuestion = () => {
-        if (question.value.length && !questions.includes(question) && questions.length < QUESTION_LIMIT) {
+        if (isQuestionAccepted) {
             setQuestions([...questions, question])
             setQuestion({...question, value: ''})
         }
@@ -58,7 +59,6 @@ export function CreatePage() {
             handleAddQuestion()
         }
     }
-    const handleAddQuestionButtonPress = (e: MouseEvent<HTMLButtonElement>) => handleAddQuestion()
     const handleSetQuestionValue = (e: ChangeEvent<HTMLInputElement>) => setQuestion({
         ...question,
         value: e.target.value,
@@ -82,46 +82,48 @@ export function CreatePage() {
         roomRef.current = room;
     }, [room]);
 
+    useEffect(() => {
+        // Check if question is filled right and is unique
+        setIsQuestionAccepted(
+            question.value.length &&
+            questions.length < QUESTION_LIMIT &&
+            questions.filter((q) => q.value === question.value).length === 0
+        )
+    }, [question])
+
     return (
         <div>
-            <div className="font-big mb-3 d-flex justify-content-between">
-                <strong>Nová přednáška</strong><strong
-                className="text-secondary">{questions.length}/{QUESTION_LIMIT}</strong>
+            <div className="font-big font-weight-bold">Nová přednáška</div>
+            <div className="font-middle text-secondary mb-3 d-flex justify-content-between">
+                <div>Zadejte hodnoty pro sledování</div>
+                <div className="text-secondary font-weight-bold">{questions.length}/{QUESTION_LIMIT}</div>
             </div>
-            <div className="font-middle text-secondary mb-3">
-                Přepravte si hodnoty pro sledování a zvolte jejich skupinu
-            </div>
-            {questions.map(
-                (q, i) => <Question setQuestions={setQuestions} question={q} lock={lock} key={q.value}/>
-            )}
-            <div className="form-group d-flex mb-1">
+            {questions.map((q) => {
+                return <Question question={q} setQuestions={setQuestions} lock={lock} key={q.value}/>
+            })}
+            <div className="form-group d-flex mt-3 mb-1">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
-                    <input type="text" id="create-page-question-input" className="form-control"
-                           value={question.value}
-                           onChange={handleSetQuestionValue}
-                           onKeyPress={handleAddQuestionKeyPress}
-                           disabled={questions.length === QUESTION_LIMIT || lock}
-                           placeholder="Zadejte hodnotu..."/>
+                    <input id="create-page-question-input" className="form-control" placeholder="Například rychlost..."
+                           value={question.value} disabled={questions.length === QUESTION_LIMIT || lock}
+                           onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}
+                    />
                 </label>
                 <div className="d-flex w-50">
                     <select value={question.display_option} onChange={handleSetDisplayOption}
-                            className="form-control mr-1"
-                            id="create-page-display-type-selection"
+                            className="form-control mr-1" id="create-page-display-type-selection"
                             disabled={questions.length === QUESTION_LIMIT || lock}>
-                        {
-                            Object.entries(displayOptions)
-                                .map(([k, v], i) => <option key={k} value={k}>{v.title}</option>)
-                        }
+                        {Object.entries(displayOptions)
+                            .map(([key, value]) => {
+                                return <option key={key} value={key}>{value.title}</option>
+                            })}
                     </select>
-                    <Button variant="success" onClick={handleAddQuestionButtonPress}
-                            disabled={!question.value.length || questions.includes(question) || questions.length === QUESTION_LIMIT || lock}>
+                    <Button variant="success" onClick={handleAddQuestion} disabled={!isQuestionAccepted || lock}>
                         <FontAwesomeIcon icon={faPlus}/>
                     </Button>
                 </div>
             </div>
-            <Button variant="success" className="w-100"
-                    onClick={handleContinue}
-                    disabled={!questions.length || questions.length > QUESTION_LIMIT || lock}>Pokračovat
+            <Button variant="success" className="w-100" onClick={handleContinue} disabled={!questions.length || lock}>
+                Pokračovat
             </Button>
         </div>
     );
