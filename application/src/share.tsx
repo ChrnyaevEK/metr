@@ -1,5 +1,6 @@
-export const QUESTION_LIMIT = 5
-export const RECONNECT_TIMEOUT = 2000
+export const QUESTION_LIMIT = 5  // Limit of questions
+export const RECONNECT_TIMEOUT = 2000  // Timeout for reconnection to server
+export const SEARCH_VALIDATION_TIMEOUT = 1000  // Timeout when looking for room
 export const BASE_HTTP_URL = 'http://localhost:8000'
 export const BASE_WS_URL = 'ws://localhost:8000'
 
@@ -21,5 +22,6 @@ export default {
     QUESTION_LIMIT,
     RECONNECT_TIMEOUT,
     BASE_HTTP_URL,
-    BASE_WS_URL
+    BASE_WS_URL,
+    SEARCH_VALIDATION_TIMEOUT
 }
