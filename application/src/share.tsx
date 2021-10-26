@@ -1,6 +1,7 @@
 export const QUESTION_LIMIT = 5  // Limit of questions
 export const RECONNECT_TIMEOUT = 2000  // Timeout for reconnection to server
 export const SEARCH_VALIDATION_TIMEOUT = 1000  // Timeout when looking for room
+export const ANSWER_SAVE_TIMEOUT = 1000  // Timeout for saving students answers
 export const BASE_HTTP_URL = 'http://localhost:8000'
 export const BASE_WS_URL = 'ws://localhost:8000'
 export const DEFAULT_DISPLAY_OPTION = 'numeric_range_optimum'
