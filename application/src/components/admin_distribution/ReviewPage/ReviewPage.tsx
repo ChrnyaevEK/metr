@@ -1,5 +1,5 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
+import {faShare, faShareAlt} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RouteComponentProps} from "react-router";
@@ -67,22 +67,22 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
             <div className="font-big d-flex justify-content-between mb-3">
                 <div>
                     <strong className="mr-2">Přednáška @ {room?.id}</strong>
-                    <strong className="font-small text-info mb-3">{room?.online_counter} online</strong>
+                    <strong className="font-small text-secondary mb-3">{room?.online_counter} online</strong>
                 </div>
                 <Button onClick={handleShowShareModal} variant="light">
                     <FontAwesomeIcon icon={faShareAlt}/>
                 </Button>
                 <Modal show={showShareModal} onHide={handleCloseShareModal} centered className="d-flex">
-                    <Modal.Body>
-                        <strong className="text-info">{shareAdmin ? "Výsledky" : "Hlasování"}</strong>
-                        <div className="d-flex justify-content-center m-2">
-                            <QRCode value={getShareURL()}/>
-                        </div>
+                    <Modal.Header className="font-weight-bold">
+                        {shareAdmin ? "Výsledky" : "Hlasování"}
+                    </Modal.Header>
+                    <Modal.Body className="d-flex flex-column align-items-center">
+                        <QRCode className="m-2" value={getShareURL()}/>
+                        <a href={getShareURL()} target="_blank">{getShareURL()}</a>
                     </Modal.Body>
-                    <Modal.Footer className="d-flex justify-content-between">
-                        <Button variant="light" onClick={handleSharePublic} className="mr-2">Hlasování</Button>
-                        <Button variant="light" onClick={handleShareAdmin}>Výsledky</Button>
-                        <Button variant="primary" onClick={handleCloseShareModal}>Close</Button>
+                    <Modal.Footer className="d-flex justify-content-end">
+                        <Button variant="primary" onClick={handleSharePublic} className="mr-2">Hlasování</Button>
+                        <Button variant="primary" onClick={handleShareAdmin}>Výsledky</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
