@@ -3,6 +3,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from api import models
 import json
+import datetime
 
 
 class Counter:
@@ -54,7 +55,9 @@ class PublicPoll(WebsocketConsumer):
     def disconnect(self, code):
         async_to_sync(self.channel_layer.group_discard)(self.public_group_name, self.channel_name)
         try:
-            models.Client.objects.get(pk=self.client_id).delete()
+            client = models.Client.objects.get(pk=self.client_id)
+            client.time_destroyed = datetime.datetime.now()
+            client.save()
         except models.Client.DoesNotExist:
             pass
 

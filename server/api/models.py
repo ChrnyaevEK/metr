@@ -14,7 +14,7 @@ class Room(models.Model):
     use_color = models.BooleanField(default=True)
 
     def online_counter(self):
-        return Client.objects.filter(room=self).count()
+        return Client.objects.filter(room=self, time_destroyed=None).count()
 
     def is_online(self):
         return self.id in Counter.admin_counter
@@ -37,6 +37,8 @@ class Question(models.Model):
 class Client(models.Model):
     id = HashidAutoField(primary_key=True, salt='client.id')
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    time_created = models.DateTimeField(auto_now_add=True)
+    time_destroyed = models.DateTimeField(null=True, default=None)
 
 
 class Answer(models.Model):
