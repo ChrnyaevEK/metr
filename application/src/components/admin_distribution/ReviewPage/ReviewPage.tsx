@@ -1,48 +1,45 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
-import Slider from "../Widgets/Slider/Slider";
 import {useEffect, useState} from "react";
-import {displayOptions} from "../../../share";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../core/store";
-import {retrieveRoom} from "../../../core/actions/room_actions";
-import {listQuestions} from "../../../core/actions/questions_actions";
 import {RouteComponentProps} from "react-router";
 import {Modal, Button} from "react-bootstrap";
 import QRCode from "react-qr-code";
+import Slider from "../Widgets/Slider/Slider";
+import {displayOptions} from "../../../share";
+import {RootState} from "../../../core/store";
+import {retrieveRoom} from "../../../core/actions/room_actions";
+import {listQuestions} from "../../../core/actions/questions_actions";
 import WS from "../../../core/ws";
 
-interface IQuestionGroup {
-    questions: JSX.Element[]
-}
+const ws = new WS()
 
-function QuestionGroup(props: IQuestionGroup) {
+function QuestionGroup(props: {
+    questionGroups: JSX.Element[]
+}) {
     return (
         <div className="card mb-2">
             <div className="card-body">
-                {props.questions}
+                {props.questionGroups}
             </div>
         </div>
     )
 }
 
-type TParams = {
-    roomId: string
-}
-
-const ws = new WS()
-
-export function ReviewPage({match}: RouteComponentProps<TParams>) {
-    const [showShare, setShowShare] = useState(false);
-    const handleClose = () => setShowShare(false);
-    const handleShow = () => setShowShare(true);
-
-    const [shareAdmin, setShareAdmin] = useState(false)
-
+export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
     const dispatch = useDispatch()
 
     const room = useSelector((state: RootState) => state.roomManager.room)
     const questions = useSelector((state: RootState) => state.questionManager.questions)
+
+    const [showShareModal, setShowShareModal] = useState(false);
+    const handleCloseShareModal = () => setShowShareModal(false);
+    const handleShowShareModal = () => setShowShareModal(true);
+    const [shareAdmin, setShareAdmin] = useState(false)
+
+    const getShareURL = () => `${window.location.origin}${shareAdmin ? '/admin/' : '/public/'}${room?.id}/`
+    const handleShareAdmin = () => setShareAdmin(true)
+    const handleSharePublic = () => setShareAdmin(false)
 
     const triggerUpdate = async () => {
         await dispatch(retrieveRoom(match.params.roomId))
@@ -56,54 +53,46 @@ export function ReviewPage({match}: RouteComponentProps<TParams>) {
             case 'public_disconnect':
                 triggerUpdate()
                 break
-            default:
-                throw `Unknown WS event ${e.type}`
         }
     }
 
     // Retrieve data for the first time, on error - display error
     useEffect(() => {
-        (async () => {
-            await triggerUpdate()
-            ws.open('admin_poll', match.params.roomId, handleMessage)
-        })()
+        ws.open('admin_poll', match.params.roomId, handleMessage)
+        triggerUpdate()
     }, [])
 
     return (
         <div>
-            <div className="font-big d-flex justify-content-between mb-2">
+            <div className="font-big d-flex justify-content-between mb-3">
                 <div>
                     <strong className="mr-2">Přednáška @ {room?.id}</strong>
-                    <strong className="font-small text-info mb-3"> {room?.online_counter} online</strong>
+                    <strong className="font-small text-info mb-3">{room?.online_counter} online</strong>
                 </div>
-                <Button onClick={handleShow} variant="light">
+                <Button onClick={handleShowShareModal} variant="light">
                     <FontAwesomeIcon icon={faShareAlt}/>
                 </Button>
-                <Modal show={showShare} onHide={handleClose} centered className="d-flex">
+                <Modal show={showShareModal} onHide={handleCloseShareModal} centered className="d-flex">
                     <Modal.Body>
                         <strong className="text-info">{shareAdmin ? "Výsledky" : "Hlasování"}</strong>
                         <div className="d-flex justify-content-center m-2">
-                            <QRCode
-                                value={`${window.location.origin}${shareAdmin ? '/admin/' : '/public/'}${room?.id}/`}/>
+                            <QRCode value={getShareURL()}/>
                         </div>
                     </Modal.Body>
                     <Modal.Footer className="d-flex justify-content-between">
-                        <div>
-                            <Button variant="light" onClick={() => setShareAdmin(false)}
-                                    className="mr-2">Hlasování</Button>
-                            <Button variant="light" onClick={() => setShareAdmin(true)}>Výsledky</Button>
-                        </div>
-                        <Button variant="primary" onClick={handleClose}>Close</Button>
+                        <Button variant="light" onClick={handleSharePublic} className="mr-2">Hlasování</Button>
+                        <Button variant="light" onClick={handleShareAdmin}>Výsledky</Button>
+                        <Button variant="primary" onClick={handleCloseShareModal}>Close</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
             {
                 Object.keys(displayOptions).map((op: string) => {
-                    let qs = []
-                    for (let q of questions.filter((q: QuestionType) => q.display_option === op)) {
-                        qs.push(<Slider question={q} key={q.id}/>)
+                    let questionGroup = []
+                    for (let question of questions.filter((question: QuestionType) => question.display_option === op)) {
+                        questionGroup.push(<Slider question={question} key={question.id}/>)
                     }
-                    return qs.length ? <QuestionGroup key={op} questions={qs}/> : null
+                    return questionGroup.length ? <QuestionGroup key={op} questionGroups={questionGroup}/> : null
                 })
             }
         </div>
