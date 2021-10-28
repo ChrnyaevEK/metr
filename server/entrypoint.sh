@@ -11,7 +11,6 @@ then
     echo "PostgreSQL started"
 fi
 
-source venv/bin/activate 
 python manage.py migrate
 deactivate
 
