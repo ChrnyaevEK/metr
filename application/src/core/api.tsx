@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import {BASE_HTTP_URL} from "../share";
+import {BASE_API_URL} from "../share";
 import store from "./store";
 
 export const baseApi = {
@@ -10,7 +10,7 @@ export const baseApi = {
                 ...settings,
                 crossDomain: true,
                 dataType: 'json',
-                url: BASE_HTTP_URL + settings.url,
+                url: BASE_API_URL + settings.url,
                 contentType: 'application/json',
                 data: JSON.stringify(settings.data)
             });

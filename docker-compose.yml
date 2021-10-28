@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     volumes:
-      - static_volume:/home/app/server/staticfiles
+      - main_server_volume:/home/app
   db:
     image: postgres:13.0-alpine
     volumes:
@@ -31,9 +31,9 @@ services:
     depends_on:
       - server
     volumes:
-      - static_volume:/home/app/server/staticfiles
+      - main_server_volume:/home/app
 
 volumes:
   postgres_data:
   redis_data:
-  static_volume:
+  main_server_volume:

@@ -36,6 +36,7 @@ RUN npm install --prefix $APP_APPLICATION_HOME && npm run build --prefix $APP_AP
 
 # chown all the files to the app user
 RUN chown -R app:app $APP_SERVER_HOME
+RUN chown -R app:app $APP_APPLICATION_HOME
 
 # change to the app user
 USER app
