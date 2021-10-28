@@ -15,12 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from server import views
 
 urlpatterns = [
     path('root/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('', views.main_entry_point)
 ]
 
-handler404 = views.handler404
+handler404 = 'server.views.handler404'

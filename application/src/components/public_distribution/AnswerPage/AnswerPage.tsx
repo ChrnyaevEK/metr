@@ -121,7 +121,8 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
                         questionGroup.push(<Slider key={question.id} question={question}
                                                    onChangeHandler={handleAddAnswer}/>)
                     }
-                    return <QuestionGroup key={displayOption} questionGroup={questionGroup}/>
+                    return questionGroup.length ?
+                        <QuestionGroup key={displayOption} questionGroup={questionGroup}/> : null
                 })
             }
             <div className="font-small text-success position-absolute font-weight-bold">

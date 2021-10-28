@@ -23,7 +23,7 @@ COPY ./server $APP_SERVER_HOME
 COPY ./application $APP_APPLICATION_HOME
 
 # install dependencies
-RUN apk update && apk add --no-cache libressl-dev musl-dev libffi-dev build-base postgresql-dev gcc python3-dev musl-dev bash npm
+RUN apk update && apk add libressl-dev musl-dev libffi-dev build-base postgresql-dev gcc python3-dev musl-dev bash npm
 RUN pip install --upgrade pip
 RUN pip install -r $APP_SERVER_HOME/requirements.txt
 
@@ -43,8 +43,6 @@ USER app
 
 WORKDIR $APP_SERVER_HOME
 
-RUN source venv/bin/activate
-RUN python manage.py migrate
 RUN python manage.py collectstatic --no-input
 
 # run entrypoint.sh
