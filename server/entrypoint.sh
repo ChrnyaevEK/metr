@@ -12,6 +12,5 @@ then
 fi
 
 python manage.py migrate
-deactivate
 
 exec "$@"
