@@ -36,7 +36,9 @@ function App() {
                                 </Switch>
                                 <div className="font-small fixed-bottom d-flex justify-content-center px-3 py-1">
                                     <Link to="/" className="mr-4">Domů</Link>
-                                    <Link to="/admin">Nová přednáška</Link>
+                                    <Link to="/admin" className="mr-4">Nová přednáška</Link>
+                                    <a href="mailto:chrnyaevek@gmail.com" className="mr-4">Kontakt</a>
+                                    <a href="https://github.com/ChrnyaevEK/metr" target="_blank">GitHub</a>
                                 </div>
                             </div>
                         </div>
