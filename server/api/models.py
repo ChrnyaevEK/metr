@@ -36,7 +36,7 @@ class Question(models.Model):
             try:
                 average += NumericAnswer.objects.filter(client=client, question=self).latest('time_created').value
             except NumericAnswer.DoesNotExist:
-                average += NumericAnswer.default_value
+                average += DISPLAY_OPTIONS[self.display_option][1]
         return average / len(clients) if len(clients) else DISPLAY_OPTIONS[self.display_option][1]
 
 
@@ -49,7 +49,6 @@ class Client(models.Model):
 
 class Answer(models.Model):
     type: str = None
-    default_value = 0
 
     id = HashidAutoField(primary_key=True, salt='answer.id')
     time_created = models.DateTimeField(auto_now_add=True)
