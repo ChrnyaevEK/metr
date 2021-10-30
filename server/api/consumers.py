@@ -23,6 +23,11 @@ class PublicPoll(WebsocketConsumer):
 
             self.accept()
 
+    def receive(self, text_data=None, bytes_data=None):
+        event = json.loads(text_data)
+        if event['type'] == 'bind_client':
+            self.bind_client(event['message']['id'])
+
             # Trigger all admin channels - user connected
             async_to_sync(self.channel_layer.group_send)(
                 self.admin_group_name,
@@ -30,11 +35,6 @@ class PublicPoll(WebsocketConsumer):
                     'type': 'public_connect',
                 }
             )
-
-    def receive(self, text_data=None, bytes_data=None):
-        event = json.loads(text_data)
-        if event['type'] == 'bind_client':
-            self.bind_client(event['message']['id'])
 
     # Match WS with client
     def bind_client(self, client_id):
