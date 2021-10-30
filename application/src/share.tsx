@@ -19,11 +19,16 @@ export const displayOptions: IDisplayOptions = {
     }
 }
 
+export const sleep = (milliseconds: number) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
 export default {
     displayOptions,
     QUESTION_LIMIT,
     RECONNECT_TIMEOUT,
     BASE_API_URL,
     BASE_WS_URL,
-    SEARCH_VALIDATION_TIMEOUT
+    SEARCH_VALIDATION_TIMEOUT,
+    sleep
 }

@@ -41,6 +41,7 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
     const questions: QuestionType[] = useSelector((state: RootState) => state.questionManager.questions)
 
     const answersBufferRef = useRef(answersBuffer)
+    const clientRef = useRef(client)
 
     const getShareURL = () => `${window.location.origin}/public/${room?.id}/`
     const handleCloseShareModal = () => setShowShareModal(false);
@@ -70,7 +71,8 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
 
     useLayoutEffect(() => {
         answersBufferRef.current = answersBuffer
-    }, [answersBuffer]);
+        clientRef.current = client
+    }, [answersBuffer, client]);
 
     useEffect(() => {
         // Set timeout to send answers to server and clean buffer
@@ -88,14 +90,13 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
 
     useEffect(() => {
         // Retrieve data for the first time, create and propagate client
-        (async () => {
-            ws.open('public_poll', match.params.roomId, handleMessage)
+        ws.open('public_poll', match.params.roomId, handleMessage, async () => {
             ws.send({
                 type: 'bind_client',
-                message: await dispatch(createClient({room: match.params.roomId}))
+                message: clientRef.current || await dispatch(createClient({room: match.params.roomId}))
             })
             triggerUpdate()
-        })()
+        })
     }, [])
 
     return (

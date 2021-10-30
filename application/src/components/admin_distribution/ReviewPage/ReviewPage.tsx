@@ -1,5 +1,5 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faShare, faShareAlt} from "@fortawesome/free-solid-svg-icons";
+import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RouteComponentProps} from "react-router";
@@ -58,8 +58,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
 
     // Retrieve data for the first time, on error - display error
     useEffect(() => {
-        ws.open('admin_poll', match.params.roomId, handleMessage)
-        triggerUpdate()
+        ws.open('admin_poll', match.params.roomId, handleMessage, triggerUpdate)
     }, [])
 
     return (
