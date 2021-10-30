@@ -4,7 +4,7 @@ from api.urtils import Counter
 
 
 def display_option_validator(item):
-    return item in DISPLAY_OPTIONS
+    return item in [ans.type for ans in DISPLAY_OPTIONS.values()]
 
 
 class Room(models.Model):
@@ -30,8 +30,14 @@ class Question(models.Model):
 
     @property
     def rate(self):
-        # TODO Implement
-        return 10
+        average = 0
+        clients = Client.objects.filter(room=self.room, time_destroyed=None).all()
+        for client in clients:
+            try:
+                average += NumericAnswer.objects.filter(client=client, question=self).latest('time_created').value
+            except NumericAnswer.DoesNotExist:
+                average += NumericAnswer.default_value
+        return average / len(clients) if len(clients) else DISPLAY_OPTIONS[self.display_option].default_value
 
 
 class Client(models.Model):
@@ -42,6 +48,9 @@ class Client(models.Model):
 
 
 class Answer(models.Model):
+    type: str = None
+    default_value = 0
+
     id = HashidAutoField(primary_key=True, salt='answer.id')
     time_created = models.DateTimeField(auto_now_add=True)
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
@@ -53,11 +62,12 @@ class Answer(models.Model):
 
 class NumericAnswer(Answer):
     type = 'numeric_answers'
-    value = models.FloatField(default=0)
+    default_value = 0
+    value = models.FloatField(default=default_value)
 
 
 # Option name: valid answer type
 DISPLAY_OPTIONS = {
-    'numeric_range_maximum': NumericAnswer.type,
-    'numeric_range_optimum': NumericAnswer.type,
+    'numeric_range_maximum': NumericAnswer,
+    'numeric_range_optimum': NumericAnswer,
 }
