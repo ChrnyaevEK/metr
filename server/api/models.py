@@ -4,7 +4,7 @@ from api.urtils import Counter
 
 
 def display_option_validator(item):
-    return item in [ans.type for ans in DISPLAY_OPTIONS.values()]
+    return item in DISPLAY_OPTIONS
 
 
 class Room(models.Model):
@@ -37,7 +37,10 @@ class Question(models.Model):
                 average += NumericAnswer.objects.filter(client=client, question=self).latest('time_created').value
             except NumericAnswer.DoesNotExist:
                 average += NumericAnswer.default_value
-        return average / len(clients) if len(clients) else DISPLAY_OPTIONS[self.display_option].default_value
+        return average / len(clients) if len(clients) else DISPLAY_OPTIONS[self.display_option][1]
+
+    def default_rate(self):
+        return DISPLAY_OPTIONS[self.display_option][1]
 
 
 class Client(models.Model):
@@ -62,12 +65,11 @@ class Answer(models.Model):
 
 class NumericAnswer(Answer):
     type = 'numeric_answers'
-    default_value = 0
-    value = models.FloatField(default=default_value)
+    value = models.FloatField()
 
 
-# Option name: valid answer type
+# Option name: [valid answer type, default value]
 DISPLAY_OPTIONS = {
-    'numeric_range_maximum': NumericAnswer,
-    'numeric_range_optimum': NumericAnswer,
+    'numeric_range_maximum': [NumericAnswer, 0],
+    'numeric_range_optimum': [NumericAnswer, 50],
 }
