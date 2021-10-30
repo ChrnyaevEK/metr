@@ -20,7 +20,6 @@ class QuestionSerializer(serializers.ModelSerializer):
         queryset=models.Room.objects.all()
     )
     rate = serializers.IntegerField(read_only=True)
-    default_rate = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = models.Question

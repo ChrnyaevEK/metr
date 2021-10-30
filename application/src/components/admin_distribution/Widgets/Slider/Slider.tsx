@@ -1,5 +1,4 @@
 import "./Slider.css"
-import {useState} from "react";
 import {displayOptions} from "../../../../share";
 
 export function Slider(props: {

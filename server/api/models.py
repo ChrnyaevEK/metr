@@ -39,9 +39,6 @@ class Question(models.Model):
                 average += NumericAnswer.default_value
         return average / len(clients) if len(clients) else DISPLAY_OPTIONS[self.display_option][1]
 
-    def default_rate(self):
-        return DISPLAY_OPTIONS[self.display_option][1]
-
 
 class Client(models.Model):
     id = HashidAutoField(primary_key=True, salt='client.id')
