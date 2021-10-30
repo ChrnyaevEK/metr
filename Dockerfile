@@ -34,7 +34,7 @@ RUN chmod +x $APP_SERVER_HOME/entrypoint.sh
 RUN npm install --prefix $APP_APPLICATION_HOME && npm run build --prefix $APP_APPLICATION_HOME
 
 # chown all the files to the app user
-RUN chown -R app:app $APP_SERVER_HOME && chown -R app:app $APP_APPLICATION_HOME
+RUN chown -R app:app $APP_SERVER_HOME && chown -R app:app $APP_APPLICATION_HOME/build
 
 # change to the app user
 USER app
