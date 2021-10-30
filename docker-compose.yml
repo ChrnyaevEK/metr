@@ -28,12 +28,23 @@ services:
     build: ./nginx
     ports:
       - 80:80
+      - 443:443
     depends_on:
       - server
     volumes:
       - main_server_volume:/home/app
+      - certbot_volume:/var/www/certbot/:ro
+      - certbot_certificate_volume:/etc/nginx/ssl/:ro
+  
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certbot_volume:/var/www/certbot/:rw
+      - certbot_certificate_volume:/etc/letsencrypt/:rw
 
 volumes:
   postgres_data:
   redis_data:
   main_server_volume:
+  certbot_volume:
+  certbot_certificate_volume:
