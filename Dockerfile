@@ -24,19 +24,17 @@ COPY ./application $APP_APPLICATION_HOME
 
 # install dependencies
 RUN apk update && apk add libressl-dev musl-dev libffi-dev build-base postgresql-dev gcc python3-dev musl-dev bash npm
-RUN pip install --upgrade pip
-RUN pip install -r $APP_SERVER_HOME/requirements.txt
+RUN pip install --upgrade pip && pip install -r $APP_SERVER_HOME/requirements.txt
 
 # prepare entrypoint.sh
 RUN sed -i 's/\r$//g' $APP_SERVER_HOME/entrypoint.sh
 RUN chmod +x $APP_SERVER_HOME/entrypoint.sh
 
 # install and build project web application
-RUN npm install --prefix $APP_APPLICATION_HOME && npm run build --prefix $APP_APPLICATION_HOME
+RUN npm cache clean --force && npm install --prefix $APP_APPLICATION_HOME && npm run build --prefix $APP_APPLICATION_HOME
 
 # chown all the files to the app user
-RUN chown -R app:app $APP_SERVER_HOME
-RUN chown -R app:app $APP_APPLICATION_HOME
+RUN chown -R app:app $APP_SERVER_HOME && chown -R app:app $APP_APPLICATION_HOME
 
 # change to the app user
 USER app
