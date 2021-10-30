@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faComments, faPlus, faPoll} from "@fortawesome/free-solid-svg-icons";
 import {Link, useHistory} from "react-router-dom";
 import {validateRoomExist} from "../../core/actions/room_actions";
-import {Button} from "react-bootstrap";
+import {Accordion, Button, Card} from "react-bootstrap";
 import {SEARCH_VALIDATION_TIMEOUT} from "../../share";
 
 
@@ -45,6 +45,13 @@ export function HomePage() {
 
     return (
         <div>
+            <div>
+                <p className="h1 font-weight-bold">METR</p>
+                <p className="text-secondary font-middle">
+                    Metr je aplikace pro živé sledování nálady publika. Nástroj přináší okamžitou zpětnou vazbu a pomáhá
+                    zlepšit kvalitu a účinnost výkladu.
+                </p>
+            </div>
             <div className="font-middle d-flex form-group">
                 <input className="form-control mr-1" placeholder="Zadejte ID přednášky..."
                        onChange={handleSearchInput}/>
@@ -63,20 +70,24 @@ export function HomePage() {
                     <FontAwesomeIcon icon={faPlus}/>
                 </Button>
             </div>
-            {
-                targetRoomId && isTargetRoomValid !== null ?
-                    <div className="d-flex flex-column font-small text-secondary position-absolute">
-                        {
-                            isTargetRoomValid ?
-                                <div>
-                                    <span className="mr-3">Něco se našlo...</span>
-                                    <Link className="mr-3" to={getPublicRoomURL()}>Hlasování</Link>
-                                    <Link to={getAdminRoomURL()}>Výsledky</Link>
-                                </div> :
-                                <span>Přednáška neexistuje... <Link to='/admin'>Vytvořit novou přednášku</Link></span>
-                        }
-                    </div> : null
-            }
+            <div style={{visibility: targetRoomId && isTargetRoomValid !== null ? "visible" : "hidden"}}
+                 className="d-flex flex-column font-small">
+                {
+                    isTargetRoomValid ?
+                        <p>
+                            <span className="mr-3">Něco se našlo...</span>
+                            <Link className="mr-3" to={getPublicRoomURL()}>Hlasování</Link>
+                            <Link to={getAdminRoomURL()}>Výsledky</Link>
+                        </p> :
+                        <p>Přednáška neexistuje... <Link to='/admin'>Vytvořit novou přednášku</Link></p>
+                }
+            </div>
+            <div>
+                <p className="text-secondary font-middle">
+                    Začněte vytvořením nové přednášky nebo otevřete existující přednášku. Každá přednáška může být
+                    otevřena pro pro náhled výsledků hlasování a pro samotné hlasování.
+                </p>
+            </div>
         </div>
     )
 }

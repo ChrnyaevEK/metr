@@ -1,13 +1,13 @@
 body {
-    line-height: 1.5rem;
+    line-height: 1.5rem !important;
 }
 
 .font-big {
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .font-middle {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .font-small {

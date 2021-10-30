@@ -122,9 +122,15 @@ export function CreatePage() {
                     </Button>
                 </div>
             </div>
-            <Button variant="success" className="w-100" onClick={handleContinue} disabled={!questions.length || lock}>
+            <Button variant="success" className="w-100 mb-3" onClick={handleContinue}
+                    disabled={!questions.length || lock}>
                 Pokračovat
             </Button>
+            <div className="text-secondary font-middle">
+                Zvolte <strong>optimum</strong>, pokud cílová hodnota může být popsána slovem optimální.
+                Zvolte <strong>maximum</strong>, pokud cílová
+                hodnota by měla být co největší.
+            </div>
         </div>
     );
 }
