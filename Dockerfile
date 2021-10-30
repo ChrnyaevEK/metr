@@ -31,7 +31,7 @@ RUN sed -i 's/\r$//g' $APP_SERVER_HOME/entrypoint.sh
 RUN chmod +x $APP_SERVER_HOME/entrypoint.sh
 
 # install and build project web application
-RUN npm cache clean --force && npm install --prefix $APP_APPLICATION_HOME && npm run build --prefix $APP_APPLICATION_HOME
+RUN npm install --prefix $APP_APPLICATION_HOME && npm run build --prefix $APP_APPLICATION_HOME
 
 # chown all the files to the app user
 RUN chown -R app:app $APP_SERVER_HOME && chown -R app:app $APP_APPLICATION_HOME
