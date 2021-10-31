@@ -14,6 +14,7 @@ import CreatePage from "../admin_distribution/CreatePage/CreatePage";
 import {HomePage} from "../HomePage/HomePage";
 import Logger from "../admin_distribution/Utils/Logger/Logger";
 import AnswerPage from "../public_distribution/AnswerPage/AnswerPage";
+import ContactPage from "../ContactPage/ContactPage";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                                     <Route path="/admin/:roomId" component={ReviewPage}/>
                                     <Route path="/admin" component={CreatePage}/>
                                     <Route path="/home" component={HomePage}/>
+                                    <Route path="/contact" component={ContactPage}/>
                                     <Route path="*">
                                         <Redirect to="/home"/>
                                     </Route>
@@ -37,7 +39,7 @@ function App() {
                                 <div className="font-small fixed-bottom d-flex justify-content-center px-3 py-1">
                                     <Link to="/" className="mr-4">Domů</Link>
                                     <Link to="/admin" className="mr-4">Nová přednáška</Link>
-                                    <a href="mailto:chrnyaevek@gmail.com" className="mr-4">Kontakt</a>
+                                    <Link to="/contact" className="mr-4">Kontakt</Link>
                                     <a href="https://github.com/ChrnyaevEK/metr" target="_blank">GitHub</a>
                                 </div>
                             </div>
