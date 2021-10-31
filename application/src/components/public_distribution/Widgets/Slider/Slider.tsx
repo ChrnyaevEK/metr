@@ -11,7 +11,7 @@ export function Slider(props: {
                    className="font-middle font-weight-bold mb-1 text-break">{props.question.value}</label>
             <input type="range" min="0" max="100" className="form-control-range public-slider" onChange={(e) => {
                 props.onChangeHandler(props.question.id, parseInt(e.target.value))
-            }} id="formControlRange"/>
+            }} id="formControlRange" value={displayOptions[props.question.display_option].default_value}/>
             <div className="d-flex justify-content-between mt-1">
                 {
                     displayOptions[props.question.display_option].text_equivalents.map((value) => {

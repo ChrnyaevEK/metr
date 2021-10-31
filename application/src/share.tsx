@@ -10,12 +10,14 @@ export const displayOptions: IDisplayOptions = {
     numeric_range_optimum: {
         title: 'Optimum',
         text_equivalents: ['Nizké', 'Optimální', 'Vysoké'],
-        color_shifter: (value: number) => 'hue-rotate(-' + 2 * value + 'deg)'
+        color_shifter: (value: number) => 'hue-rotate(-' + 2 * value + 'deg)',
+        default_value: 50,
     },
     numeric_range_maximum: {
         title: 'Maximum',
         text_equivalents: ['Nizké', 'Střední', 'Maximální'],
-        color_shifter: (value: number) => 'hue-rotate(-' + value + 'deg)'
+        color_shifter: (value: number) => 'hue-rotate(-' + value + 'deg)',
+        default_value: 100,
     }
 }
 

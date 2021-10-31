@@ -140,6 +140,7 @@ interface IDisplayOptions {
         title: string,
         text_equivalents: string[],
         color_shifter: (value: number) => string,
+        default_value: number,
     }
 }
 
