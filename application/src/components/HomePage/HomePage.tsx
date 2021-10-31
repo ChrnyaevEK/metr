@@ -65,7 +65,7 @@ export function HomePage() {
                         onClick={handleOpenAdminPage}>
                     <FontAwesomeIcon icon={faPoll}/>
                 </Button>
-                <Button disabled={Boolean(isTargetRoomValid)} variant="success" title="Vytvořit novou přednášku"
+                <Button disabled={Boolean(isTargetRoomValid)} variant="success" title="Vytvořit nové hlasování"
                         onClick={handleOpenCreatePollPage}>
                     <FontAwesomeIcon icon={faPlus}/>
                 </Button>
@@ -79,7 +79,7 @@ export function HomePage() {
                             <Link className="mr-3" to={getPublicRoomURL()}>Hlasování</Link>
                             <Link to={getAdminRoomURL()}>Výsledky</Link>
                         </p> :
-                        <p>Hlasování neexistuje... <Link to='/admin'>Vytvořit novou přednášku</Link></p>
+                        <p>Hlasování neexistuje... <Link to='/admin'>Vytvořit nové hlasování</Link></p>
                 }
             </div>
             <div>
