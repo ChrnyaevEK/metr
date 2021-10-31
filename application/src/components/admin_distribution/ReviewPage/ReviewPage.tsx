@@ -80,8 +80,8 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                         <a href={getShareURL()} target="_blank">{getShareURL()}</a>
                     </Modal.Body>
                     <Modal.Footer className="d-flex justify-content-end">
-                        <Button variant="primary" onClick={handleSharePublic} className="mr-2">Hlasování</Button>
-                        <Button variant="primary" onClick={handleShareAdmin}>Výsledky</Button>
+                        <Button variant="light" onClick={handleSharePublic} className="mr-2">Hlasování</Button>
+                        <Button variant="light" onClick={handleShareAdmin}>Výsledky</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
