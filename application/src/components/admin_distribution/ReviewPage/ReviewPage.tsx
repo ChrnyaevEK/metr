@@ -63,7 +63,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
 
     return (
         <div>
-            <div className="font-big d-flex justify-content-between mb-3">
+            <div className="font-big d-flex justify-content-between align-items-baseline mb-3">
                 <div>
                     <strong className="mr-2">Přednáška @ {room?.id}</strong>
                     <strong className="font-small text-secondary mb-3">{room?.online_counter} online</strong>
@@ -95,6 +95,9 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                         <QuestionGroup key={displayOption} questionGroups={questionGroup}/> : null
                 })
             }
+            <div className="text-secondary font-tiny mt-3">
+                Nesdílejte hlasování tlačítkem "Sdílet" v pravém vrchním rohu.
+            </div>
         </div>
     )
 }

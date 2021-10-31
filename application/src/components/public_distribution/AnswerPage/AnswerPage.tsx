@@ -126,6 +126,9 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
                         <QuestionGroup key={displayOption} questionGroup={questionGroup}/> : null
                 })
             }
+            <div className="text-secondary font-tiny mt-3">
+                Nesdílejte hlasování tlačítkem "Sdílet" v pravém vrchním rohu.
+            </div>
             <div className="font-small text-success position-absolute font-weight-bold">
                 {savedMarker ? 'Uloženo!' : null}
             </div>
