@@ -1,4 +1,4 @@
-import {BASE_WS_URL, RECONNECT_TIMEOUT} from "../share";
+import {BASE_WS_URL, RECONNECT_MAX_TRY, RECONNECT_TIMEOUT} from "../share";
 import store from "./store";
 
 class WS {
@@ -7,6 +7,7 @@ class WS {
     onmessage: any
     onopen: any
     reconnectTimeoutId: any
+    reconnectTry = 0
 
     send = (event: WSEvent) => {
         this.connection?.send(JSON.stringify(event))
@@ -27,7 +28,10 @@ class WS {
         })
         if (!this.url) throw 'No URL specified'
         this.connection = new WebSocket(this.url)
-        this.connection.onopen = this.onopen
+        this.connection.onopen = () => {
+            this.reconnectTry = 0
+            this.onopen()
+        }
         this.connection.onerror = this.onerror
         this.connection.onclose = this.onerror
         this.connection.onmessage = (msg) => {
@@ -50,7 +54,8 @@ class WS {
                 timestamp: Date.now()
             },
         })
-        if (!this.reconnectTimeoutId) {
+        if (!this.reconnectTimeoutId && this.reconnectTry <= RECONNECT_MAX_TRY) {
+            this.reconnectTry += 1
             this.reconnectTimeoutId = setTimeout(this.reopen, RECONNECT_TIMEOUT)
         }
     }
