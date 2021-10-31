@@ -102,16 +102,19 @@ class AdminPoll(WebsocketConsumer):
 
     def disconnect(self, code):
         async_to_sync(self.channel_layer.group_discard)(self.admin_group_name, self.channel_name)
-
-        Counter.admin_counter[self.room] -= 1
-        if Counter.admin_counter[self.room] <= 0:
-            del Counter.admin_counter[self.room]
-            async_to_sync(self.channel_layer.group_send)(
-                self.public_group_name,
-                {
-                    'type': 'admin_disconnect',
-                }
-            )
+        try:
+            Counter.admin_counter[self.room] -= 1
+        except KeyError:
+            pass
+        else:
+            if Counter.admin_counter[self.room] <= 0:
+                del Counter.admin_counter[self.room]
+                async_to_sync(self.channel_layer.group_send)(
+                    self.public_group_name,
+                    {
+                        'type': 'admin_disconnect',
+                    }
+                )
 
     def public_connect(self, event):
         self.send(json.dumps(event))
