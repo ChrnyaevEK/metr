@@ -89,7 +89,7 @@ export function CreatePage() {
             questions.length < QUESTION_LIMIT &&
             questions.filter((q) => q.value === question.value).length === 0
         )
-    }, [question])
+    }, [question, questions])
 
     return (
         <div>
@@ -104,7 +104,8 @@ export function CreatePage() {
             <div className="form-group d-flex mt-3 mb-1">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
                     <input id="create-page-question-input" className="form-control" placeholder="Například rychlost..."
-                           value={question.value} disabled={questions.length === QUESTION_LIMIT || lock}
+                           autoComplete="off" value={question.value}
+                           disabled={questions.length === QUESTION_LIMIT || lock}
                            maxLength={1000} onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}
                     />
                 </label>
