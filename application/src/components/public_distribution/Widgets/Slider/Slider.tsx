@@ -7,7 +7,8 @@ export function Slider(props: {
 }) {
     return (
         <div className="form-group">
-            <label htmlFor="formControlRange" className="font-middle font-weight-bold mb-1">{props.question.value}</label>
+            <label htmlFor="formControlRange"
+                   className="font-middle font-weight-bold mb-1 text-break">{props.question.value}</label>
             <input type="range" min="0" max="100" className="form-control-range public-slider" onChange={(e) => {
                 props.onChangeHandler(props.question.id, parseInt(e.target.value))
             }} id="formControlRange"/>

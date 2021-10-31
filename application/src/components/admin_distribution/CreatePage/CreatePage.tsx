@@ -21,8 +21,8 @@ function Question(props: {
     }
 
     return (
-        <div className="border rounded px-2 py-1 font-middle d-flex align-items-center mb-1">
-            <div className="flex-grow-1 text-truncate mr-2 font-weight-bold">{props.question.value}</div>
+        <div className="border rounded px-2 py-1 font-middle d-flex align-items-baseline mb-1">
+            <div className="flex-grow-1 text-break mr-2 font-weight-bold">{props.question.value}</div>
             <div className="text-secondary mr-2">{displayOptions[props.question.display_option].title}</div>
             <Button variant="outline-light" onClick={handleRemoveQuestion} disabled={props.lock}>
                 <FontAwesomeIcon icon={faTimes} className="text-danger"/>
@@ -105,7 +105,7 @@ export function CreatePage() {
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
                     <input id="create-page-question-input" className="form-control" placeholder="Například rychlost..."
                            value={question.value} disabled={questions.length === QUESTION_LIMIT || lock}
-                           onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}
+                           maxLength={1000} onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}
                     />
                 </label>
                 <div className="d-flex w-50">

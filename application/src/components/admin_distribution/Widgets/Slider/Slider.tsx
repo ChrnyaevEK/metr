@@ -6,7 +6,7 @@ export function Slider(props: {
 }) {
     return (
         <div className="d-flex flex-column mb-2">
-            <div className="font-middle text-truncate font-weight-bold">{props.question.value}</div>
+            <div className="font-middle text-break font-weight-bold">{props.question.value}</div>
             <input style={{'filter': displayOptions[props.question.display_option].color_shifter(props.question.rate)}}
                    type="range" className="admin-slider" min={0} max={100}
                    value={props.question.rate} readOnly={true}/>
