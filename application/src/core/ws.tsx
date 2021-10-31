@@ -1,10 +1,12 @@
-import {BASE_WS_URL, RECONNECT_TIMEOUT, sleep} from "../share";
+import {BASE_WS_URL, RECONNECT_TIMEOUT} from "../share";
+import store from "./store";
 
 class WS {
     url: string | undefined
     connection: WebSocket | undefined
     onmessage: any
     onopen: any
+    reconnectTimeoutId: any
 
     send = (event: WSEvent) => {
         this.connection?.send(JSON.stringify(event))
@@ -18,6 +20,11 @@ class WS {
     }
 
     reopen = () => {
+        this.reconnectTimeoutId = null
+        store.dispatch({
+            type: 'logger/unset/error',
+            payload: null,
+        })
         if (!this.url) throw 'No URL specified'
         this.connection = new WebSocket(this.url)
         this.connection.onopen = this.onopen
@@ -34,7 +41,18 @@ class WS {
     }
 
     onerror = () => {
-        setTimeout(this.reopen, RECONNECT_TIMEOUT)
+        store.dispatch({
+            type: 'logger/set/error',
+            payload: {
+                detail: 'Failed co connect to server...',
+                status: 500,
+                protocol: 'ws',
+                timestamp: Date.now()
+            },
+        })
+        if (!this.reconnectTimeoutId) {
+            this.reconnectTimeoutId = setTimeout(this.reopen, RECONNECT_TIMEOUT)
+        }
     }
 }
 
