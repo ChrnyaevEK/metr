@@ -66,6 +66,6 @@ class NumericAnswer(Answer):
 
 # Option name: [valid answer type, default value]
 DISPLAY_OPTIONS = {
-    'numeric_range_maximum': [NumericAnswer, 0],
+    'numeric_range_maximum': [NumericAnswer, 100],
     'numeric_range_optimum': [NumericAnswer, 50],
 }
