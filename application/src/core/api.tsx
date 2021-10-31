@@ -1,13 +1,15 @@
 import $ from 'jquery'
-import {BASE_API_URL} from "../share";
+import {BASE_API_URL, getCookie} from "../share";
 import store from "./store";
 
 export const baseApi = {
+    csrfToken: getCookie('csrftoken'),
     ajaxJSON: async (settings: JQueryAjaxSettings) => {
         let response;
         try {
             response = await $.ajax({
                 ...settings,
+                headers: {'X-CSRFToken': baseApi.csrfToken},
                 crossDomain: true,
                 dataType: 'json',
                 url: BASE_API_URL + settings.url,
