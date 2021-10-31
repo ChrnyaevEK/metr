@@ -53,7 +53,7 @@ export function HomePage() {
                 </p>
             </div>
             <div className="font-middle d-flex form-group">
-                <input className="form-control mr-1" placeholder="Zadejte ID přednášky..." maxLength={7}
+                <input className="form-control mr-1" placeholder="Zadejte ID hlasování..." maxLength={7}
                        onChange={handleSearchInput}/>
                 <Button disabled={!Boolean(isTargetRoomValid)} variant="success" className="mr-1"
                         title="Otevřit hlasování"
@@ -79,13 +79,13 @@ export function HomePage() {
                             <Link className="mr-3" to={getPublicRoomURL()}>Hlasování</Link>
                             <Link to={getAdminRoomURL()}>Výsledky</Link>
                         </p> :
-                        <p>Přednáška neexistuje... <Link to='/admin'>Vytvořit novou přednášku</Link></p>
+                        <p>Hlasování neexistuje... <Link to='/admin'>Vytvořit novou přednášku</Link></p>
                 }
             </div>
             <div>
                 <p className="text-secondary font-middle">
-                    Začněte vytvořením nové přednášky nebo otevřete existující přednášku. Každá přednáška může být
-                    otevřena pro pro náhled výsledků hlasování a pro samotné hlasování.
+                    Začněte vytvořením nového hlasování nebo otevřete existující. Každá hlasování může být
+                    otevřeno pro náhled výsledků a pro samotné hlasování.
                 </p>
             </div>
         </div>

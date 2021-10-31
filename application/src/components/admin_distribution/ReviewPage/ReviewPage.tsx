@@ -65,7 +65,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
         <div>
             <div className="font-big d-flex justify-content-between align-items-baseline mb-3">
                 <div>
-                    <strong className="mr-2">Přednáška @ {room?.id}</strong>
+                    <strong className="mr-2">Výsledky @ {room?.id}</strong>
                     <strong className="font-small text-secondary mb-3">{room?.online_counter} online</strong>
                 </div>
                 <Button onClick={handleShowShareModal} variant="light">

@@ -103,7 +103,7 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
         <div>
             <div className="font-big d-flex justify-content-between mb-2">
                 <div className="font-weight-bold">
-                    <span className="mr-2">Přednáška @ {room?.id}</span>
+                    <span className="mr-2">Hlasování @ {room?.id}</span>
                     <span className="font-small text-secondary"> {room?.is_online ? 'online' : 'offline'}</span>
                 </div>
                 <Button variant="light" onClick={handleShowShareModal}><FontAwesomeIcon icon={faShareAlt}/></Button>
