@@ -1,4 +1,4 @@
-import {MouseEvent, ChangeEvent, KeyboardEvent, useState, useRef, useLayoutEffect, useEffect} from "react";
+import {ChangeEvent, KeyboardEvent, useState, useRef, useLayoutEffect, useEffect} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {DEFAULT_DISPLAY_OPTION, displayOptions, QUESTION_LIMIT} from "../../../share";
@@ -8,28 +8,7 @@ import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
 import {Button} from "react-bootstrap";
-
-function Question(props: {
-    question: QuestionPrototype,
-    setQuestions: any,
-    lock: boolean,
-}) {
-    const handleRemoveQuestion = (e: MouseEvent<HTMLButtonElement>) => {
-        props.setQuestions((questions: QuestionPrototype[]) => {
-            return [...questions.filter(question => question.value !== props.question.value)]
-        })
-    }
-
-    return (
-        <div className="border rounded px-2 py-1 font-middle d-flex align-items-baseline mb-1">
-            <div className="flex-grow-1 text-break mr-2 font-weight-bold">{props.question.value}</div>
-            <div className="text-secondary mr-2">{displayOptions[props.question.display_option].title}</div>
-            <Button variant="outline-light" onClick={handleRemoveQuestion} disabled={props.lock}>
-                <FontAwesomeIcon icon={faTimes} className="text-danger"/>
-            </Button>
-        </div>
-    )
-}
+import Question from "./Question";
 
 export function CreatePage() {
     const history = useHistory()
@@ -40,17 +19,24 @@ export function CreatePage() {
     const roomRef = useRef(room)
 
     const [lock, setLock]: [boolean, any] = useState(false)
+    const [isLimitReached, setIsLimitReached]: [boolean, any] = useState(false)
+    const [editMode, setEditMode]: [boolean, any] = useState(false)
+    const [editIndex, setEditIndex]: [number | null, any] = useState(null)
+    const [isQuestionAccepted, setIsQuestionAccepted]: [boolean, any] = useState(false)
     const [questions, setQuestions]: [QuestionPrototype[], any] = useState([])
     const [question, setQuestion]: [QuestionPrototype, any] = useState({
         display_option: DEFAULT_DISPLAY_OPTION,
         room: '',
         value: '',
     })
-    const [isQuestionAccepted, setIsQuestionAccepted]: [boolean, any] = useState(false)
-
     const handleAddQuestion = () => {
         if (isQuestionAccepted) {
-            setQuestions([...questions, question])
+            if (editIndex !== null) {
+                Object.assign(questions[editIndex], question)
+                setEditIndex(null)
+            } else {
+                setQuestions([...questions, question])
+            }
             setQuestion({...question, value: ''})
         }
     }
@@ -67,7 +53,6 @@ export function CreatePage() {
         ...question,
         display_option: e.target.value
     })
-
     const handleContinue = async () => {
         setLock(true)  // Lock buttons
         await dispatch(createRoom({}))  // Create room
@@ -76,6 +61,31 @@ export function CreatePage() {
             await dispatch(createQuestion(q))
         }
         history.push(`/admin/${roomRef.current.id}/`)
+    }
+    const handleRemoveQuestion = (removedQuestion: QuestionPrototype) => {
+        setQuestions((questions: QuestionPrototype[]) => {
+            return [...questions.filter(question => question.value !== removedQuestion.value)]
+        })
+        handleCancelEdition()
+    }
+    const handleEditQuestion = (editedQuestion: QuestionPrototype) => {
+        setEditMode(true)
+        for (let i = 0; i < questions.length; i++) {
+            if (questions[i].value === editedQuestion.value) {
+                setEditIndex(i)
+                break;
+            }
+        }
+        setQuestion(editedQuestion)
+    }
+    const handleCancelEdition = () => {
+        setEditMode(false)
+        setEditIndex(null)
+        setQuestion({
+            display_option: DEFAULT_DISPLAY_OPTION,
+            room: '',
+            value: ''
+        })
     }
 
     useLayoutEffect(() => {
@@ -86,8 +96,11 @@ export function CreatePage() {
         // Check if question is filled right and is unique
         setIsQuestionAccepted(
             question.value.length &&
-            questions.length < QUESTION_LIMIT &&
-            questions.filter((q) => q.value === question.value).length === 0
+            (questions.length < QUESTION_LIMIT || editIndex !== null) &&
+            questions.filter((q) => q.value === question.value && q.display_option === question.display_option).length === 0
+        )
+        setIsLimitReached(
+            questions.length === QUESTION_LIMIT && editIndex === null
         )
     }, [question, questions])
 
@@ -99,25 +112,32 @@ export function CreatePage() {
                 <div className="text-secondary font-weight-bold">{questions.length}/{QUESTION_LIMIT}</div>
             </div>
             {questions.map((q) => {
-                return <Question question={q} setQuestions={setQuestions} lock={lock} key={q.value}/>
+                return <Question question={q}
+                                 handleRemoveQuestion={handleRemoveQuestion}
+                                 handleEditQuestion={handleEditQuestion}
+                                 lock={lock} key={q.value}/>
             })}
             <div className="form-group d-flex mt-3 mb-1">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
                     <input id="create-page-question-input" className="form-control" placeholder="Například rychlost..."
                            autoComplete="off" value={question.value}
-                           disabled={questions.length === QUESTION_LIMIT || lock}
+                           disabled={isLimitReached || lock}
                            maxLength={1000} onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}
                     />
                 </label>
                 <div className="d-flex w-50">
                     <select value={question.display_option} onChange={handleSetDisplayOption}
                             className="form-control mr-1" id="create-page-display-type-selection"
-                            disabled={questions.length === QUESTION_LIMIT || lock}>
+                            disabled={isLimitReached || lock}>
                         {Object.entries(displayOptions)
                             .map(([key, value]) => {
                                 return <option key={key} value={key}>{value.title}</option>
                             })}
                     </select>
+                    <Button variant="danger" onClick={handleCancelEdition} className="mr-1"
+                            disabled={!editMode || lock}>
+                        <FontAwesomeIcon icon={faTimes}/>
+                    </Button>
                     <Button variant="success" onClick={handleAddQuestion} disabled={!isQuestionAccepted || lock}>
                         <FontAwesomeIcon icon={faPlus}/>
                     </Button>
