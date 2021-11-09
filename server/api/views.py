@@ -1,15 +1,14 @@
 import csv
 import tempfile
-from wsgiref.util import FileWrapper
 
 from api import models
 from api import serializers
 from api.consumers import PublicPoll
-from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.exceptions import MethodNotAllowed, NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from sendfile import sendfile
 
 CSV_QUESTION_HEADERS = ['question_id', 'question_value', 'answer_type', 'answer_value', 'answer_time_created']
 
@@ -136,9 +135,6 @@ class CSVQuestionsExport(APIView):
             dict_writer = csv.DictWriter(csvfile, CSV_QUESTION_HEADERS)
             dict_writer.writeheader()
             dict_writer.writerows(data)
-
-        with open(csvfile.name, encoding="utf-8") as csvfile:
-            response = HttpResponse(FileWrapper(csvfile), content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="%s_room_export.csv"' % room.id
-
-            return response
+            csvfile.flush()
+            return sendfile(request, csvfile.name, encoding="utf-8", attachment=True,
+                            attachment_filename="%s_room_export.csv" % room.id)
