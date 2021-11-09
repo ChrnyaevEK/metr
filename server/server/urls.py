@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from api.views import CSVQuestionsExport
 
 urlpatterns = [
     path('root/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('csv_export/', CSVQuestionsExport.as_view()),
 ]
 
 handler404 = 'server.views.handler404'
