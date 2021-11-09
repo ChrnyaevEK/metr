@@ -7,18 +7,12 @@ import {createQuestion} from "../../../core/actions/questions_actions";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
-import {Button} from "react-bootstrap";
+import {Alert, Button} from "react-bootstrap";
 import RegularQuestion from "./RegularQuestion";
 import PopularQuestion from "./PopularQuestion";
 
 export function CreatePage() {
-    const popularQuestions = [
-        {
-            display_option: DEFAULT_DISPLAY_OPTION,
-            room: '',
-            value: 'Test',
-        }
-    ]
+    const popularQuestions: QuestionPrototype[] = []
 
     const history = useHistory()
     const dispatch = useDispatch()
@@ -42,7 +36,9 @@ export function CreatePage() {
         if (isQuestionAccepted) {
             if (editIndex !== null) {
                 Object.assign(questions[editIndex], question)
+                setQuestions([...questions]) // Trigger array changes
                 setEditIndex(null)
+                setEditMode(false)
             } else {
                 setQuestions([...questions, question])
             }
@@ -123,18 +119,24 @@ export function CreatePage() {
             <div className="font-middle text-secondary mb-3 d-flex justify-content-between">
                 Zadejte hodnoty pro sledování nebo zkuste přidat populární hodnoty
             </div>
-            {popularQuestions.map((q) => {
-                return <PopularQuestion question={q} handleUseQuestion={handleUseQuestion} key={q.value}/>
-            })}
+            {
+                popularQuestions.length ? popularQuestions.map((q) => {
+                    return <PopularQuestion question={q} questions={questions}
+                                            validateQuestionAcceptable={validateQuestionAcceptable}
+                                            handleUseQuestion={handleUseQuestion} key={q.value}/>
+                }) : <Alert variant="info">Nejsou k dispozici žádné populární hodnoty</Alert>
+            }
             <div className="font-middle text-secondary my-3 d-flex justify-content-end">
                 <div className="text-secondary font-weight-bold">{questions.length}/{QUESTION_LIMIT}</div>
             </div>
-            {questions.map((q) => {
-                return <RegularQuestion question={q}
-                                        handleRemoveQuestion={handleRemoveQuestion}
-                                        handleEditQuestion={handleEditQuestion}
-                                        lock={lock} key={q.value}/>
-            })}
+            {
+                questions.length ? questions.map((q) => {
+                    return <RegularQuestion question={q}
+                                            handleRemoveQuestion={handleRemoveQuestion}
+                                            handleEditQuestion={handleEditQuestion}
+                                            lock={lock} key={q.value}/>
+                }) : <Alert variant="info">Zatím nemáte žádné hodnoty pro sledování</Alert>
+            }
             <div className="form-group d-flex mt-3 mb-1">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
                     <input id="create-page-question-input" className="form-control" placeholder="Například rychlost..."
