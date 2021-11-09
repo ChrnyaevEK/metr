@@ -6,7 +6,7 @@ import {RouteComponentProps} from "react-router";
 import {Modal, Button} from "react-bootstrap";
 import QRCode from "react-qr-code";
 import Slider from "../Widgets/Slider/Slider";
-import {displayOptions} from "../../../share";
+import {BASE_URL, displayOptions} from "../../../share";
 import {RootState} from "../../../core/store";
 import {retrieveRoom} from "../../../core/actions/room_actions";
 import {listQuestions} from "../../../core/actions/questions_actions";
@@ -95,8 +95,8 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                         <QuestionGroup key={displayOption} questionGroups={questionGroup}/> : null
                 })
             }
-            <div className="text-secondary font-tiny mt-3">
-                Nesdílejte hlasování tlačítkem "Sdílet" v pravém vrchním rohu.
+            <div className="text-secondary font-small mt-3 d-flex justify-content-end">
+                <a href={`${BASE_URL}/csv_export?room=${room?.id}`}>Export</a>
             </div>
         </div>
     )

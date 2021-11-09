@@ -11,5 +11,4 @@ router.register(r'clients', views.ClientViewSet, 'client')
 urlpatterns = [
     path('', include(router.urls)),
     path('validate_room_exist', views.ValidateRoomExist.as_view()),
-    path(r'csv_export', views.CSVQuestionsExport.as_view()),
 ]
