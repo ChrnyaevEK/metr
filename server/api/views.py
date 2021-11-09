@@ -1,10 +1,17 @@
-from rest_framework import viewsets
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.exceptions import MethodNotAllowed, NotFound
-from api import serializers
+import csv
+import tempfile
+from wsgiref.util import FileWrapper
+
 from api import models
+from api import serializers
 from api.consumers import PublicPoll
+from django.http import HttpResponse
+from rest_framework import viewsets
+from rest_framework.exceptions import MethodNotAllowed, NotFound
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+CSV_QUESTION_HEADERS = ['question_id', 'question_value', 'answer_type', 'answer_value', 'answer_time_created']
 
 
 def get_target_room(request):  # ...?room=hash...
@@ -97,3 +104,41 @@ class ValidateRoomExist(APIView):
         except NotFound:
             return Response(False)
         return Response(True)
+
+
+class CSVQuestionsExport(APIView):
+    """ Questions & Answers export to CSV file"""
+
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+
+        room = get_target_room(request)
+        questions_qs = models.Question.objects.filter(room=room)
+        answers_qs = models.NumericAnswer.objects.filter(question__in=questions_qs)
+
+        data = []
+        for question in questions_qs:
+            for answer in answers_qs:
+                if answer.question == question:
+                    data.append(
+                        {
+                            "question_id": question.id,
+                            "question_value": question.value,
+                            "answer_type": answer.type,
+                            "answer_value": answer.value,
+                            "answer_time_created": answer.time_created
+                        }
+                    )
+
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, encoding="utf-8") as csvfile:
+            dict_writer = csv.DictWriter(csvfile, CSV_QUESTION_HEADERS)
+            dict_writer.writeheader()
+            dict_writer.writerows(data)
+
+        with open(csvfile.name, encoding="utf-8") as csvfile:
+            response = HttpResponse(FileWrapper(csvfile), content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="%s_room_export.csv"' % room.id
+
+            return response
