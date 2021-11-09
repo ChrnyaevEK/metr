@@ -8,9 +8,18 @@ import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
 import {Button} from "react-bootstrap";
-import Question from "./Question";
+import RegularQuestion from "./RegularQuestion";
+import PopularQuestion from "./PopularQuestion";
 
 export function CreatePage() {
+    const popularQuestions = [
+        {
+            display_option: DEFAULT_DISPLAY_OPTION,
+            room: '',
+            value: 'Test',
+        }
+    ]
+
     const history = useHistory()
     const dispatch = useDispatch()
 
@@ -87,6 +96,16 @@ export function CreatePage() {
             value: ''
         })
     }
+    const handleUseQuestion = (usedQuestion: QuestionPrototype) => {
+        if (validateQuestionAcceptable(usedQuestion)) {
+            setQuestions([...questions, usedQuestion])
+        }
+    }
+
+    const validateQuestionAcceptable = (controlledQuestion: QuestionPrototype) => {
+        return Boolean(controlledQuestion.value.length && (questions.length < QUESTION_LIMIT || editIndex !== null) &&
+            questions.filter((q) => q.value === controlledQuestion.value && q.display_option === controlledQuestion.display_option).length === 0)
+    }
 
     useLayoutEffect(() => {
         roomRef.current = room;
@@ -94,28 +113,27 @@ export function CreatePage() {
 
     useEffect(() => {
         // Check if question is filled right and is unique
-        setIsQuestionAccepted(
-            question.value.length &&
-            (questions.length < QUESTION_LIMIT || editIndex !== null) &&
-            questions.filter((q) => q.value === question.value && q.display_option === question.display_option).length === 0
-        )
-        setIsLimitReached(
-            questions.length === QUESTION_LIMIT && editIndex === null
-        )
+        setIsQuestionAccepted(validateQuestionAcceptable(question))
+        setIsLimitReached(questions.length === QUESTION_LIMIT && editIndex === null)
     }, [question, questions])
 
     return (
         <div>
             <div className="font-big font-weight-bold">Nové hlasování</div>
             <div className="font-middle text-secondary mb-3 d-flex justify-content-between">
-                <div>Zadejte hodnoty pro sledování</div>
+                Zadejte hodnoty pro sledování nebo zkuste přidat populární hodnoty
+            </div>
+            {popularQuestions.map((q) => {
+                return <PopularQuestion question={q} handleUseQuestion={handleUseQuestion} key={q.value}/>
+            })}
+            <div className="font-middle text-secondary my-3 d-flex justify-content-end">
                 <div className="text-secondary font-weight-bold">{questions.length}/{QUESTION_LIMIT}</div>
             </div>
             {questions.map((q) => {
-                return <Question question={q}
-                                 handleRemoveQuestion={handleRemoveQuestion}
-                                 handleEditQuestion={handleEditQuestion}
-                                 lock={lock} key={q.value}/>
+                return <RegularQuestion question={q}
+                                        handleRemoveQuestion={handleRemoveQuestion}
+                                        handleEditQuestion={handleEditQuestion}
+                                        lock={lock} key={q.value}/>
             })}
             <div className="form-group d-flex mt-3 mb-1">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
@@ -147,11 +165,6 @@ export function CreatePage() {
                     disabled={!questions.length || lock}>
                 Pokračovat
             </Button>
-            <div className="text-secondary font-middle">
-                Zvolte <strong>optimum</strong>, pokud cílová hodnota může být popsána slovem optimální.
-                Zvolte <strong>maximum</strong>, pokud cílová
-                hodnota by měla být co největší.
-            </div>
         </div>
     );
 }
