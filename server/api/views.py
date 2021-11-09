@@ -131,7 +131,7 @@ class CSVQuestionsExport(APIView):
                         }
                     )
 
-        with tempfile.NamedTemporaryFile(mode='w', delete=False, encoding="utf-8") as csvfile:
+        with tempfile.NamedTemporaryFile(mode='w', delete=True, encoding="utf-8") as csvfile:
             dict_writer = csv.DictWriter(csvfile, CSV_QUESTION_HEADERS)
             dict_writer.writeheader()
             dict_writer.writerows(data)
