@@ -2,7 +2,7 @@ from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from api import models
-from api.urtils import Counter
+from api.utils import Counter
 import json
 import datetime
 
