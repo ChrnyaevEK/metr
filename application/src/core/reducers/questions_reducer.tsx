@@ -26,6 +26,11 @@ export const questionsReducer = (state: IState = initialState, action: PayloadAc
                 ...state,
                 questions: action.payload
             }
+        case 'popular_questions/list':
+            return {
+                ...state,
+                popularQuestions: action.payload
+            }
         default:
             return state
     }

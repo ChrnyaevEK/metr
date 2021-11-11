@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {DEFAULT_DISPLAY_OPTION, displayOptions, QUESTION_LIMIT} from "../../../share";
 import {createRoom} from "../../../core/actions/room_actions";
-import {createQuestion} from "../../../core/actions/questions_actions";
+import {createQuestion, listPopularQuestions} from "../../../core/actions/questions_actions";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
@@ -27,7 +27,6 @@ export function CreatePage() {
     const [questions, setQuestions]: [QuestionPrototype[], any] = useState([])
     const [question, setQuestion]: [QuestionPrototype, any] = useState({
         display_option: DEFAULT_DISPLAY_OPTION,
-        room: '',
         value: '',
     })
 
@@ -109,6 +108,9 @@ export function CreatePage() {
     }, [room]);
 
     useEffect(() => {
+        dispatch(listPopularQuestions())
+    }, [])
+    useEffect(() => {
         // Check if question is filled right and is unique
         setIsQuestionAccepted(validateQuestionAcceptable(question))
         setIsLimitReached(questions.length === QUESTION_LIMIT && editIndex === null)
@@ -121,7 +123,7 @@ export function CreatePage() {
                 Zadejte hodnoty pro sledování nebo přidejte populární hodnoty
             </div>
             {
-                popularQuestions.length ? popularQuestions.map((q) => {
+                popularQuestions.length ? popularQuestions.map((q: QuestionPrototype) => {
                     return <PopularQuestion question={q} questions={questions} key={q.value}
                                             validateQuestionAcceptable={validateQuestionAcceptable}
                                             handleUseQuestion={handleUseQuestion}/>
