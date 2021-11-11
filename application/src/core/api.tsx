@@ -19,9 +19,9 @@ export const baseApi = {
         } catch (e: any) {
             console.error(e)
             store.dispatch({
-                type: 'logger/set/error',
+                type: 'logger/set_http_error',
                 payload: {
-                    detail: e.responseJSON?.detail || 'Server error occurred...',
+                    detail: e.responseJSON?.detail || 'Server error occurred',
                     status: e.status || 500,
                     protocol: 'http',
                     timestamp: Date.now()
@@ -30,7 +30,7 @@ export const baseApi = {
             throw e
         }
         store.dispatch({
-            type: 'logger/unset/error',
+            type: 'logger/unset_http_error',
             payload: null,
         })
         return response

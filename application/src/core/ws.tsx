@@ -23,7 +23,7 @@ class WS {
     reopen = () => {
         this.reconnectTimeoutId = null
         store.dispatch({
-            type: 'logger/unset/error',
+            type: 'logger/unset_ws_error',
             payload: null,
         })
         if (!this.url) throw 'No URL specified'
@@ -46,9 +46,9 @@ class WS {
 
     onerror = () => {
         store.dispatch({
-            type: 'logger/set/error',
+            type: 'logger/set_ws_error',
             payload: {
-                detail: 'Failed co connect to server...',
+                detail: 'Failed co connect to server',
                 status: 500,
                 protocol: 'ws',
                 timestamp: Date.now()
