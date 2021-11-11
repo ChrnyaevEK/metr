@@ -2,7 +2,7 @@ import {PayloadAction} from "@reduxjs/toolkit";
 
 interface IState {
     questions: QuestionType[],
-    popularQuestions: QuestionType[],
+    popularQuestions: QuestionPrototype[],
 }
 
 const initialState: IState = {

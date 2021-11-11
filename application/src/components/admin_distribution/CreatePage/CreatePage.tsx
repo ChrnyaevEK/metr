@@ -95,7 +95,7 @@ export function CreatePage() {
     }
     const handleUseQuestion = (usedQuestion: QuestionPrototype) => {
         if (validateQuestionAcceptable(usedQuestion)) {
-            setQuestions([...questions, usedQuestion])
+            setQuestions([...questions, {...usedQuestion}])
         }
     }
 
@@ -118,7 +118,7 @@ export function CreatePage() {
         <div>
             <div className="font-big font-weight-bold">Nové hlasování</div>
             <div className="font-middle text-secondary mb-3 d-flex justify-content-between">
-                Zadejte hodnoty pro sledování nebo zkuste přidat populární hodnoty
+                Zadejte hodnoty pro sledování nebo přidejte populární hodnoty
             </div>
             {
                 popularQuestions.length ? popularQuestions.map((q) => {
@@ -147,10 +147,9 @@ export function CreatePage() {
                     <select value={question.display_option} onChange={handleSetDisplayOption}
                             className="form-control mr-1" id="create-page-display-type-selection"
                             disabled={isLimitReached || lock}>
-                        {Object.entries(displayOptions)
-                            .map(([k, v]) => {
-                                return <option key={k} value={k}>{v.title}</option>
-                            })}
+                        {Object.entries(displayOptions).map(([k, v]) => {
+                            return <option key={k} value={k}>{v.title}</option>
+                        })}
                     </select>
                     <Button variant="danger" onClick={handleCancelEdition} className="mr-1"
                             disabled={!editMode || lock}>
