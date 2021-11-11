@@ -33,7 +33,7 @@ class WS {
             this.onopen()
         }
         this.connection.onerror = this.onerror
-        this.connection.onclose = this.onerror
+        this.connection.onclose = this.onclose
         this.connection.onmessage = (msg) => {
             this.onmessage(JSON.parse(msg.data))
         }
@@ -45,6 +45,17 @@ class WS {
     }
 
     onerror = () => {
+        store.dispatch({
+            type: 'logger/set_ws_error',
+            payload: {
+                detail: 'Communication with server failed',
+                status: 500,
+                protocol: 'ws',
+                timestamp: Date.now()
+            },
+        })
+    }
+    onclose = () => {
         store.dispatch({
             type: 'logger/set_ws_error',
             payload: {
