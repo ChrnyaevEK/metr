@@ -1,6 +1,6 @@
 from django.db import models
 from hashid_field import HashidAutoField
-from api.urtils import Counter
+from api.utils import Counter
 
 
 def display_option_validator(item):
