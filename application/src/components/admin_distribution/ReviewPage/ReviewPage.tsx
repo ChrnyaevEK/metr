@@ -86,13 +86,12 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                 </Modal>
             </div>
             {
-                Object.keys(displayOptions).map((displayOption: string) => {
+                Object.keys(displayOptions).map((d_o: string) => {
                     let questionGroup = []
-                    for (let question of questions.filter((question: QuestionType) => question.display_option === displayOption)) {
-                        questionGroup.push(<Slider question={question} key={question.id}/>)
+                    for (let q of questions.filter((q: QuestionType) => q.display_option === d_o)) {
+                        questionGroup.push(<Slider question={q} key={q.id}/>)
                     }
-                    return questionGroup.length ?
-                        <QuestionGroup key={displayOption} questionGroups={questionGroup}/> : null
+                    return questionGroup.length ? <QuestionGroup key={d_o} questionGroups={questionGroup}/> : null
                 })
             }
             <div className="text-secondary font-small mt-3 d-flex justify-content-end">

@@ -2,10 +2,12 @@ import {PayloadAction} from "@reduxjs/toolkit";
 
 interface IState {
     questions: QuestionType[],
+    popularQuestions: QuestionType[],
 }
 
 const initialState: IState = {
     questions: [],
+    popularQuestions: []
 }
 
 export const questionsReducer = (state: IState = initialState, action: PayloadAction<any>) => {

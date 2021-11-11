@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faComments, faPlus, faPoll} from "@fortawesome/free-solid-svg-icons";
 import {Link, useHistory} from "react-router-dom";
 import {validateRoomExist} from "../../core/actions/room_actions";
-import {Accordion, Button, Card} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import {SEARCH_VALIDATION_TIMEOUT} from "../../share";
 
 

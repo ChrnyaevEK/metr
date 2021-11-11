@@ -12,8 +12,6 @@ import RegularQuestion from "./RegularQuestion";
 import PopularQuestion from "./PopularQuestion";
 
 export function CreatePage() {
-    const popularQuestions: QuestionPrototype[] = []
-
     const history = useHistory()
     const dispatch = useDispatch()
 
@@ -32,6 +30,9 @@ export function CreatePage() {
         room: '',
         value: '',
     })
+
+    const popularQuestions = useSelector((state: RootState) => state.questionManager.popularQuestions)
+
     const handleAddQuestion = () => {
         if (isQuestionAccepted) {
             if (editIndex !== null) {
@@ -69,7 +70,7 @@ export function CreatePage() {
     }
     const handleRemoveQuestion = (removedQuestion: QuestionPrototype) => {
         setQuestions((questions: QuestionPrototype[]) => {
-            return [...questions.filter(question => question.value !== removedQuestion.value)]
+            return [...questions.filter(q => q.value !== removedQuestion.value)]
         })
         handleCancelEdition()
     }
@@ -121,9 +122,9 @@ export function CreatePage() {
             </div>
             {
                 popularQuestions.length ? popularQuestions.map((q) => {
-                    return <PopularQuestion question={q} questions={questions}
+                    return <PopularQuestion question={q} questions={questions} key={q.value}
                                             validateQuestionAcceptable={validateQuestionAcceptable}
-                                            handleUseQuestion={handleUseQuestion} key={q.value}/>
+                                            handleUseQuestion={handleUseQuestion}/>
                 }) : <Alert variant="info">Nejsou k dispozici žádné populární hodnoty</Alert>
             }
             <div className="font-middle text-secondary my-3 d-flex justify-content-end">
@@ -131,27 +132,24 @@ export function CreatePage() {
             </div>
             {
                 questions.length ? questions.map((q) => {
-                    return <RegularQuestion question={q}
+                    return <RegularQuestion question={q} lock={lock} key={q.value}
                                             handleRemoveQuestion={handleRemoveQuestion}
-                                            handleEditQuestion={handleEditQuestion}
-                                            lock={lock} key={q.value}/>
+                                            handleEditQuestion={handleEditQuestion}/>
                 }) : <Alert variant="info">Zatím nemáte žádné hodnoty pro sledování</Alert>
             }
             <div className="form-group d-flex mt-3 mb-1">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
                     <input id="create-page-question-input" className="form-control" placeholder="Například rychlost..."
-                           autoComplete="off" value={question.value}
-                           disabled={isLimitReached || lock}
-                           maxLength={1000} onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}
-                    />
+                           autoComplete="off" value={question.value} disabled={isLimitReached || lock}
+                           maxLength={1000} onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}/>
                 </label>
                 <div className="d-flex w-50">
                     <select value={question.display_option} onChange={handleSetDisplayOption}
                             className="form-control mr-1" id="create-page-display-type-selection"
                             disabled={isLimitReached || lock}>
                         {Object.entries(displayOptions)
-                            .map(([key, value]) => {
-                                return <option key={key} value={key}>{value.title}</option>
+                            .map(([k, v]) => {
+                                return <option key={k} value={k}>{v.title}</option>
                             })}
                     </select>
                     <Button variant="danger" onClick={handleCancelEdition} className="mr-1"
