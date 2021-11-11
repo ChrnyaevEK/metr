@@ -138,3 +138,13 @@ class CSVQuestionsExport(APIView):
             csvfile.flush()
             return sendfile(request, csvfile.name, encoding="utf-8", attachment=True,
                             attachment_filename="%s_room_export.csv" % room.id)
+
+
+class PopularQuestions(APIView):
+    """ Frequently used questions """
+
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        return Response([])
