@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faComments, faPlus, faPoll} from "@fortawesome/free-solid-svg-icons";
 import {Link, useHistory} from "react-router-dom";
 import {validateRoomExist} from "../../core/actions/room_actions";
-import {Accordion, Button, Card} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import {SEARCH_VALIDATION_TIMEOUT} from "../../share";
 
 
@@ -23,7 +23,11 @@ export function HomePage() {
         if (validationTimeoutId === null) {
             setValidationTimeoutId(setTimeout(async () => {
                 if (targetRoomId) {
-                    setIsTargetRoomValid(await validateRoomExist(targetRoomId))
+                    try {
+                        setIsTargetRoomValid(await validateRoomExist(targetRoomId))
+                    } catch {
+                        setIsTargetRoomValid(false);
+                    }
                 }
                 setValidationTimeoutId(null)
             }, SEARCH_VALIDATION_TIMEOUT))
