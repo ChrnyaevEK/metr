@@ -12,7 +12,7 @@ export function PopularQuestion(props: {
 
     useEffect(() => {
         setIsQuestionAcceptable(props.validateQuestionAcceptable(props.question))
-    }, [props.questions])
+    }, [props.questions, props])
 
     return (
         <div className="border rounded p-2 font-middle d-flex align-items-baseline mb-1">

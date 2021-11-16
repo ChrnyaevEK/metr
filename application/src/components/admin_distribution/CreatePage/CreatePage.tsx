@@ -116,12 +116,12 @@ export function CreatePage() {
 
     useEffect(() => {
         dispatch(listPopularQuestions())
-    }, [])
+    })
     useEffect(() => {
         // Check if question is filled right and is unique
         setIsQuestionAccepted(validateQuestionAcceptable(question))
         setIsLimitReached(questions.length === QUESTION_LIMIT && editIndex === null)
-    }, [question, questions])
+    }, [question, questions, editIndex])
 
     return (
         <div>

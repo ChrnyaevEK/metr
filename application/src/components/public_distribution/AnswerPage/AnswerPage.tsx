@@ -95,7 +95,7 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
                 setSavedMarker(true)
             }, ANSWER_SAVE_TIMEOUT))
         }
-    }, [answersBuffer])
+    }, [answersBuffer, saveTimeoutId])
 
     useEffect(() => {
         // Retrieve data for the first time, create and propagate client

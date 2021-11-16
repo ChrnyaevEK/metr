@@ -32,7 +32,7 @@ export function HomePage() {
                 setValidationTimeoutId(null)
             }, SEARCH_VALIDATION_TIMEOUT))
         }
-    }, [targetRoomId])
+    }, [targetRoomId, validationTimeoutId])
 
     const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
         setTargetRoomId(e.target.value)

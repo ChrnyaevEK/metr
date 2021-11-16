@@ -26,7 +26,7 @@ class WS {
             type: 'logger/unset_ws_error',
             payload: null,
         })
-        if (!this.url) throw 'No URL specified'
+        if (!this.url) throw new Error('No URL specified')
         this.connection = new WebSocket(this.url)
         this.connection.onopen = () => {
             this.reconnectTry = 0
@@ -40,7 +40,7 @@ class WS {
     }
 
     close = () => {
-        if (!this.connection) throw 'Not connected'
+        if (!this.connection) throw new Error('Not connected')
         this.connection.close()
     }
 
