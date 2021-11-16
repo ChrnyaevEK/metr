@@ -37,6 +37,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
     const handleCloseShareModal = () => setShowShareModal(false);
     const handleShowShareModal = () => setShowShareModal(true);
     const [shareAdmin, setShareAdmin] = useState(false)
+    const [lastUpdate, setLastUpdate] = useState(new Date())
 
     const getShareURL = () => `${window.location.origin}${shareAdmin ? '/admin/' : '/public/'}${room?.id}/`
     const handleShareAdmin = () => setShareAdmin(true)
@@ -52,6 +53,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
         try {
             await dispatch(retrieveRoom(match.params.roomId))
             await dispatch(listQuestions(match.params.roomId))
+            setLastUpdate(new Date())
         } catch {
             return
         }
@@ -105,19 +107,24 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                     return questionGroup.length ? <QuestionGroup key={d_o} questionGroups={questionGroup}/> : null
                 })
             }
-            <div className="text-secondary font-small mt-3 d-flex justify-content-between">
-                <InputGroup className="d-flex flex-column">
-                    {rateOptions.map((rate, i) => (
-                        <label key={i} title={`Použit ${rate.name} pro hodnocení výsledků`}>
-                            <input id={`radio-${i}`} type="radio" value={rate.value}
-                                   checked={rateOption === rate.value} className="mr-2"
-                                   onChange={(e) => setRateOption(e.currentTarget.value)}
-                            />
-                            {rate.name}
-                        </label>
-                    ))}
-                </InputGroup>
-                <div>
+            <div className="row text-secondary font-small mt-3">
+                <div className="col-3 d-flex justify-content-start">
+                    <InputGroup className="d-flex flex-column">
+                        {rateOptions.map((rate, i) => (
+                            <label key={i} title={`Použit ${rate.name} pro hodnocení výsledků`}>
+                                <input id={`radio-${i}`} type="radio" value={rate.value}
+                                       checked={rateOption === rate.value} className="mr-2"
+                                       onChange={(e) => setRateOption(e.currentTarget.value)}
+                                />
+                                {rate.name}
+                            </label>
+                        ))}
+                    </InputGroup>
+                </div>
+                <div className="col-6 d-flex justify-content-center text-truncate">
+                    Poslední aktualizace {lastUpdate.toLocaleTimeString('cz-CZ')}
+                </div>
+                <div className="col-3 d-flex justify-content-end">
                     <a href={`${BASE_URL}/csv_export?room=${room?.id}`}>Export</a>
                 </div>
             </div>
