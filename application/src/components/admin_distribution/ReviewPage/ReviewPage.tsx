@@ -3,7 +3,7 @@ import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RouteComponentProps} from "react-router";
-import {Modal, Button, ButtonGroup, ToggleButton, InputGroup, FormLabel} from "react-bootstrap";
+import {Modal, Button, InputGroup} from "react-bootstrap";
 import QRCode from "react-qr-code";
 import Slider from "../Widgets/Slider/Slider";
 import {BASE_URL, displayOptions} from "../../../share";
