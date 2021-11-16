@@ -29,15 +29,23 @@ class Question(models.Model):
     value = models.CharField(max_length=1000)
 
     @property
-    def rate(self):
-        average = 0
+    def mode_rate(self):
+        return 0
+
+    @property
+    def mean_rate(self):
+        mean = 0
         clients = Client.objects.filter(room=self.room, time_destroyed=None).all()
         for client in clients:
             try:
-                average += NumericAnswer.objects.filter(client=client, question=self).latest('time_created').value
+                mean += NumericAnswer.objects.filter(client=client, question=self).latest('time_created').value
             except NumericAnswer.DoesNotExist:
-                average += DISPLAY_OPTIONS[self.display_option][1]
-        return average / len(clients) if len(clients) else DISPLAY_OPTIONS[self.display_option][1]
+                mean += DISPLAY_OPTIONS[self.display_option][1]
+        return mean / len(clients) if len(clients) else DISPLAY_OPTIONS[self.display_option][1]
+
+    @property
+    def median_rate(self):
+        return 0
 
 
 class Client(models.Model):

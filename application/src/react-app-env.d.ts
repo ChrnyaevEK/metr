@@ -1,7 +1,3 @@
-/// <reference types="node" />
-/// <reference types="react" />
-/// <reference types="react-dom" />
-
 declare namespace NodeJS {
     interface ProcessEnv {
         readonly NODE_ENV: 'development' | 'production' | 'test';
@@ -87,7 +83,9 @@ interface QuestionType {
     room: string,
     value: string,
     display_option: string,
-    rate: number,
+    mean_rate: number,
+    mode_rate: number,
+    median_rate: number,
 }
 
 interface QuestionPrototype {
