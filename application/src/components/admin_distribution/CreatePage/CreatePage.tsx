@@ -60,10 +60,17 @@ export function CreatePage() {
     })
     const handleContinue = async () => {
         setLock(true)  // Lock buttons
-        await dispatch(createRoom({}))  // Create room
-        for (let q of questions) {  // Create all questions
-            q.room = roomRef.current.id
-            await dispatch(createQuestion(q))
+        try {
+            if (!roomRef.current?.id) {  // If room creation was successful, but next operation failed, room ID will be set
+                await dispatch(createRoom({}))  // Create room
+            }
+            for (let q of questions) {  // Create all questions
+                q.room = roomRef.current.id
+                await dispatch(createQuestion(q))
+            }
+        } catch {  // If any request fails - let user try again
+            setLock(false)
+            return
         }
         history.push(`/admin/${roomRef.current.id}/`)
     }

@@ -42,8 +42,12 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
     const handleSharePublic = () => setShareAdmin(false)
 
     const triggerUpdate = async () => {
-        await dispatch(retrieveRoom(match.params.roomId))
-        await dispatch(listQuestions(match.params.roomId))
+        try {
+            await dispatch(retrieveRoom(match.params.roomId))
+            await dispatch(listQuestions(match.params.roomId))
+        } catch {
+            return
+        }
     }
 
     const handleMessage = (e: WSEvent) => {

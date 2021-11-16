@@ -51,5 +51,5 @@ export default {
     BASE_WS_URL,
     SEARCH_VALIDATION_TIMEOUT,
     sleep,
-    getCookie
+    getCookie,
 }

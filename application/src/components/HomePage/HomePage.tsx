@@ -23,7 +23,11 @@ export function HomePage() {
         if (validationTimeoutId === null) {
             setValidationTimeoutId(setTimeout(async () => {
                 if (targetRoomId) {
-                    setIsTargetRoomValid(await validateRoomExist(targetRoomId))
+                    try {
+                        setIsTargetRoomValid(await validateRoomExist(targetRoomId))
+                    } catch {
+                        setIsTargetRoomValid(false);
+                    }
                 }
                 setValidationTimeoutId(null)
             }, SEARCH_VALIDATION_TIMEOUT))

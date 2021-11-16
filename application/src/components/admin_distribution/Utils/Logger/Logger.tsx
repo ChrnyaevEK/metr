@@ -3,9 +3,12 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../core/store";
 
 function Logger() {
-    const error = useSelector((state: RootState) => state.logManager.error)
+    const http_error = useSelector((state: RootState) => state.logManager.http_error)
+    const ws_error = useSelector((state: RootState) => state.logManager.ws_error)
     return (
-        error ? <div className="alert alert-danger fixed-top" role="alert">{error?.detail}</div> : null
+        (http_error || ws_error) ? <div className="alert alert-danger fixed-top" role="alert">{
+            http_error?.detail || ws_error?.detail
+        }</div> : null
     )
 }
 

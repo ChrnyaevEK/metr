@@ -65,8 +65,11 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
         }
     }
     const triggerUpdate = async () => {
-        await dispatch(retrieveRoom(match.params.roomId))
-        await dispatch(listQuestions(match.params.roomId))
+        try {
+            await dispatch(retrieveRoom(match.params.roomId))
+            await dispatch(listQuestions(match.params.roomId))
+        } catch {
+        }
     }
 
     useLayoutEffect(() => {
@@ -77,13 +80,19 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
     useEffect(() => {
         // Set timeout to send answers to server and clean buffer
         if (saveTimeoutId === null && answersBuffer.length) {
-            setSaveTimeoutId(setTimeout(() => {
+            setSaveTimeoutId(setTimeout(async () => {
+                let createdAnswers: PromiseLike<any> [] = [];
                 for (let answer of answersBufferRef.current) {
-                    createAnswer(answer, 'numeric_answers')
+                    createdAnswers.push(createAnswer(answer, 'numeric_answers'))
                 }
                 setAnswersBuffer([])
-                setSavedMarker(true)
                 setSaveTimeoutId(null)
+                try {
+                    await Promise.all(createdAnswers)
+                } catch {
+                    return
+                }
+                setSavedMarker(true)
             }, ANSWER_SAVE_TIMEOUT))
         }
     }, [answersBuffer])
@@ -91,10 +100,14 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
     useEffect(() => {
         // Retrieve data for the first time, create and propagate client
         ws.open('public_poll', match.params.roomId, handleMessage, async () => {
-            ws.send({
-                type: 'bind_client',
-                message: clientRef.current || await dispatch(createClient({room: match.params.roomId}))
-            })
+            try {
+                ws.send({
+                    type: 'bind_client',
+                    message: clientRef.current || await dispatch(createClient({room: match.params.roomId}))
+                })
+            } catch {
+                return
+            }
             triggerUpdate()
         })
     }, [])
