@@ -46,7 +46,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
             await dispatch(retrieveRoom(match.params.roomId))
             await dispatch(listQuestions(match.params.roomId))
         } catch {
-            // If update fails - ignore
+            return
         }
     }
 
