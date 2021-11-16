@@ -9,6 +9,13 @@ export const listQuestions = (roomId: string) => async (dispatch: ThunkDispatch<
     })
 }
 
+export const listPopularQuestions = () => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
+    dispatch({
+        type: 'popular_questions/list',
+        payload: await viewSet.list('popular_questions'),
+    })
+}
+
 export const retrieveQuestion = (roomId: string, id: string) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
     dispatch({
         type: 'questions/retrieve',

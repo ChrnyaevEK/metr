@@ -1,35 +1,15 @@
-import {MouseEvent, ChangeEvent, KeyboardEvent, useState, useRef, useLayoutEffect, useEffect} from "react";
+import {ChangeEvent, KeyboardEvent, useState, useRef, useLayoutEffect, useEffect} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {DEFAULT_DISPLAY_OPTION, displayOptions, QUESTION_LIMIT} from "../../../share";
 import {createRoom} from "../../../core/actions/room_actions";
-import {createQuestion} from "../../../core/actions/questions_actions";
+import {createQuestion, listPopularQuestions} from "../../../core/actions/questions_actions";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../core/store";
-import {Button} from "react-bootstrap";
-
-function Question(props: {
-    question: QuestionPrototype,
-    setQuestions: any,
-    lock: boolean,
-}) {
-    const handleRemoveQuestion = (e: MouseEvent<HTMLButtonElement>) => {
-        props.setQuestions((questions: QuestionPrototype[]) => {
-            return [...questions.filter(question => question.value !== props.question.value)]
-        })
-    }
-
-    return (
-        <div className="border rounded px-2 py-1 font-middle d-flex align-items-baseline mb-1">
-            <div className="flex-grow-1 text-break mr-2 font-weight-bold">{props.question.value}</div>
-            <div className="text-secondary mr-2">{displayOptions[props.question.display_option].title}</div>
-            <Button variant="outline-light" onClick={handleRemoveQuestion} disabled={props.lock}>
-                <FontAwesomeIcon icon={faTimes} className="text-danger"/>
-            </Button>
-        </div>
-    )
-}
+import {Alert, Button} from "react-bootstrap";
+import RegularQuestion from "./RegularQuestion";
+import PopularQuestion from "./PopularQuestion";
 
 export function CreatePage() {
     const history = useHistory()
@@ -40,17 +20,28 @@ export function CreatePage() {
     const roomRef = useRef(room)
 
     const [lock, setLock]: [boolean, any] = useState(false)
+    const [isLimitReached, setIsLimitReached]: [boolean, any] = useState(false)
+    const [editMode, setEditMode]: [boolean, any] = useState(false)
+    const [editIndex, setEditIndex]: [number | null, any] = useState(null)
+    const [isQuestionAccepted, setIsQuestionAccepted]: [boolean, any] = useState(false)
     const [questions, setQuestions]: [QuestionPrototype[], any] = useState([])
     const [question, setQuestion]: [QuestionPrototype, any] = useState({
         display_option: DEFAULT_DISPLAY_OPTION,
-        room: '',
         value: '',
     })
-    const [isQuestionAccepted, setIsQuestionAccepted]: [boolean, any] = useState(false)
+
+    const popularQuestions = useSelector((state: RootState) => state.questionManager.popularQuestions)
 
     const handleAddQuestion = () => {
         if (isQuestionAccepted) {
-            setQuestions([...questions, question])
+            if (editIndex !== null) {
+                Object.assign(questions[editIndex], question)
+                setQuestions([...questions]) // Trigger array changes
+                setEditIndex(null)
+                setEditMode(false)
+            } else {
+                setQuestions([...questions, question])
+            }
             setQuestion({...question, value: ''})
         }
     }
@@ -67,7 +58,6 @@ export function CreatePage() {
         ...question,
         display_option: e.target.value
     })
-
     const handleContinue = async () => {
         setLock(true)  // Lock buttons
         try {
@@ -84,47 +74,96 @@ export function CreatePage() {
         }
         history.push(`/admin/${roomRef.current.id}/`)
     }
+    const handleRemoveQuestion = (removedQuestion: QuestionPrototype) => {
+        setQuestions((questions: QuestionPrototype[]) => {
+            return [...questions.filter(q => q.value !== removedQuestion.value)]
+        })
+        handleCancelEdition()
+    }
+    const handleEditQuestion = (editedQuestion: QuestionPrototype) => {
+        setEditMode(true)
+        for (let i = 0; i < questions.length; i++) {
+            if (questions[i].value === editedQuestion.value) {
+                setEditIndex(i)
+                break;
+            }
+        }
+        setQuestion(editedQuestion)
+    }
+    const handleCancelEdition = () => {
+        setEditMode(false)
+        setEditIndex(null)
+        setQuestion({
+            display_option: DEFAULT_DISPLAY_OPTION,
+            room: '',
+            value: ''
+        })
+    }
+    const handleUseQuestion = (usedQuestion: QuestionPrototype) => {
+        if (validateQuestionAcceptable(usedQuestion)) {
+            setQuestions([...questions, {...usedQuestion}])
+        }
+    }
+
+    const validateQuestionAcceptable = (controlledQuestion: QuestionPrototype) => {
+        return Boolean(controlledQuestion.value.length && (questions.length < QUESTION_LIMIT || editIndex !== null) &&
+            questions.filter((q) => q.value === controlledQuestion.value && q.display_option === controlledQuestion.display_option).length === 0)
+    }
 
     useLayoutEffect(() => {
         roomRef.current = room;
     }, [room]);
 
     useEffect(() => {
+        dispatch(listPopularQuestions())
+    }, [])
+    useEffect(() => {
         // Check if question is filled right and is unique
-        setIsQuestionAccepted(
-            question.value.length &&
-            questions.length < QUESTION_LIMIT &&
-            questions.filter((q) => q.value === question.value).length === 0
-        )
+        setIsQuestionAccepted(validateQuestionAcceptable(question))
+        setIsLimitReached(questions.length === QUESTION_LIMIT && editIndex === null)
     }, [question, questions])
 
     return (
         <div>
             <div className="font-big font-weight-bold">Nové hlasování</div>
             <div className="font-middle text-secondary mb-3 d-flex justify-content-between">
-                <div>Zadejte hodnoty pro sledování</div>
+                Zadejte hodnoty pro sledování nebo přidejte populární hodnoty
+            </div>
+            {
+                popularQuestions.length ? popularQuestions.map((q: QuestionPrototype) => {
+                    return <PopularQuestion question={q} questions={questions} key={q.value}
+                                            validateQuestionAcceptable={validateQuestionAcceptable}
+                                            handleUseQuestion={handleUseQuestion}/>
+                }) : <Alert variant="info">Nejsou k dispozici žádné populární hodnoty</Alert>
+            }
+            <div className="font-middle text-secondary my-3 d-flex justify-content-end">
                 <div className="text-secondary font-weight-bold">{questions.length}/{QUESTION_LIMIT}</div>
             </div>
-            {questions.map((q) => {
-                return <Question question={q} setQuestions={setQuestions} lock={lock} key={q.value}/>
-            })}
+            {
+                questions.length ? questions.map((q) => {
+                    return <RegularQuestion question={q} lock={lock} key={q.value}
+                                            handleRemoveQuestion={handleRemoveQuestion}
+                                            handleEditQuestion={handleEditQuestion}/>
+                }) : <Alert variant="info">Zatím nemáte žádné hodnoty pro sledování</Alert>
+            }
             <div className="form-group d-flex mt-3 mb-1">
                 <label htmlFor="create-page-question-input" className="w-50 m-0 mr-1">
                     <input id="create-page-question-input" className="form-control" placeholder="Například rychlost..."
-                           autoComplete="off" value={question.value}
-                           disabled={questions.length === QUESTION_LIMIT || lock}
-                           maxLength={1000} onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}
-                    />
+                           autoComplete="off" value={question.value} disabled={isLimitReached || lock}
+                           maxLength={1000} onChange={handleSetQuestionValue} onKeyPress={handleAddQuestionKeyPress}/>
                 </label>
                 <div className="d-flex w-50">
                     <select value={question.display_option} onChange={handleSetDisplayOption}
                             className="form-control mr-1" id="create-page-display-type-selection"
-                            disabled={questions.length === QUESTION_LIMIT || lock}>
-                        {Object.entries(displayOptions)
-                            .map(([key, value]) => {
-                                return <option key={key} value={key}>{value.title}</option>
-                            })}
+                            disabled={isLimitReached || lock}>
+                        {Object.entries(displayOptions).map(([k, v]) => {
+                            return <option key={k} value={k}>{v.title}</option>
+                        })}
                     </select>
+                    <Button variant="danger" onClick={handleCancelEdition} className="mr-1"
+                            disabled={!editMode || lock}>
+                        <FontAwesomeIcon icon={faTimes}/>
+                    </Button>
                     <Button variant="success" onClick={handleAddQuestion} disabled={!isQuestionAccepted || lock}>
                         <FontAwesomeIcon icon={faPlus}/>
                     </Button>
@@ -134,11 +173,6 @@ export function CreatePage() {
                     disabled={!questions.length || lock}>
                 Pokračovat
             </Button>
-            <div className="text-secondary font-middle">
-                Zvolte <strong>optimum</strong>, pokud cílová hodnota může být popsána slovem optimální.
-                Zvolte <strong>maximum</strong>, pokud cílová
-                hodnota by měla být co největší.
-            </div>
         </div>
     );
 }

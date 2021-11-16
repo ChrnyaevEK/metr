@@ -129,14 +129,13 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
                 </Modal>
             </div>
             {
-                Object.keys(displayOptions).map((displayOption: string) => {
+                Object.keys(displayOptions).map((d_o: string) => {
                     let questionGroup = []
-                    for (let question of questions.filter((q) => q.display_option === displayOption)) {
-                        questionGroup.push(<Slider key={question.id} question={question}
-                                                   onChangeHandler={handleAddAnswer}/>)
+                    for (let q of questions.filter((q) => q.display_option === d_o)) {
+                        questionGroup.push(<Slider key={q.id} question={q} onChangeHandler={handleAddAnswer}/>)
                     }
                     return questionGroup.length ?
-                        <QuestionGroup key={displayOption} questionGroup={questionGroup}/> : null
+                        <QuestionGroup key={d_o} questionGroup={questionGroup}/> : null
                 })
             }
             <div className="text-secondary font-tiny mt-3">

@@ -12,7 +12,7 @@ export function Slider(props: {
                    value={props.question.rate} readOnly={true}/>
             <div className="d-flex justify-content-between font-tiny text-secondary">
                 {displayOptions[props.question.display_option].text_equivalents
-                    .map((value: string) => <span key={value}>{value}</span>)}
+                    .map((v: string) => <span key={v}>{v}</span>)}
             </div>
         </div>
     )
