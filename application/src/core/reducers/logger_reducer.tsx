@@ -2,17 +2,11 @@ import {PayloadAction} from "@reduxjs/toolkit";
 import Rollbar from "rollbar";
 
 interface IState {
+    warning: string | null,
     http_error: ErrorType | null,
     http_errors: ErrorType[],
     ws_error: ErrorType | null,
     ws_errors: ErrorType[],
-}
-
-const initialState: IState = {
-    http_error: null,
-    http_errors: [],
-    ws_error: null,
-    ws_errors: [],
 }
 
 const rollbar = new Rollbar({
@@ -22,8 +16,24 @@ const rollbar = new Rollbar({
     captureUnhandledRejections: true,
 })
 
-export const loggerReducer = (state: IState = initialState, action: PayloadAction<any>) => {
+export const loggerReducer = (state: IState = {
+    warning: null,
+    http_error: null,
+    http_errors: [],
+    ws_error: null,
+    ws_errors: [],
+}, action: PayloadAction<any>) => {
     switch (action.type) {
+        case 'logger/set_warning':
+            return {
+                ...state,
+                warning: action.payload
+            }
+        case 'logger/unset_warning':
+            return {
+                ...state,
+                warning: null
+            }
         case 'logger/set_http_error':
             let http_errors;
             if (state.http_errors.includes(action.payload.detail)) {

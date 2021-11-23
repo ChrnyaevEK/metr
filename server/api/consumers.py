@@ -5,11 +5,12 @@ from api import models
 from api.utils import Counter
 import json
 import datetime
+from api import texts
 
 
 class PublicPoll(WebsocketConsumer):
     room = None
-    client_id = None
+    client = None
     public_group_name = None
     admin_group_name = None
 
@@ -26,20 +27,29 @@ class PublicPoll(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         event = json.loads(text_data)
         if event['type'] == 'bind_client':
-            self.bind_client(event['message']['id'])
+            self.bind_client(event['detail']['id'])
 
             # Trigger all admin channels - user connected
             async_to_sync(self.channel_layer.group_send)(
-                self.admin_group_name,
-                {
+                self.admin_group_name, {
                     'type': 'public_connect',
                 }
             )
 
     # Match WS with client
     def bind_client(self, client_id):
-        if models.Client.objects.filter(pk=client_id).exists():
-            self.client_id = client_id
+        try:
+            self.client = models.Client.objects.get(pk=client_id)
+        except models.Client.DoesNotExist:
+            pass
+        else:
+            if self.client.active:  # If client is in use - prevent connection
+                return self.public_conflict({
+                    'type': 'public_conflict',
+                    'detail': texts.Error.client_conflict
+                })
+            self.client.active = True  # Activate client to prevent multiple app instances
+            self.client.save()
 
     @staticmethod
     def trigger_admin_update(room):
@@ -52,19 +62,22 @@ class PublicPoll(WebsocketConsumer):
     def disconnect(self, code):
         async_to_sync(self.channel_layer.group_discard)(self.public_group_name, self.channel_name)
         try:
-            client = models.Client.objects.get(pk=self.client_id)
-            client.time_destroyed = datetime.datetime.now()
-            client.save()
-        except models.Client.DoesNotExist:
+            self.client.time_destroyed = datetime.datetime.now()
+            self.client.active = False  # Deactivate client to allow its usage
+        except AttributeError:
             pass
+        else:
+            self.client.save()
 
         # Trigger all admin channels - user disconnected
         async_to_sync(self.channel_layer.group_send)(
-            self.admin_group_name,
-            {
+            self.admin_group_name, {
                 'type': 'public_disconnect',
             }
         )
+
+    def public_conflict(self, event):
+        self.send(json.dumps(event))
 
     def admin_connect(self, event):
         self.send(json.dumps(event))
@@ -94,8 +107,7 @@ class AdminPoll(WebsocketConsumer):
 
             # Trigger all public channels - admin connected
             async_to_sync(self.channel_layer.group_send)(
-                self.public_group_name,
-                {
+                self.public_group_name, {
                     'type': 'admin_connect',
                 }
             )
@@ -110,8 +122,7 @@ class AdminPoll(WebsocketConsumer):
             if Counter.admin_counter[self.room] <= 0:
                 del Counter.admin_counter[self.room]
                 async_to_sync(self.channel_layer.group_send)(
-                    self.public_group_name,
-                    {
+                    self.public_group_name, {
                         'type': 'admin_disconnect',
                     }
                 )

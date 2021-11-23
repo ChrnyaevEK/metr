@@ -4,6 +4,7 @@ import tempfile
 
 from api import models
 from api import serializers
+from api import texts
 from api.consumers import PublicPoll
 
 from server.settings import JWT_SECRET_KEY, JWT_ALGORITHM
@@ -94,6 +95,8 @@ class ClientViewSet(viewsets.ModelViewSet):
                 client = models.Client.objects.get(pk=jwt_client['id'])
             except models.Client.DoesNotExist:
                 raise PermissionDenied()
+            if client.active:
+                raise PermissionDenied(detail=texts.Error.client_conflict)
             response = Response(self.serializer_class(client).data)
         response.set_cookie('client_token',
                             jwt.encode({'id': response.data['id']}, key=JWT_SECRET_KEY, algorithm=JWT_ALGORITHM))

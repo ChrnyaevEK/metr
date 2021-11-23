@@ -13,6 +13,7 @@ import {useEffect, useLayoutEffect, useRef, useState} from "react";
 import {createClient} from "../../../core/actions/client_actions";
 import QRCode from "react-qr-code";
 import WS from "../../../core/ws";
+import {useHistory} from "react-router-dom";
 
 const ws = new WS()
 
@@ -30,6 +31,8 @@ function QuestionGroup(props: {
 
 export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
     const dispatch = useDispatch()
+
+    const history = useHistory()
 
     const [savedMarker, setSavedMarker]: [boolean, any] = useState(false)
     const [showShareModal, setShowShareModal]: [boolean, any] = useState(false);
@@ -62,6 +65,11 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
             case 'admin_disconnect':
                 triggerUpdate()
                 break
+            case 'public_conflict':
+                history.push({
+                    pathname:'/conflict',
+                    state: e
+                })
         }
     }
     const triggerUpdate = async () => {
@@ -103,7 +111,7 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
             try {
                 ws.send({
                     type: 'bind_client',
-                    message: clientRef.current || await dispatch(createClient({room: match.params.roomId}))
+                    detail: clientRef.current || await dispatch(createClient({room: match.params.roomId}))
                 })
             } catch {
                 return

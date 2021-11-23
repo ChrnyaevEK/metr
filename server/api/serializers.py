@@ -54,4 +54,4 @@ class ClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Client
-        fields = '__all__'
+        exclude = ['active']
