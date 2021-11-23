@@ -36,3 +36,4 @@ Twisted==21.7.0
 txaio==21.2.1
 typing-extensions==3.10.0.2
 zope.interface==5.4.0
+PyJWT~=2.3.0
