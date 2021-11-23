@@ -24,8 +24,10 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "default-not-secret-key")
 HASHID_FIELD_SALT = os.environ.get("HASHID_FIELD_SALT", "default-not-secret-salt")
 DEBUG = int(os.environ.get("DEBUG", "1"))
 
-# Application definition
+JWT_SECRET_KEY = os.environ.get("JWT_SECRET", "default-not-secret-jwt-key")
+JWT_ALGORITHM = 'HS256'
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -130,8 +132,8 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = 'staticfiles'
+STATIC_URL = '/metr/static/'
+STATIC_ROOT = '/home/egor/Documents/work/metr/application/build'
 
 CORS_ALLOW_ALL_ORIGINS = True
 

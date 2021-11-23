@@ -1,13 +1,18 @@
 import csv
+import jwt
 import tempfile
 
 from api import models
 from api import serializers
 from api.consumers import PublicPoll
+
+from server.settings import JWT_SECRET_KEY, JWT_ALGORITHM
+
 from rest_framework import viewsets
-from rest_framework.exceptions import MethodNotAllowed, NotFound
+from rest_framework.exceptions import MethodNotAllowed, NotFound, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from sendfile import sendfile
 
 CSV_QUESTION_HEADERS = ['question_id', 'question_value', 'answer_type', 'answer_value', 'answer_time_created']
@@ -76,6 +81,23 @@ class ClientViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ClientSerializer
     permission_classes = []
     queryset = model.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        try:
+            jwt_client = jwt.decode(request.COOKIES['client_token'], key=JWT_SECRET_KEY, algorithms=JWT_ALGORITHM)
+        except (jwt.InvalidTokenError, KeyError):
+            # Creating new client
+            response = super().create(request, *args, **kwargs)
+        else:
+            # Using old client
+            try:
+                client = models.Client.objects.get(pk=jwt_client['id'])
+            except models.Client.DoesNotExist:
+                raise PermissionDenied()
+            response = Response(self.serializer_class(client).data)
+        response.set_cookie('client_token',
+                            jwt.encode({'id': response.data['id']}, key=JWT_SECRET_KEY, algorithm=JWT_ALGORITHM))
+        return response
 
     def list(self, request, *args, **kwargs):
         raise MethodNotAllowed('List')
