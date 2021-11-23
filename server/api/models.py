@@ -53,6 +53,7 @@ class Client(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
     time_destroyed = models.DateTimeField(null=True, default=None)
+    active = models.BooleanField(default=False)
 
 
 class Answer(models.Model):
