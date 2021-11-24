@@ -33,14 +33,14 @@ services:
       - server
     volumes:
       - main_server_volume:/home/app/
-      - certbot_volume:/home/certbot/:ro
-      - certbot_certificate_volume:/home/nginx/:ro
+      - certbot_volume:/var/www/certbot/:ro
+      - certbot_certificate_volume:/etc/nginx/ssl/:ro
   
   certbot:
     image: certbot/certbot:latest
     volumes:
-      - certbot_volume:/home/certbot/:rw
-      - certbot_certificate_volume:/home/letsencrypt/:rw
+      - certbot_volume:/var/www/certbot/:rw
+      - certbot_certificate_volume:/etc/letsencrypt/:rw
 
 volumes:
   postgres_data:
