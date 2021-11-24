@@ -41,7 +41,7 @@ services:
     volumes:
       - certbot_volume:/var/www/certbot/:rw
       - certbot_certificate_volume:/etc/letsencrypt/:rw
-
+      
 volumes:
   postgres_data:
   redis_data:
