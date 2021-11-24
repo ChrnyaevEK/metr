@@ -1,2 +1,5 @@
-./application/build
-./application/node_modules
+./application/web/build
+./application/web/node_modules
+**/__py_cache__
+**/.idea
+**/venv

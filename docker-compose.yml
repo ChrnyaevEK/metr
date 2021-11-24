@@ -9,11 +9,11 @@ services:
     env_file:
       - .env
     volumes:
-      - main_server_volume:/home/app
+      - main_server_volume:/home/app/
   db:
     image: postgres:13.0-alpine
     volumes:
-      - postgres_data:/home/app/postgresql/data/
+      - postgres_data:/home/postgresql/
     environment:
       - POSTGRES_USER=$SQL_USER
       - POSTGRES_PASSWORD=$SQL_PASSWORD
@@ -23,7 +23,7 @@ services:
       expose:
         - 6379
       volumes:
-        - redis_data:/home/app/redis/data/
+        - redis_data:/home/redis/
   nginx:
     build: ./nginx
     ports:
@@ -32,15 +32,15 @@ services:
     depends_on:
       - server
     volumes:
-      - main_server_volume:/home/app
-      - certbot_volume:/var/www/certbot/:ro
-      - certbot_certificate_volume:/etc/nginx/ssl/:ro
+      - main_server_volume:/home/app/
+      - certbot_volume:/home/certbot/:ro
+      - certbot_certificate_volume:/home/nginx/:ro
   
   certbot:
     image: certbot/certbot:latest
     volumes:
-      - certbot_volume:/var/www/certbot/:rw
-      - certbot_certificate_volume:/etc/letsencrypt/:rw
+      - certbot_volume:/home/certbot/:rw
+      - certbot_certificate_volume:/home/letsencrypt/:rw
 
 volumes:
   postgres_data:

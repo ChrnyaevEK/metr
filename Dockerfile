@@ -2,8 +2,6 @@
 FROM python:3.9.6-alpine
 
 ENV APP_HOME=/home/app
-ENV APP_SERVER_HOME=/home/app/server
-ENV APP_APPLICATION_HOME=/home/app/application
 
 # create directory for the app user
 RUN mkdir -p $APP_HOME
@@ -15,33 +13,27 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DJANGO_SETTINGS_MODULE server.settings
 
-RUN mkdir $APP_SERVER_HOME
-RUN mkdir $APP_SERVER_HOME/staticfiles
-RUN mkdir $APP_APPLICATION_HOME
-
-COPY ./server $APP_SERVER_HOME
-COPY ./application $APP_APPLICATION_HOME
+COPY ./application $APP_HOME
 
 # install dependencies
 RUN apk update && apk add libressl-dev musl-dev libffi-dev build-base postgresql-dev gcc python3-dev musl-dev bash npm
-RUN pip install --upgrade pip && pip install -r $APP_SERVER_HOME/requirements.txt
+RUN pip install --upgrade pip && pip install -r $APP_HOME/requirements.txt
 
 # prepare entrypoint.sh
-RUN sed -i 's/\r$//g' $APP_SERVER_HOME/entrypoint.sh
-RUN chmod +x $APP_SERVER_HOME/entrypoint.sh
+RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.sh
+RUN chmod +x $APP_HOME/entrypoint.sh
 
-# install and build project web application
-RUN npm install --prefix $APP_APPLICATION_HOME && npm run build --prefix $APP_APPLICATION_HOME
+# install and build web app, then collect statics for DRFW and admin site
+RUN npm install --prefix $APP_HOME/web && npm run build --prefix $APP_HOME/web
+RUN python manage.py collectstatic --no-input
 
 # chown all the files to the app user
-RUN chown -R app:app $APP_SERVER_HOME && chown -R app:app $APP_APPLICATION_HOME/build
+RUN chown -R app:app $APP_HOME
 
 # change to the app user
 USER app
 
-WORKDIR $APP_SERVER_HOME
-
-RUN python manage.py collectstatic --no-input
+WORKDIR $APP_HOME
 
 # run entrypoint.sh
-ENTRYPOINT ["/home/app/server/entrypoint.sh"]
+ENTRYPOINT ["/home/app/entrypoint.sh"]
