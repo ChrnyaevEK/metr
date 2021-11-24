@@ -131,7 +131,7 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = 'web/build/static'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
