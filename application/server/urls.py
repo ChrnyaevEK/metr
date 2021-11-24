@@ -16,11 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from api.views import CSVQuestionsExport
+from server import settings
+from django.urls import re_path
+from django.views.static import serve
 
 urlpatterns = [
     path('root/', admin.site.urls),
     path('api/', include('api.urls')),
     path('csv_export/', CSVQuestionsExport.as_view()),
+    re_path(rf'^{settings.STATIC_URL}(?P<path>.*)$', serve, {
+        'document_root': settings.STATIC_ROOT,
+        'show_indexes': True
+    }),
 ]
 
 handler404 = 'server.views.handler404'
