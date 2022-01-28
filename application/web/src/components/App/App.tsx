@@ -11,10 +11,11 @@ import store from "../../core/store"
 
 import ReviewPage from "../admin_distribution/ReviewPage/ReviewPage";
 import CreatePage from "../admin_distribution/CreatePage/CreatePage";
-import {HomePage} from "../HomePage/HomePage";
+import HomePage from "../HomePage/HomePage";
 import Logger from "../admin_distribution/Utils/Logger/Logger";
 import AnswerPage from "../public_distribution/AnswerPage/AnswerPage";
 import ContactPage from "../ContactPage/ContactPage";
+import PublicConflictPage from "../PublicConflictPage/PublicConflictPage";
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
                                     <Route path="/admin" component={CreatePage}/>
                                     <Route path="/home" component={HomePage}/>
                                     <Route path="/contact" component={ContactPage}/>
+                                    <Route path="/conflict" component={PublicConflictPage}/>
                                     <Route path="*">
                                         <Redirect to="/home"/>
                                     </Route>

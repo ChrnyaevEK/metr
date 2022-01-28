@@ -142,5 +142,5 @@ interface IDisplayOptions {
 
 interface WSEvent {
     type: string,
-    message?: any
+    detail?: any
 }
