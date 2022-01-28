@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import logging
 import os
+
+logging.basicConfig(level=logging.DEBUG if int(os.environ.get("DEBUG", "1")) else logging.WARNING)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1").split(" ")
 SECRET_KEY = os.environ.get("SECRET_KEY", "default-not-secret-key")
 HASHID_FIELD_SALT = os.environ.get("HASHID_FIELD_SALT", "default-not-secret-salt")
-DEBUG = int(os.environ.get("DEBUG", "1"))
+DEBUG = False
 
 # Application definition
 
@@ -130,8 +133,8 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = 'staticfiles'
+STATIC_URL = 'static/'
+STATIC_ROOT = 'web/build'
 
 CORS_ALLOW_ALL_ORIGINS = True
 

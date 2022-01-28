@@ -1,7 +1,8 @@
-version: '3.3'
+version: '3.9'
 
 services:
   server:
+    image: metr_server:elegancy
     build: .
     command: daphne -b 0.0.0.0 -p 8000 server.asgi:application
     expose:
@@ -9,11 +10,11 @@ services:
     env_file:
       - .env
     volumes:
-      - main_server_volume:/home/app
+      - server_volume:/home/app/
   db:
     image: postgres:13.0-alpine
     volumes:
-      - postgres_data:/home/app/postgresql/data/
+      - postgres_volume:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=$SQL_USER
       - POSTGRES_PASSWORD=$SQL_PASSWORD
@@ -23,28 +24,10 @@ services:
       expose:
         - 6379
       volumes:
-        - redis_data:/home/app/redis/data/
-  nginx:
-    build: ./nginx
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      - server
-    volumes:
-      - main_server_volume:/home/app
-      - certbot_volume:/var/www/certbot/:ro
-      - certbot_certificate_volume:/etc/nginx/ssl/:ro
-  
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - certbot_volume:/var/www/certbot/:rw
-      - certbot_certificate_volume:/etc/letsencrypt/:rw
+        - redis_volume:/data  
+
 
 volumes:
-  postgres_data:
-  redis_data:
-  main_server_volume:
-  certbot_volume:
-  certbot_certificate_volume:
+  postgres_volume:
+  redis_volume:
+  server_volume:
