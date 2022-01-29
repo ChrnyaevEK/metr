@@ -12,5 +12,4 @@ urlpatterns = [
     path('', include(router.urls)),
     path('validate_room_exist', views.ValidateRoomExist.as_view()),
     path('popular_questions/', views.PopularQuestions.as_view()),
-
 ]

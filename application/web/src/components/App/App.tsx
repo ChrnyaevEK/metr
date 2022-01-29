@@ -15,8 +15,7 @@ import HomePage from "../HomePage/HomePage";
 import Logger from "../admin_distribution/Utils/Logger/Logger";
 import AnswerPage from "../public_distribution/AnswerPage/AnswerPage";
 import ContactPage from "../ContactPage/ContactPage";
-import PublicConflictPage from "../PublicConflictPage/PublicConflictPage";
-
+import ConflictPage from "../public_distribution/ConflictPage/ConflictPage";
 
 function App() {
     return (
@@ -33,7 +32,7 @@ function App() {
                                     <Route path="/admin" component={CreatePage}/>
                                     <Route path="/home" component={HomePage}/>
                                     <Route path="/contact" component={ContactPage}/>
-                                    <Route path="/conflict" component={PublicConflictPage}/>
+                                    <Route path="/conflict" component={ConflictPage}/>
                                     <Route path="*">
                                         <Redirect to="/home"/>
                                     </Route>

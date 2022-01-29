@@ -1,4 +1,9 @@
 import csv
+import datetime
+import re
+import unicodedata
+from collections import defaultdict
+
 import jwt
 import tempfile
 
@@ -15,8 +20,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from sendfile import sendfile
-
-CSV_QUESTION_HEADERS = ['question_id', 'question_value', 'answer_type', 'answer_value', 'answer_time_created']
 
 
 def get_target_room(request):  # ...?room=hash...
@@ -143,6 +146,8 @@ class CSVQuestionsExport(APIView):
         answers_qs = models.NumericAnswer.objects.filter(question__in=questions_qs)
 
         data = []
+        csv_question_headers = ['question_id', 'question_value', 'answer_type', 'answer_value', 'answer_time_created']
+
         for question in questions_qs:
             for answer in answers_qs:
                 if answer.question == question:
@@ -157,7 +162,7 @@ class CSVQuestionsExport(APIView):
                     )
 
         with tempfile.NamedTemporaryFile(mode='w', delete=True, encoding="utf-8") as csvfile:
-            dict_writer = csv.DictWriter(csvfile, CSV_QUESTION_HEADERS)
+            dict_writer = csv.DictWriter(csvfile, csv_question_headers)
             dict_writer.writeheader()
             dict_writer.writerows(data)
             csvfile.flush()
@@ -171,5 +176,24 @@ class PopularQuestions(APIView):
     authentication_classes = []
     permission_classes = []
 
+    serializer_class = serializers.QuestionSerializer
+
+    _nrm_str = re.compile(r'[^a-z0-9]+')
+    POPULAR_QUESTIONS_LIMIT = 3
+
+    def normalize_str(self, s):
+        return self._nrm_str.sub('', unicodedata.normalize('NFD', s.lower()).encode('ascii', 'ignore').decode("utf-8"))
+
     def get(self, request):
-        return Response([])
+        end = datetime.datetime.today()
+        start = end - datetime.timedelta(days=30)
+
+        frequency_map = defaultdict(list)
+        for question in models.Question.objects.filter(time_created__range=[start, end]):
+            frequency_map[self.normalize_str(question.value)].append(question)
+
+        frequency_map = sorted(frequency_map.items(), key=lambda item: len(item[1]), reverse=True)
+        popular_questions = [question[1][0] for question in frequency_map[:self.POPULAR_QUESTIONS_LIMIT]]
+        serialized = [self.serializer_class(question).data for question in popular_questions]
+
+        return Response(serialized)
