@@ -192,7 +192,7 @@ class PopularQuestions(APIView):
         for question in models.Question.objects.filter(time_created__range=[start, end]):
             frequency_map[self.normalize_str(question.value)].append(question)
 
-        frequency_map = sorted(frequency_map.items(), key=lambda item: len(item[1]), reverse=True)
+        frequency_map = sorted(frequency_map.items(), key=lambda item: len(item[1]))
         popular_questions = [question[1][0] for question in frequency_map[:self.POPULAR_QUESTIONS_LIMIT]]
         serialized = [self.serializer_class(question).data for question in popular_questions]
 

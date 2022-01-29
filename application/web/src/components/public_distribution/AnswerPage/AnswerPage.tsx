@@ -9,7 +9,7 @@ import {createAnswer} from "../../../core/actions/anwers_actions";
 import {RouteComponentProps} from "react-router";
 import {retrieveRoom} from "../../../core/actions/room_actions";
 import {listQuestions} from "../../../core/actions/questions_actions";
-import {useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
 import {createClient} from "../../../core/actions/client_actions";
 import QRCode from "react-qr-code";
 import WS from "../../../core/ws";
@@ -67,7 +67,7 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
                 break
             case 'public_conflict':
                 history.push({
-                    pathname:'/conflict',
+                    pathname: '/conflict',
                     state: e
                 })
         }
@@ -137,14 +137,14 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
                 </Modal>
             </div>
             {
-                Object.keys(displayOptions).map((d_o: string) => {
+                clientRef.current ? Object.keys(displayOptions).map((d_o: string) => {
                     let questionGroup = []
                     for (let q of questions.filter((q) => q.display_option === d_o)) {
                         questionGroup.push(<Slider key={q.id} question={q} onChangeHandler={handleAddAnswer}/>)
                     }
                     return questionGroup.length ?
                         <QuestionGroup key={d_o} questionGroup={questionGroup}/> : null
-                })
+                }) : <div className="alert alert-info" role="alert">Zatím zde nic není</div>
             }
             <div className="text-secondary font-tiny mt-3">
                 Nesdílejte hlasování tlačítkem "Sdílet" v pravém vrchním rohu.
