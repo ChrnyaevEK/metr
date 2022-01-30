@@ -2,6 +2,10 @@ from django.db import models
 from hashid_field import HashidAutoField
 from api.utils import Counter
 
+from functools import lru_cache
+import numpy as np
+from scipy import stats
+
 
 def display_option_validator(item):
     return item in DISPLAY_OPTIONS
@@ -28,24 +32,37 @@ class Question(models.Model):
     display_option = models.CharField(max_length=100, validators=[display_option_validator])
     value = models.CharField(max_length=1000)
 
+    @lru_cache()
+    def _list_values(self):
+        values = []
+        clients = Client.objects.filter(room=self.room, active=True).all()
+        for client in clients:
+            try:
+                values.append(NumericAnswer.objects.filter(client=client, question=self).latest('time_created').value)
+            except NumericAnswer.DoesNotExist:
+                values.append(DISPLAY_OPTIONS[self.display_option][1])
+        return values
+
     @property
     def mode_rate(self):
-        return 0
+        values = self._list_values()
+        if values:
+            return stats.mode(values)[0][0]
+        return DISPLAY_OPTIONS[self.display_option][1]
 
     @property
     def mean_rate(self):
-        mean = 0
-        clients = Client.objects.filter(room=self.room, time_destroyed=None).all()
-        for client in clients:
-            try:
-                mean += NumericAnswer.objects.filter(client=client, question=self).latest('time_created').value
-            except NumericAnswer.DoesNotExist:
-                mean += DISPLAY_OPTIONS[self.display_option][1]
-        return mean / len(clients) if len(clients) else DISPLAY_OPTIONS[self.display_option][1]
+        values = self._list_values()
+        if values:
+            return np.mean(values)
+        return DISPLAY_OPTIONS[self.display_option][1]
 
     @property
     def median_rate(self):
-        return 0
+        values = self._list_values()
+        if values:
+            return np.median(values)
+        return DISPLAY_OPTIONS[self.display_option][1]
 
 
 class Client(models.Model):

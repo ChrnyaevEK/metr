@@ -114,9 +114,10 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
                     detail: clientRef.current || await dispatch(createClient({room: match.params.roomId}))
                 })
             } catch {
+                await dispatch(retrieveRoom(match.params.roomId))
                 return
             }
-            triggerUpdate()
+            await triggerUpdate()
         })
     }, [])
 

@@ -16,7 +16,7 @@ class WS {
     open = (group: string, room: string, onMessage: (e: WSEvent) => void, onOpen: () => void) => {
         this.onmessage = onMessage
         this.onopen = onOpen
-        this.url = `${BASE_WS_URL}/ws/${group}/${room}/`
+        this.url = `${BASE_WS_URL}/${group}/${room}/`
         this.reopen()
     }
 
@@ -27,6 +27,7 @@ class WS {
             payload: null,
         })
         if (!this.url) throw new Error('No URL specified')
+        console.log(this.url)
         this.connection = new WebSocket(this.url)
         this.connection.onopen = () => {
             this.reconnectTry = 0

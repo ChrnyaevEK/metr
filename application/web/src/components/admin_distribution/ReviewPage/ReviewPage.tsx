@@ -6,7 +6,7 @@ import {RouteComponentProps} from "react-router";
 import {Modal, Button, InputGroup} from "react-bootstrap";
 import QRCode from "react-qr-code";
 import Slider from "../Widgets/Slider/Slider";
-import {BASE_URL, displayOptions} from "../../../share";
+import {BASE_API_URL, displayOptions} from "../../../share";
 import {RootState} from "../../../core/store";
 import {retrieveRoom} from "../../../core/actions/room_actions";
 import {listQuestions} from "../../../core/actions/questions_actions";
@@ -125,7 +125,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                     Poslední aktualizace {lastUpdate.toLocaleTimeString('cz-CZ')}
                 </div>
                 <div className="col-3 d-flex justify-content-end">
-                    <a href={`${BASE_URL}/csv_export?room=${room?.id}`}>Export</a>
+                    <a href={`${BASE_API_URL}/csv_export?room=${room?.id}`}>Export</a>
                 </div>
             </div>
         </div>
