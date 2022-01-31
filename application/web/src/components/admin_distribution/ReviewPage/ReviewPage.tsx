@@ -1,6 +1,6 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RouteComponentProps} from "react-router";
 import {Modal, Button, InputGroup} from "react-bootstrap";
@@ -84,28 +84,29 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                 <Button onClick={handleShowShareModal} variant="light">
                     <FontAwesomeIcon icon={faShareAlt}/>
                 </Button>
-                <Modal show={showShareModal} onHide={handleCloseShareModal} centered className="d-flex">
-                    <Modal.Header className="font-weight-bold">
-                        {shareAdmin ? "Výsledky" : "Hlasování"}
-                    </Modal.Header>
-                    <Modal.Body className="d-flex flex-column align-items-center">
-                        <QRCode className="m-2" value={getShareURL()}/>
-                        <a href={getShareURL()} target="_blank">{getShareURL()}</a>
-                    </Modal.Body>
-                    <Modal.Footer className="d-flex justify-content-end">
-                        <Button variant="light" onClick={handleSharePublic} className="mr-2">Hlasování</Button>
-                        <Button variant="light" onClick={handleShareAdmin}>Výsledky</Button>
-                    </Modal.Footer>
-                </Modal>
             </div>
+            <Modal show={showShareModal} onHide={handleCloseShareModal} centered size="sm">
+                <Modal.Header className="font-weight-bold">
+                    {shareAdmin ? "Výsledky" : "Hlasování"}
+                </Modal.Header>
+                <Modal.Body className="d-flex flex-column align-items-center">
+                    <QRCode className="m-2" value={getShareURL()}/>
+                    <a href={getShareURL()} target="_blank">{getShareURL()}</a>
+                </Modal.Body>
+                <Modal.Footer className="d-flex justify-content-end">
+                    <Button variant="light" onClick={handleSharePublic} className="mr-2">Hlasování</Button>
+                    <Button variant="light" onClick={handleShareAdmin}>Výsledky</Button>
+                </Modal.Footer>
+            </Modal>
             {
-                Object.keys(displayOptions).map((d_o: string) => {
-                    let questionGroup = []
-                    for (let q of questions.filter((q: QuestionType) => q.display_option === d_o)) {
-                        questionGroup.push(<Slider question={q} rateOption={rateOption} key={q.id}/>)
-                    }
-                    return questionGroup.length ? <QuestionGroup key={d_o} questionGroups={questionGroup}/> : null
-                })
+                questions.length ?
+                    Object.keys(displayOptions).map((d_o: string) => {
+                        let questionGroup = []
+                        for (let q of questions.filter((q: QuestionType) => q.display_option === d_o)) {
+                            questionGroup.push(<Slider question={q} rateOption={rateOption} key={q.id}/>)
+                        }
+                        return questionGroup.length ? <QuestionGroup key={d_o} questionGroups={questionGroup}/> : null
+                    }) : <div className="alert alert-info" role="alert">Zatím zde nic není</div>
             }
             <div className="row text-secondary font-small mt-3">
                 <div className="col-3 d-flex justify-content-start">
@@ -121,8 +122,8 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                         ))}
                     </InputGroup>
                 </div>
-                <div className="col-6 d-flex justify-content-center text-truncate">
-                    Poslední aktualizace {lastUpdate.toLocaleTimeString('cz-CZ')}
+                <div className="col-6 text-truncate text-center">
+                    Aktualizováno {lastUpdate.toLocaleTimeString('cz-CZ')}
                 </div>
                 <div className="col-3 d-flex justify-content-end">
                     <a href={`${BASE_API_URL}/csv_export?room=${room?.id}`}>Export</a>

@@ -108,13 +108,13 @@ export function AnswerPage({match}: RouteComponentProps<{ roomId: string }>) {
     useEffect(() => {
         // Retrieve data for the first time, create and propagate client
         ws.open('public_poll', match.params.roomId, handleMessage, async () => {
+            await dispatch(retrieveRoom(match.params.roomId))
             try {
                 ws.send({
                     type: 'bind_client',
                     detail: clientRef.current || await dispatch(createClient({room: match.params.roomId}))
                 })
             } catch {
-                await dispatch(retrieveRoom(match.params.roomId))
                 return
             }
             await triggerUpdate()

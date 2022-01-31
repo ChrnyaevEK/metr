@@ -24,7 +24,18 @@ function App() {
                 <Router>
                     <div className="container h-100">
                         <div className="row d-flex justify-content-center align-items-center h-100">
-                            <div className="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <div className="col-12 col-sm-10 col-md-8 col-lg-8">
+                                <nav className="navbar p-0 m-0">
+                                    <a className="navbar-brand" href="/">
+                                        <div className="h1 font-weight-bold">
+                                            <span className="text-danger mr-1">M</span>
+                                            <span className="text-warning mr-1">e</span>
+                                            <span className="text-success mr-1">t</span>
+                                            <span className="text-info">r</span>
+                                        </div>
+                                    </a>
+                                </nav>
+                                <hr className="w-100 mb-5"/>
                                 <Logger/>
                                 <Switch>
                                     <Route path="/public/:roomId" component={AnswerPage}/>
@@ -37,7 +48,8 @@ function App() {
                                         <Redirect to="/home"/>
                                     </Route>
                                 </Switch>
-                                <div className="font-small fixed-bottom d-flex justify-content-center px-3 py-1">
+                                <hr className="w-100 mt-5"/>
+                                <div className="font-small d-flex justify-content-center px-3 py-1">
                                     <Link to="/" className="mr-4">Domů</Link>
                                     <Link to="/admin" className="mr-4">Nové hlasování</Link>
                                     <Link to="/contact" className="mr-4">Kontakt</Link>

@@ -18,7 +18,7 @@ class Room(models.Model):
     use_color = models.BooleanField(default=True)
 
     def online_counter(self):
-        return Client.objects.filter(room=self, time_destroyed=None).count()
+        return Client.objects.filter(room=self, active=True).count()
 
     def is_online(self):
         return self.id in Counter.admin_counter
@@ -32,11 +32,9 @@ class Question(models.Model):
     display_option = models.CharField(max_length=100, validators=[display_option_validator])
     value = models.CharField(max_length=1000)
 
-    @lru_cache()
     def _list_values(self):
         values = []
-        clients = Client.objects.filter(room=self.room, active=True).all()
-        for client in clients:
+        for client in Client.objects.filter(room=self.room, active=True).all():
             try:
                 values.append(NumericAnswer.objects.filter(client=client, question=self).latest('time_created').value)
             except NumericAnswer.DoesNotExist:

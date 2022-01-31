@@ -6,6 +6,9 @@ from api.utils import Counter
 import json
 import datetime
 from api import texts
+import logging
+
+logger = logging.getLogger('api.consumers')
 
 
 class PublicPoll(WebsocketConsumer):

@@ -30,6 +30,12 @@ export const createRoom = (data: RoomPrototype) => async (dispatch: ThunkDispatc
     })
 }
 
+export const unsetRoom = () => async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => {}) => {
+    dispatch({
+        type: 'rooms/unset',
+    })
+}
+
 export const validateRoomExist = async (id: string) => {
     return await api.get({url: `/validate_room_exist?room=${id}`})
 }

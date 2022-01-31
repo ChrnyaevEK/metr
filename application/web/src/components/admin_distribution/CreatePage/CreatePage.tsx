@@ -2,7 +2,7 @@ import {ChangeEvent, KeyboardEvent, useState, useRef, useLayoutEffect, useEffect
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {DEFAULT_DISPLAY_OPTION, displayOptions, QUESTION_LIMIT} from "../../../share";
-import {createRoom} from "../../../core/actions/room_actions";
+import {createRoom, unsetRoom} from "../../../core/actions/room_actions";
 import {createQuestion, listPopularQuestions} from "../../../core/actions/questions_actions";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -115,6 +115,7 @@ export function CreatePage() {
     }, [room]);
 
     useEffect(() => {
+        dispatch(unsetRoom())
         dispatch(listPopularQuestions())
     }, [])
     useEffect(() => {

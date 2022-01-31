@@ -2,6 +2,7 @@ import csv
 import datetime
 import re
 import unicodedata
+import logging
 from collections import defaultdict
 
 import jwt
@@ -21,6 +22,8 @@ from rest_framework.views import APIView
 
 from sendfile import sendfile
 
+logger = logging.getLogger('api.views')
+
 
 def get_target_room(request):  # ...?room=hash...
     try:
@@ -34,6 +37,22 @@ class RoomViewSet(viewsets.ModelViewSet):
     queryset = model.objects.all()
     serializer_class = serializers.RoomSerializer
     permission_classes = []
+
+    def retrieve(self, request, *args, **kwargs):
+        # Update client room
+        try:
+            jwt_client = jwt.decode(request.COOKIES['client_token'], key=JWT_SECRET_KEY, algorithms=JWT_ALGORITHM)
+        except (jwt.InvalidTokenError, KeyError):
+            pass
+        else:
+            try:
+                client = models.Client.objects.get(pk=jwt_client['id'])
+            except models.Client.DoesNotExist:
+                pass
+            else:
+                client.room = self.get_object()
+                client.save()
+        return super().retrieve(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed('Destroy')
@@ -192,7 +211,7 @@ class PopularQuestions(APIView):
         for question in models.Question.objects.filter(time_created__range=[start, end]):
             frequency_map[self.normalize_str(question.value)].append(question)
 
-        frequency_map = sorted(frequency_map.items(), key=lambda item: len(item[1]))
+        frequency_map = sorted(frequency_map.items(), key=lambda item: len(item[1]), reverse=True)
         popular_questions = [question[1][0] for question in frequency_map[:self.POPULAR_QUESTIONS_LIMIT]]
         serialized = [self.serializer_class(question).data for question in popular_questions]
 

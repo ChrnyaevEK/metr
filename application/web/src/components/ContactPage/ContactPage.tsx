@@ -3,7 +3,7 @@ import './ContactPage.css'
 export function ContactPage() {
     return (
         <div>
-            <h1 className="font-weight-bold">Kontakt</h1>
+            <p className="h1 font-weight-bold">Kontakt</p>
             <p className="text-secondary font-middle">
                 Potřebuješ s něčím poradit? Máš skvělý nápad na zlepšení aplikace? Nevahej nás kontaktovat!
             </p>

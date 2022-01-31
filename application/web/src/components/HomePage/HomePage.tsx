@@ -50,9 +50,8 @@ export function HomePage() {
     return (
         <div>
             <div>
-                <p className="h1 font-weight-bold">METR</p>
                 <p className="text-secondary font-middle">
-                    Metr je aplikace pro živé sledování nálady publika. Nástroj přináší okamžitou zpětnou vazbu a pomáhá
+                    <span className="font-weight-bold">Metr</span> je aplikace pro živé sledování nálady publika. Nástroj přináší okamžitou zpětnou vazbu a pomáhá
                     zlepšit kvalitu a účinnost výkladu.
                 </p>
             </div>
@@ -88,7 +87,7 @@ export function HomePage() {
             </div>
             <div>
                 <p className="text-secondary font-middle">
-                    Začněte vytvořením nového hlasování nebo otevřete existující. Každá hlasování může být
+                    Začněte vytvořením nového hlasování nebo otevřete existující. Hlasování může být
                     otevřeno pro náhled výsledků a pro samotné hlasování.
                 </p>
             </div>

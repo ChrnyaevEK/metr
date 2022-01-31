@@ -14,7 +14,8 @@ from pathlib import Path
 import logging
 import os
 
-logging.basicConfig(level=logging.DEBUG if int(os.environ.get("DEBUG", "1")) else logging.WARNING)
+logging.basicConfig(level=logging.WARNING)
+DEBUG = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
