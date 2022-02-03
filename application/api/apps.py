@@ -8,6 +8,9 @@ class ApiConfig(AppConfig):
     def ready(self):
         from api.models import Client
 
-        for client in Client.objects.filter(active=True).all():
-            client.active = False
-            client.save()
+        try:
+            for client in Client.objects.filter(active=True).all():
+                client.active = False
+                client.save()
+        except Exception as e:
+            print(f'Failed to deactivate clients! [{e}]')

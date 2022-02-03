@@ -33,4 +33,4 @@ urlpatterns = [
     }),
 ]
 
-# handler404 = 'server.views.handler404'
+handler404 = 'server.views.handler404'

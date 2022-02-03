@@ -26,13 +26,11 @@ function App() {
                         <div className="row d-flex justify-content-center align-items-center h-100">
                             <div className="col-12 col-sm-10 col-md-8 col-lg-8">
                                 <nav className="navbar p-0 m-0">
-                                    <a className="navbar-brand" href="/">
-                                        <div className="h1 font-weight-bold">
-                                            <span className="text-danger mr-1">M</span>
-                                            <span className="text-warning mr-1">e</span>
-                                            <span className="text-success mr-1">t</span>
-                                            <span className="text-info">r</span>
-                                        </div>
+                                    <a className="navbar-brand d-flex align-items-baseline" href="/">
+                                        <span className="text-danger h1 font-weight-bold mr-1">M</span>
+                                        <span className="text-warning h1 font-weight-bold mr-1">e</span>
+                                        <span className="text-success h1 font-weight-bold mr-1">t</span>
+                                        <span className="text-info h1 font-weight-bold mr-1">r</span>
                                     </a>
                                 </nav>
                                 <hr className="w-100 mb-5"/>

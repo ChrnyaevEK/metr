@@ -1,10 +1,7 @@
 from django.db import models
 from hashid_field import HashidAutoField
 from api.utils import Counter
-
-from functools import lru_cache
-import numpy as np
-from scipy import stats
+import statistics
 
 
 def display_option_validator(item):
@@ -45,21 +42,21 @@ class Question(models.Model):
     def mode_rate(self):
         values = self._list_values()
         if values:
-            return stats.mode(values)[0][0]
+            return statistics.mode(values)
         return DISPLAY_OPTIONS[self.display_option][1]
 
     @property
     def mean_rate(self):
         values = self._list_values()
         if values:
-            return np.mean(values)
+            return statistics.mean(values)
         return DISPLAY_OPTIONS[self.display_option][1]
 
     @property
     def median_rate(self):
         values = self._list_values()
         if values:
-            return np.median(values)
+            return statistics.median(values)
         return DISPLAY_OPTIONS[self.display_option][1]
 
 
@@ -67,7 +64,6 @@ class Client(models.Model):
     id = HashidAutoField(primary_key=True, salt='client.id')
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
-    time_destroyed = models.DateTimeField(null=True, default=None)
     active = models.BooleanField(default=False)
 
 

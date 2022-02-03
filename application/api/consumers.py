@@ -4,7 +4,6 @@ from channels.layers import get_channel_layer
 from api import models
 from api.utils import Counter
 import json
-import datetime
 from api import texts
 import logging
 
@@ -65,7 +64,6 @@ class PublicPoll(WebsocketConsumer):
     def disconnect(self, code):
         async_to_sync(self.channel_layer.group_discard)(self.public_group_name, self.channel_name)
         try:
-            self.client.time_destroyed = datetime.datetime.now()
             self.client.active = False  # Deactivate client to allow its usage
         except AttributeError:
             pass

@@ -96,6 +96,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
+  "homepage": "/static",
   "eslintConfig": {
     "extends": [
       "react-app",
