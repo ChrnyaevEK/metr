@@ -116,7 +116,7 @@ class ClientViewSet(viewsets.ModelViewSet):
             try:
                 client = models.Client.objects.get(pk=jwt_client['id'])
             except models.Client.DoesNotExist:
-                raise PermissionDenied()
+                raise PermissionDenied("Interní chyba: client not found. Odstraňte cookie soubory a zkuste znovu.")
             if client.active:
                 raise PermissionDenied(detail=texts.Error.client_conflict)
             response = Response(self.serializer_class(client).data)
