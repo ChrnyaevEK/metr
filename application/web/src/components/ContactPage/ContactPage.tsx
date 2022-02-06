@@ -10,11 +10,11 @@ export function ContactPage() {
             <div className="d-flex flex-column mb-5">
                 <div className="d-flex justify-content-between mb-2">
                     <span className="font-weight-bold">Facebook</span>
-                    <a href="https://www.facebook.com/groups/metr.application" target="_blank" rel="noreferrer">Metr on Facebook</a>
+                    <a href="https://www.facebook.com/groups/metr.application" target="_blank" rel="noreferrer">Metrbot on Facebook</a>
                 </div>
                 <div className="d-flex justify-content-between">
                     <span className="font-weight-bold">GitHub</span>
-                    <a href="https://github.com/ChrnyaevEK/metr" target="_blank" rel="noreferrer">Metr on GitHub</a>
+                    <a href="https://github.com/ChrnyaevEK/metr" target="_blank" rel="noreferrer">Metrbot on GitHub</a>
                 </div>
             </div>
             <a href="https://www.facebook.com/cherniaev.public" target="_blank" rel="noreferrer"

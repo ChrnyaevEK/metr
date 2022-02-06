@@ -51,7 +51,7 @@ export function HomePage() {
         <div>
             <div>
                 <p className="text-secondary font-middle">
-                    <span className="font-weight-bold">Metr</span> je aplikace pro živé sledování nálady publika. Nástroj přináší okamžitou zpětnou vazbu a pomáhá
+                    <span className="font-weight-bold">Metrbot</span> je aplikace pro živé sledování nálady publika. Nástroj přináší okamžitou zpětnou vazbu a pomáhá
                     zlepšit kvalitu a účinnost výkladu.
                 </p>
             </div>

@@ -85,7 +85,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                     <FontAwesomeIcon icon={faShareAlt}/>
                 </Button>
             </div>
-            <Modal show={showShareModal} onHide={handleCloseShareModal} centered size="md">
+            <Modal show={showShareModal} onHide={handleCloseShareModal} centered size="lg">
                 <Modal.Header className="font-weight-bold">
                     {shareAdmin ? "Výsledky" : "Hlasování"}
                 </Modal.Header>

@@ -4,8 +4,8 @@
     "display" : "standalone",
     "scope" : "/",
     "start_url" : "/",
-    "name" : "Metr application",
-    "short_name" : "Metr",
+    "name" : "Metrbot",
+    "short_name" : "Metrbot",
     "description" : "Live rating application!",
     "icons": [
         {
