@@ -26,7 +26,7 @@ function App() {
                         <div className="row d-flex justify-content-center align-items-center h-100">
                             <div className="col-12 col-sm-10 col-md-8 col-lg-8">
                                 <nav className="navbar p-0 m-0">
-                                    <a className="navbar-brand" href="#">
+                                    <a className="navbar-brand" href="/">
                                         <img src="/static/metrbot.png" height="50px" alt="Metrbot"/>
                                     </a>
                                 </nav>
