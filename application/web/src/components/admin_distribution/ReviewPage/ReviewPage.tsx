@@ -112,7 +112,8 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                 <div className="col-3 d-flex justify-content-start">
                     <InputGroup className="d-flex flex-column">
                         {rateOptions.map((rate, i) => (
-                            <label key={i} title={`Použit ${rate.name} pro hodnocení výsledků`}>
+                            <label key={i} title={`Použit ${rate.name} pro hodnocení výsledků`}
+                                   className="text-truncate">
                                 <input id={`radio-${i}`} type="radio" value={rate.value}
                                        checked={rateOption === rate.value} className="mr-2"
                                        onChange={(e) => setRateOption(e.currentTarget.value)}
@@ -123,7 +124,11 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                     </InputGroup>
                 </div>
                 <div className="col-6 text-truncate text-center">
-                    Aktualizováno {lastUpdate.toLocaleTimeString('cz-CZ')}
+                    Aktualizováno {lastUpdate.toLocaleTimeString('cz-CZ', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                })}
                 </div>
                 <div className="col-3 d-flex justify-content-end">
                     <a href={`${BASE_API_URL}/csv_export?room=${room?.id}`} download>Export</a>
