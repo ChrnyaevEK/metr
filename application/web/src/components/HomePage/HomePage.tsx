@@ -86,7 +86,7 @@ export function HomePage() {
                 }
             </div>
             <div>
-                <p className="text-dark font-middle">
+                <p className="text-secondary font-middle">
                     Začněte vytvořením nového hlasování nebo otevřete existující. Hlasování může být
                     otevřeno pro náhled výsledků a pro samotné hlasování.
                 </p>
