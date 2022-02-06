@@ -16,7 +16,7 @@ services:
       - PYTHONUNBUFFERED=1
     volumes:
       - daphne_server_volume:/home/app/
-      - load_balancer_static_content:/var/www/
+      - static_content:/home/app/web/build/
 
   postgres-db:
     image: postgres:13.0-alpine
@@ -38,5 +38,4 @@ volumes:
   daphne_server_volume:
   postgres_db_volume:
   redis_db_volume:
-  load_balancer_static_content:
-    external: true
+  static_content:
