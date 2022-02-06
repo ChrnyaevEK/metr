@@ -85,7 +85,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                     <FontAwesomeIcon icon={faShareAlt}/>
                 </Button>
             </div>
-            <Modal show={showShareModal} onHide={handleCloseShareModal} centered size="sm">
+            <Modal show={showShareModal} onHide={handleCloseShareModal} centered size="md">
                 <Modal.Header className="font-weight-bold">
                     {shareAdmin ? "Výsledky" : "Hlasování"}
                 </Modal.Header>
@@ -126,7 +126,7 @@ export function ReviewPage({match}: RouteComponentProps<{ roomId: string }>) {
                     Aktualizováno {lastUpdate.toLocaleTimeString('cz-CZ')}
                 </div>
                 <div className="col-3 d-flex justify-content-end">
-                    <a href={`${BASE_API_URL}/csv_export?room=${room?.id}`}>Export</a>
+                    <a href={`${BASE_API_URL}/csv_export?room=${room?.id}`} download>Export</a>
                 </div>
             </div>
         </div>
