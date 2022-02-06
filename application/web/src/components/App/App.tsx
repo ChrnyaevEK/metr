@@ -48,8 +48,6 @@ function App() {
                                     <Link to="/" className="mr-4">Domů</Link>
                                     <Link to="/admin" className="mr-4">Nové hlasování</Link>
                                     <Link to="/contact" className="mr-4">Kontakt</Link>
-                                    <a href="https://github.com/ChrnyaevEK/metr" target="_blank"
-                                       rel="noreferrer">GitHub</a>
                                 </div>
                             </div>
                         </div>

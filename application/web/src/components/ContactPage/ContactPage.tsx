@@ -1,5 +1,3 @@
-import './ContactPage.css'
-
 export function ContactPage() {
     return (
         <div>
@@ -7,20 +5,15 @@ export function ContactPage() {
             <p className="text-secondary font-middle">
                 Potřebuješ s něčím poradit? Máš skvělý nápad na zlepšení aplikace? Nevahej nás kontaktovat!
             </p>
-            <div className="d-flex flex-column mb-5">
-                <div className="d-flex justify-content-between mb-2">
-                    <span className="font-weight-bold">Facebook</span>
-                    <a href="https://www.facebook.com/groups/metrbot" target="_blank" rel="noreferrer">Metrbot on Facebook</a>
-                </div>
-                <div className="d-flex justify-content-between">
-                    <span className="font-weight-bold">GitHub</span>
-                    <a href="https://github.com/ChrnyaevEK/metr" target="_blank" rel="noreferrer">Metrbot on GitHub</a>
-                </div>
+            <div className="d-flex flex-column mb-2 text-secondary">
+                <span>Our Facebook group <a href="https://www.facebook.com/groups/metrbot" target="_blank"
+                                            rel="noreferrer">Metrbot</a>
+                </span>
+                <span>Application is opensource and development is located on <a
+                    href="https://github.com/ChrnyaevEK/metr" target="_blank"
+                    rel="noreferrer">GitHub</a>
+                </span>
             </div>
-            <a href="https://www.facebook.com/cherniaev.public" target="_blank" rel="noreferrer"
-               className="contact-link">
-                It's a me, Mario!
-            </a>
         </div>
     )
 }
