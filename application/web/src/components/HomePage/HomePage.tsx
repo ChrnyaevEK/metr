@@ -56,7 +56,7 @@ export function HomePage() {
                 </p>
             </div>
             <div className="font-middle d-flex form-group">
-                <input className="form-control mr-1" placeholder="Zadejte ID hlasování..." maxLength={7}
+                <input className="form-control mr-1" placeholder="Zadejte ID hlasování..." maxLength={20}
                        onChange={handleSearchInput}/>
                 <Button disabled={!Boolean(isTargetRoomValid)} variant="success" className="mr-1"
                         title="Otevřit hlasování"
