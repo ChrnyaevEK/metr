@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, useRef, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faComments, faPlus, faPoll} from "@fortawesome/free-solid-svg-icons";
 import {Link, useHistory} from "react-router-dom";
@@ -10,21 +10,22 @@ import {SEARCH_VALIDATION_TIMEOUT} from "../../share";
 export function HomePage() {
     const history = useHistory();
 
-    const [targetRoomId, setTargetRoomId]: [string | null, any] = useState(null)
     const [validationTimeoutId, setValidationTimeoutId]: [number | null, any] = useState(null)
     const [isTargetRoomValid, setIsTargetRoomValid]: [boolean | null, any] = useState(null)
 
-    const getAdminRoomURL = () => '/admin/' + targetRoomId
-    const getPublicRoomURL = () => '/public/' + targetRoomId
+    const targetRoomId: React.MutableRefObject<string | null> = useRef(null)
 
-    // Validate target room ID on user input
-    useEffect(() => {
+    const getAdminRoomURL = () => '/admin/' + targetRoomId.current
+    const getPublicRoomURL = () => '/public/' + targetRoomId.current
+
+    const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
+        targetRoomId .current = e.target.value
         setIsTargetRoomValid(null)
         if (validationTimeoutId === null) {
             setValidationTimeoutId(setTimeout(async () => {
-                if (targetRoomId) {
+                if (targetRoomId.current) {
                     try {
-                        setIsTargetRoomValid(await validateRoomExist(targetRoomId))
+                        setIsTargetRoomValid(await validateRoomExist(targetRoomId.current))
                     } catch {
                         setIsTargetRoomValid(false);
                     }
@@ -32,10 +33,6 @@ export function HomePage() {
                 setValidationTimeoutId(null)
             }, SEARCH_VALIDATION_TIMEOUT))
         }
-    }, [targetRoomId])
-
-    const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
-        setTargetRoomId(e.target.value)
     }
     const handleOpenPublicPage = () => {
         history.push(getPublicRoomURL())
@@ -51,13 +48,14 @@ export function HomePage() {
         <div>
             <div>
                 <p className="text-secondary font-middle">
-                    <span className="font-weight-bold">Metrbot</span> je aplikace pro živé sledování nálady publika. Nástroj přináší okamžitou zpětnou vazbu a pomáhá
+                    <span className="font-weight-bold">Metrbot</span> je nástroj, který přináší okamžitou zpětnou vazbu
+                    a pomáhá
                     zlepšit kvalitu a účinnost výkladu.
                 </p>
             </div>
             <div className="font-middle d-flex form-group">
                 <input className="form-control mr-1" placeholder="Zadejte ID hlasování..." maxLength={20}
-                       onChange={handleSearchInput}/>
+                       onInput={handleSearchInput}/>
                 <Button disabled={!Boolean(isTargetRoomValid)} variant="success" className="mr-1"
                         title="Otevřit hlasování"
                         onClick={handleOpenPublicPage}>
@@ -73,7 +71,7 @@ export function HomePage() {
                     <FontAwesomeIcon icon={faPlus}/>
                 </Button>
             </div>
-            <div style={{visibility: targetRoomId && isTargetRoomValid !== null ? "visible" : "hidden"}}
+            <div style={{visibility: targetRoomId.current && isTargetRoomValid !== null ? "visible" : "hidden"}}
                  className="d-flex flex-column font-small">
                 {
                     isTargetRoomValid ?
