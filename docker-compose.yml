@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   daphne-server:
-    build: cherniaev/metr:0.1.2
+    image: cherniaev/metr:0.1.2
     command: daphne -b 0.0.0.0 -p 8000 server.asgi:application
     expose:
       - 8000
