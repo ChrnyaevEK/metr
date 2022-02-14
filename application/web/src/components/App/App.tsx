@@ -22,15 +22,14 @@ function App() {
         <React.StrictMode>
             <Provider store={store}>
                 <Router>
-                    <div className="container h-100">
+                    <nav className="navbar">
+                        <a className="navbar-brand" href="/">
+                            <img src="/static/metrbot.png" height="50px" alt="Metrbot"/>
+                        </a>
+                    </nav>
+                    <div className="container flex-grow-1" id="main-container">
                         <div className="row d-flex justify-content-center align-items-center h-100">
                             <div className="col-12 col-sm-10 col-md-8 col-lg-8">
-                                <nav className="navbar p-0 m-0">
-                                    <a className="navbar-brand" href="/">
-                                        <img src="/static/metrbot.png" height="50px" alt="Metrbot"/>
-                                    </a>
-                                </nav>
-                                <hr className="w-100 mb-5"/>
                                 <Logger/>
                                 <Switch>
                                     <Route path="/public/:roomId" component={AnswerPage}/>
@@ -43,14 +42,13 @@ function App() {
                                         <Redirect to="/home"/>
                                     </Route>
                                 </Switch>
-                                <hr className="w-100 mt-5"/>
-                                <div className="font-small d-flex justify-content-center px-3 py-1">
-                                    <Link to="/" className="mr-4">Domů</Link>
-                                    <Link to="/admin" className="mr-4">Nové hlasování</Link>
-                                    <Link to="/contact" className="mr-4">Kontakt</Link>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="font-small d-flex justify-content-center px-3 py-1 position-relative">
+                        <Link to="/">Domů</Link>
+                        <Link to="/admin" className="mx-4">Nové hlasování</Link>
+                        <Link to="/contact">Kontakt</Link>
                     </div>
                 </Router>
             </Provider>

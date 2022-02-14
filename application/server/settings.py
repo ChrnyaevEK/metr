@@ -145,3 +145,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+FORCE_POPULAR_QUESTIONS = os.environ.get('FORCE_POPULAR_QUESTIONS', True)

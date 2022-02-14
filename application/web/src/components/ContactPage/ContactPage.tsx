@@ -1,7 +1,7 @@
 export function ContactPage() {
     return (
         <div>
-            <p className="h1 font-weight-bold">Kontakt</p>
+            <p className="font-weight-bold">Kontakt</p>
             <p className="text-secondary font-middle">
                 Potřebuješ s něčím poradit? Máš skvělý nápad na zlepšení aplikace? Neváhej nás kontaktovat!
             </p>

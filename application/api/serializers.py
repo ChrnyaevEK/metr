@@ -28,6 +28,12 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PopularQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Question
+        fields = ['value', 'display_option']
+
+
 class NumericAnswerSerializer(serializers.ModelSerializer):
     id = HashidSerializerCharField(read_only=True, source_field='api.NumericAnswer.id')
     question = serializers.PrimaryKeyRelatedField(

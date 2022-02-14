@@ -13,7 +13,7 @@ from api import serializers
 from api import texts
 from api.consumers import PublicPoll
 
-from server.settings import JWT_SECRET_KEY, JWT_ALGORITHM
+from server.settings import JWT_SECRET_KEY, JWT_ALGORITHM, FORCE_POPULAR_QUESTIONS
 
 from rest_framework import viewsets
 from rest_framework.exceptions import MethodNotAllowed, NotFound, PermissionDenied
@@ -195,7 +195,22 @@ class PopularQuestions(APIView):
     authentication_classes = []
     permission_classes = []
 
-    serializer_class = serializers.QuestionSerializer
+    predefined_popular_questions = [
+        serializers.PopularQuestionSerializer().validate({
+            'value': 'Rychlost',
+            'display_option': 'numeric_range_optimum'
+        }),
+        serializers.PopularQuestionSerializer().validate({
+            'value': 'Kvalita látky',
+            'display_option': 'numeric_range_maximum'
+        }),
+        serializers.PopularQuestionSerializer().validate({
+            'value': 'Zájem o téma',
+            'display_option': 'numeric_range_maximum'
+        })
+    ]
+
+    serializer_class = serializers.PopularQuestionSerializer
 
     _nrm_str = re.compile(r'[^a-z0-9]+')
     POPULAR_QUESTIONS_LIMIT = 3
@@ -204,6 +219,9 @@ class PopularQuestions(APIView):
         return self._nrm_str.sub('', unicodedata.normalize('NFD', s.lower()).encode('ascii', 'ignore').decode("utf-8"))
 
     def get(self, request):
+        if FORCE_POPULAR_QUESTIONS:
+            return Response(self.predefined_popular_questions)
+
         end = datetime.datetime.today()
         start = end - datetime.timedelta(days=30)
 
