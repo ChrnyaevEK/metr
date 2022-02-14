@@ -7,7 +7,7 @@ import {Button} from "react-bootstrap";
 import {SEARCH_VALIDATION_TIMEOUT} from "../../share";
 
 
-function FirstStep(props: {i:number, text: string }) {
+function FirstStep(props: { i: number, text: string }) {
     return (
         <div className="m-2 d-flex alert alert-light border font-weight-bold">
             <span className="text-secondary mr-2">{props.i}.</span>
@@ -98,11 +98,9 @@ export function HomePage() {
             </video>
 
             <div className="text-dark font-weight-bold font-big mb-2">První kroky...</div>
-            <div className="d-flex">
-                <FirstStep i={1} text="Vytvoř nebo otevři hlasování"/>
-                <FirstStep i={2} text="Nasdílej hlasování"/>
-                <FirstStep i={3} text="Sleduj a reaguj"/>
-            </div>
+            <FirstStep i={1} text="Vytvoř nebo otevři hlasování"/>
+            <FirstStep i={2} text="Nasdílej hlasování"/>
+            <FirstStep i={3} text="Sleduj a reaguj"/>
             <div className="text-secondary mt-2">
                 Živá zpětná vazba pomůže chytit to správné tempo povídáni!
             </div>
