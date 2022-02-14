@@ -92,7 +92,6 @@ export function HomePage() {
                 a pomáhá zlepšit kvalitu a účinnost výkladu.
             </div>
 
-            <div className="text-dark font-weight-bold font-big mb-2">Metrbot za 25 vteřin!</div>
             <video width="100%" controls={true} autoPlay={true} muted={true} loop={true} className="shadow mb-3">
                 <source src="/static/intro.mp4" type="video/mp4"/>
                 Your browser does not support the video element.
